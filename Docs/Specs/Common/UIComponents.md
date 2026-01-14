@@ -1,53 +1,82 @@
 ---
 type: spec
 assembly: Sc.Common
-class: UIButton, UIPopup, UIManager
+class: UIPopup, UIManager
 category: UI
 status: draft
-version: "1.0"
-dependencies: [Singleton, BaseView, ResourceManager, AudioManager]
+version: "1.1"
+dependencies: [Singleton, ResourceManager, AudioManager]
 created: 2025-01-14
-updated: 2025-01-14
+updated: 2025-01-15
 ---
 
 # UI Components
 
 ## 역할
-재사용 가능한 UI 컴포넌트 및 팝업 시스템.
+Unity 기본 컴포넌트를 보완하는 커스텀 UI 컴포넌트 및 팝업 시스템.
+
+## 핵심 원칙
+
+> **Unity 기본 컴포넌트 우선 사용**
+>
+> 커스텀 UIComponent는 기본 컴포넌트로 해결할 수 없는 경우에만 생성한다.
+
+### 컴포넌트 사용 기준
+
+| 기능 | 사용할 컴포넌트 | 커스텀 필요 |
+|------|----------------|-------------|
+| 텍스트 표시 | TMP_Text | X |
+| 이미지 표시 | Image | X |
+| 버튼 클릭 | Button | X |
+| 토글 | Toggle | X |
+| 슬라이더 | Slider | X |
+| 입력 필드 | TMP_InputField | X |
+| 스크롤 | ScrollRect | X |
+| 팝업 관리 | - | O (UIManager) |
+| 팝업 애니메이션 | - | O (UIPopup) |
+| 가상화 리스트 | - | O (필요시) |
+
+### 커스텀 컴포넌트 생성 조건
+
+1. **Unity 기본 컴포넌트에 해당 기능이 없음**
+2. **여러 Widget에서 반복되는 복합 동작** (예: 팝업 열기/닫기 + 딤 + 스택)
+3. **성능 최적화 필요** (예: 대량 아이템 가상화 리스트)
+
+### 확장이 필요한 경우
+
+기본 컴포넌트 기능 확장은 Widget 레이어에서 처리:
+
+```csharp
+// ❌ 잘못된 예: 커스텀 UIButton 생성
+public class UIButton : MonoBehaviour { ... }
+
+// ✅ 올바른 예: Widget에서 Button 활용
+public class ButtonWidget : Widget
+{
+    [SerializeField] private Button _button;
+    [SerializeField] private TMP_Text _label;
+
+    public override void OnInitialize()
+    {
+        _button.onClick.AddListener(HandleClick);
+    }
+
+    private void HandleClick()
+    {
+        AudioManager.Instance.PlaySfx("sfx_button_click");
+        OnClick?.Invoke();
+    }
+}
+```
 
 ## 책임
-- UIButton: 클릭 처리, 효과음, 쿨다운
-- UIPopup: 팝업 열기/닫기 애니메이션
-- UIManager: 팝업 스택 관리
+- UIPopup: 팝업 열기/닫기 애니메이션, 딤 처리
+- UIManager: 팝업 스택 관리, 뒤로가기 처리
 
 ## 비책임
 - 개별 팝업 내부 로직
 - 비팝업 UI 관리
 - 화면 전환
-
----
-
-## UIButton
-
-### 인터페이스
-
-| 멤버 | 타입 | 설명 |
-|------|------|------|
-| OnClick | event Action | 클릭 이벤트 |
-| Interactable | bool | 활성화 상태 |
-| SetText | void | 버튼 텍스트 설정 |
-
-### 기능
-- 클릭 시 효과음 재생 (AudioManager 연동)
-- 쿨다운으로 연타 방지 (기본 0.2초)
-- 자식 TMP_Text 자동 탐색
-
-### 설정 (Inspector)
-
-| 필드 | 기본값 | 설명 |
-|------|--------|------|
-| _clickSfxKey | "sfx_button_click" | 클릭 효과음 키 |
-| _cooldown | 0.2f | 연타 방지 시간 |
 
 ---
 
@@ -139,13 +168,13 @@ Update (ESC 감지)
 ```
 UIManager (Singleton)
    └─ Popup Stack
-       ├─ ConfirmPopup (UIPopup)
-       │    ├─ Dim Background
+       ├─ ConfirmPopup (UIPopup 상속)
+       │    ├─ Dim Background (Image)
        │    └─ Content
-       │         ├─ UIButton (확인)
-       │         └─ UIButton (취소)
+       │         ├─ Button (확인) ← Unity 기본
+       │         └─ Button (취소) ← Unity 기본
        │
-       └─ SettingsPopup (UIPopup)
+       └─ SettingsPopup (UIPopup 상속)
             └─ ...
 ```
 
@@ -161,10 +190,6 @@ popup.OnConfirm += DeleteItem;
 
 // 팝업 닫기
 UIManager.Instance.CloseTopPopup();
-
-// 버튼 사용
-_button.OnClick += HandleClick;
-_button.Interactable = false;
 ```
 
 ---
@@ -190,4 +215,4 @@ _button.Interactable = false;
 
 ## 관련
 - [Common.md](../Common.md)
-- [MVP.md](MVP.md)
+- [UISystem.md](UISystem.md)
