@@ -19,10 +19,16 @@ Assets/Scripts/
 │   ├── Structs/                   # 공용 구조체
 │   └── ScriptableObjects/         # SO 정의
 │
-├── Packet/                         # [Sc.Packet] 이벤트/메시지
+├── Event/                          # [Sc.Event] 클라이언트 내부 이벤트
 │   ├── Common/                    # 공통 이벤트
 │   ├── InGame/                    # 인게임 이벤트
 │   └── OutGame/                   # 아웃게임 이벤트
+│
+├── Packet/                         # [Sc.Packet] 서버 통신 인터페이스
+│   ├── Services/                  # IPacketService 인터페이스
+│   ├── Requests/                  # 요청 구조체
+│   ├── Responses/                 # 응답 구조체
+│   └── Local/                     # LocalPacketService (현재)
 │
 ├── Core/                           # [Sc.Core] 핵심 시스템
 │   ├── Base/                      # Singleton 등 베이스
@@ -55,46 +61,50 @@ Assets/Scripts/
 ## Assembly 의존성
 
 ```
-                ┌───────────┐
-                │  Sc.Data  │ ← 의존성 없음
-                └─────┬─────┘
-                      ↓
-                ┌───────────┐
-                │ Sc.Packet │ → Sc.Data
-                └─────┬─────┘
-                      ↓
-                ┌───────────┐
-                │  Sc.Core  │ → Sc.Data, Sc.Packet
-                └─────┬─────┘
-                      ↓
-                ┌───────────┐
-                │ Sc.Common │ → Sc.Core, Sc.Data, Sc.Packet
-                └─────┬─────┘
-                      ↓
-        ┌─────────────┴─────────────┐
-        ↓                           ↓
-┌──────────────┐            ┌──────────────┐
-│   Shared/*   │            │  InGame/*    │
-│              │←───────────│  OutGame/*   │
-└──────────────┘            └──────────────┘
+                     ┌───────────┐
+                     │  Sc.Data  │ ← 의존성 없음
+                     └─────┬─────┘
+                           │
+              ┌────────────┴────────────┐
+              ↓                         ↓
+        ┌───────────┐            ┌───────────┐
+        │ Sc.Event  │            │ Sc.Packet │
+        │(클라이언트)│            │(서버통신) │
+        └─────┬─────┘            └───────────┘
+              ↓                         │
+        ┌───────────┐                   │
+        │  Sc.Core  │ → Sc.Data, Sc.Event
+        └─────┬─────┘                   │
+              ↓                         │
+        ┌───────────┐                   │
+        │ Sc.Common │ → Sc.Core, ...    │
+        └─────┬─────┘                   │
+              │                         │
+        ┌─────┴─────────────────────────┘
+        ↓
+┌──────────────────────────────────────┐
+│            Contents/*                │
+│  → Sc.Common, Sc.Packet (필요시)     │
+└──────────────────────────────────────┘
 ```
 
 ### Assembly 참조 테이블
 
-| Assembly | 참조 |
-|----------|------|
-| `Sc.Data` | (없음) |
-| `Sc.Packet` | Sc.Data |
-| `Sc.Core` | Sc.Data, Sc.Packet |
-| `Sc.Common` | Sc.Core, Sc.Data, Sc.Packet |
-| `Sc.Contents.Character` | Sc.Common |
-| `Sc.Contents.Inventory` | Sc.Common |
-| `Sc.Contents.Battle` | Sc.Common, Sc.Contents.Character |
-| `Sc.Contents.Skill` | Sc.Common, Sc.Contents.Character |
-| `Sc.Contents.Lobby` | Sc.Common |
-| `Sc.Contents.Gacha` | Sc.Common, Sc.Contents.Character |
-| `Sc.Contents.Shop` | Sc.Common, Sc.Contents.Inventory |
-| `Sc.Contents.Quest` | Sc.Common |
+| Assembly | 참조 | 역할 |
+|----------|------|------|
+| `Sc.Data` | (없음) | 순수 데이터 정의 |
+| `Sc.Event` | Sc.Data | 클라이언트 내부 이벤트 |
+| `Sc.Packet` | Sc.Data, UniTask | 서버 통신 인터페이스 |
+| `Sc.Core` | Sc.Data, Sc.Event | 핵심 시스템 (EventManager 등) |
+| `Sc.Common` | Sc.Core, Sc.Data, Sc.Event | 공통 모듈 (MVP, Pool 등) |
+| `Sc.Contents.Character` | Sc.Common | 캐릭터 시스템 |
+| `Sc.Contents.Inventory` | Sc.Common | 인벤토리 시스템 |
+| `Sc.Contents.Battle` | Sc.Common, Sc.Contents.Character | 전투 시스템 |
+| `Sc.Contents.Skill` | Sc.Common, Sc.Contents.Character | 스킬 시스템 |
+| `Sc.Contents.Lobby` | Sc.Common | 로비 시스템 |
+| `Sc.Contents.Gacha` | Sc.Common, Sc.Contents.Character, Sc.Packet | 가챠 시스템 |
+| `Sc.Contents.Shop` | Sc.Common, Sc.Contents.Inventory, Sc.Packet | 상점 시스템 |
+| `Sc.Contents.Quest` | Sc.Common, Sc.Packet | 퀘스트 시스템 |
 
 ---
 
@@ -102,17 +112,32 @@ Assets/Scripts/
 
 ### 원칙
 - **상하관계 있음**: Assembly 직접 참조
-- **상하관계 없음**: Packet 이벤트 통신
+- **상하관계 없음**: Event (클라이언트 내부 이벤트)
+- **서버 통신 필요**: Packet (Request/Response 패턴)
+
+### Event vs Packet
+
+| 구분 | Event | Packet |
+|------|-------|--------|
+| 목적 | 클라이언트 내부 알림 | 서버와 데이터 교환 |
+| 방향 | 단방향 Publish | Request → Response |
+| 응답 | 없음 | 있음 (비동기) |
+| 예시 | BattleEndEvent | GachaRequest/Response |
 
 ### 통신 다이어그램
 
 ```
-┌─────────────┐  Packet   ┌─────────────┐
+┌─────────────┐  Event    ┌─────────────┐
 │   InGame    │◄────────►│   OutGame   │
-│  (Battle)   │  Events   │  (Lobby)    │
+│  (Battle)   │ (알림)    │  (Lobby)    │
 └──────┬──────┘           └──────┬──────┘
        │                         │
-       └───────────┬─────────────┘
+       │    ┌─────────────┐      │
+       │    │  Sc.Packet  │      │
+       │    │ (서버 통신)  │◄─────┘ GachaRequest 등
+       │    └─────────────┘
+       │
+       └───────────┬─────────────
                    ↓
             ┌──────────────┐
             │    Shared    │
@@ -120,10 +145,10 @@ Assets/Scripts/
             └──────────────┘
 ```
 
-### 이벤트 예시
+### Event 예시
 
 ```csharp
-// Packet/InGame/BattleEvents.cs
+// Event/InGame/BattleEndEvent.cs
 public struct BattleEndEvent
 {
     public bool IsVictory;
@@ -135,6 +160,20 @@ EventManager.Instance.Publish(new BattleEndEvent { ... });
 
 // Lobby에서 구독
 EventManager.Instance.Subscribe<BattleEndEvent>(OnBattleEnd);
+```
+
+### Packet 예시
+
+```csharp
+// Gacha에서 서버 요청
+var request = new GachaRequest { PoolId = "standard", Count = 10 };
+var response = await _packetService.SendAsync<GachaRequest, GachaResponse>(request);
+
+// 결과를 Event로 알림
+if (response.Success)
+{
+    EventManager.Instance.Publish(new GachaResultEvent { Results = response.Results });
+}
 ```
 
 ---
@@ -157,15 +196,29 @@ EventManager.Instance.Subscribe<BattleEndEvent>(OnBattleEnd);
 ## Namespace 규칙
 
 ```csharp
+// 기반 레이어
 namespace Sc.Data { }
 namespace Sc.Data.Enums { }
 namespace Sc.Data.Structs { }
-namespace Sc.Packet.InGame { }
-namespace Sc.Packet.OutGame { }
+
+namespace Sc.Event { }
+namespace Sc.Event.Common { }
+namespace Sc.Event.InGame { }
+namespace Sc.Event.OutGame { }
+
+namespace Sc.Packet { }
+namespace Sc.Packet.Services { }
+namespace Sc.Packet.Requests { }
+namespace Sc.Packet.Responses { }
+
 namespace Sc.Core { }
 namespace Sc.Core.Managers { }
+
 namespace Sc.Common { }
 namespace Sc.Common.UI { }
+
+// 컨텐츠
 namespace Sc.Contents.Character { }
 namespace Sc.Contents.Battle { }
+namespace Sc.Contents.Gacha { }
 ```

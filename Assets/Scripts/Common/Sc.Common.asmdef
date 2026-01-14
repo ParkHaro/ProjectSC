@@ -1,0 +1,19 @@
+{
+    "name": "Sc.Common",
+    "rootNamespace": "Sc.Common",
+    "references": [
+        "Sc.Core",
+        "Sc.Data",
+        "Sc.Event",
+        "UniTask"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

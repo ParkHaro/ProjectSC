@@ -1,0 +1,16 @@
+{
+    "name": "Sc.Event",
+    "rootNamespace": "Sc.Event",
+    "references": [
+        "GUID:a5fb39568b1e7704a8446a4874129323"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

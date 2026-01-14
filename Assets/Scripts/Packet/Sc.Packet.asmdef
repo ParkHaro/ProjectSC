@@ -1,0 +1,17 @@
+{
+    "name": "Sc.Packet",
+    "rootNamespace": "Sc.Packet",
+    "references": [
+        "GUID:a5fb39568b1e7704a8446a4874129323",
+        "GUID:f51ebe6a0ceec4240a699833d6309b23"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

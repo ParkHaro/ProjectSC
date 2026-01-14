@@ -1,0 +1,20 @@
+{
+    "name": "Sc.Contents.Character",
+    "rootNamespace": "Sc.Contents.Character",
+    "references": [
+        "Sc.Common",
+        "Sc.Core",
+        "Sc.Data",
+        "Sc.Packet",
+        "UniTask"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

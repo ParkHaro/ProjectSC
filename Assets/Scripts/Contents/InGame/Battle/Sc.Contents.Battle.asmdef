@@ -1,0 +1,21 @@
+{
+    "name": "Sc.Contents.Battle",
+    "rootNamespace": "Sc.Contents.Battle",
+    "references": [
+        "Sc.Common",
+        "Sc.Core",
+        "Sc.Data",
+        "Sc.Packet",
+        "Sc.Contents.Character",
+        "UniTask"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

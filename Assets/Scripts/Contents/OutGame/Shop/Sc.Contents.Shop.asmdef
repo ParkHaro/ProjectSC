@@ -1,0 +1,21 @@
+{
+    "name": "Sc.Contents.Shop",
+    "rootNamespace": "Sc.Contents.Shop",
+    "references": [
+        "Sc.Common",
+        "Sc.Core",
+        "Sc.Data",
+        "Sc.Packet",
+        "Sc.Contents.Inventory",
+        "UniTask"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}
