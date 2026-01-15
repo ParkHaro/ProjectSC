@@ -166,6 +166,45 @@
 
 ---
 
+## Phase 8: MVP 화면 구현
+
+### MVP 화면 구현
+
+**커밋**: `677b606` Add MVP screen implementations
+- TitleScreen, LobbyScreen, GachaScreen, CharacterListScreen 구현
+- CurrencyHUD, GachaResultPopup 컴포넌트 추가
+- DataManager/NetworkManager 연동
+
+**커밋**: `87b25d6` Add MVP Editor tools
+- MVPSceneSetup: SC Tools/MVP 메뉴로 씬/프리팹 자동 생성
+- ProjectEditorSettings: 에디터 공통 설정 (기본 폰트 등)
+- **상세**: [DECISIONS.md](DECISIONS.md#에디터-설정-scriptableobject-도입) 참조
+
+### 게임 초기화 흐름
+
+**커밋**: `9d296ac` Document architecture decisions
+- GameBootstrap → NetworkManager 초기화 → DataManager 로드 → Login
+- GameInitializedEvent로 초기화 완료 알림
+- GameFlowController가 이벤트 수신 후 TitleScreen Push
+
+### 캐릭터 상세 화면 & API 간소화
+
+**커밋**: `1eb467b` Add CharacterDetailScreen and simplify Navigation API
+- **CharacterDetailScreen 추가**
+  - 캐릭터 기본 정보, 스탯, 레벨/돌파, 설명 표시
+  - CharacterListScreen에서 아이템 클릭 시 상세 화면 이동
+
+- **Navigation API 간소화**
+  - `Screen.Open(state)` / `Popup.Open(state)` 패턴 도입
+  - 기존 장황한 형식에서 간결한 형식으로 개선
+  - **상세**: [DECISIONS.md](DECISIONS.md#navigation-api-간소화-open-패턴) 참조
+
+- **ScrollView 개선**
+  - RectMask2D 사용 (Image+Mask보다 효율적)
+  - LayoutElement 추가 (VerticalLayoutGroup 높이 인식)
+
+---
+
 ## 진행 중
 
 현재 진행 중인 작업은 [PROGRESS.md](../PROGRESS.md) 참조

@@ -364,6 +364,59 @@
 
 ---
 
+## Navigation API 간소화: Open() 패턴
+
+**일자**: 2026-01-16
+**상태**: 결정됨
+**관련 커밋**: `1eb467b`
+
+### 컨텍스트
+- Screen/Popup 이동 시 코드가 장황함
+- `NavigationManager.Instance?.Push(LobbyScreen.CreateContext(new LobbyState()))` 형식
+- 반복적인 보일러플레이트 코드 발생
+- 개발자 경험(DX) 개선 필요
+
+### 선택지
+1. **현행 유지 (장황한 형식)**
+   - 장점: 명시적, Context 빌더 패턴 활용 가능
+   - 단점: 코드 장황, 오타 가능성, 반복 작업
+
+2. **static Open() 메서드 추가**
+   - 장점: 간결한 API, 직관적, 타이핑 감소
+   - 단점: 내부에서 NavigationManager 직접 접근
+
+3. **확장 메서드**
+   - 장점: 기존 구조 유지
+   - 단점: 발견성 낮음, IDE 지원 제한적
+
+### 결정
+**static Open() 메서드** 선택
+
+**이유**:
+- `LobbyScreen.Open(state)` 형식이 가장 직관적
+- Flutter의 `Navigator.push()` 대신 `Screen.go()` 패턴과 유사
+- Transition 필요 시 두 번째 인자로 전달 가능
+- 기존 CreateContext 빌더 패턴도 유지 (고급 사용)
+
+### 결과
+```csharp
+// Before (장황)
+NavigationManager.Instance?.Push(LobbyScreen.CreateContext(new LobbyState()));
+
+// After (간결)
+LobbyScreen.Open(new LobbyState());
+```
+
+- ScreenWidget/PopupWidget에 Open(), Push() static 메서드 추가
+- 내부에서 NavigationManager.Instance?.Push() 호출
+- 모든 기존 코드 마이그레이션 완료
+
+### 회고
+- API 설계에서 "사용하는 쪽의 코드"를 먼저 상상하면 좋은 설계가 나옴
+- **배운 점**: 간결한 API가 생산성과 가독성 모두 향상시킴
+
+---
+
 ## [템플릿] 새 의사결정
 
 **일자**: YYYY-MM-DD
