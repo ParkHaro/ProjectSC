@@ -284,6 +284,20 @@ namespace Sc.Core
 
         #endregion
 
+        #region User Data Setter
+
+        /// <summary>
+        /// 유저 데이터 직접 설정 (로그인 시 사용)
+        /// </summary>
+        public void SetUserData(UserSaveData userData)
+        {
+            _userData = userData;
+            OnUserDataChanged?.Invoke();
+            Debug.Log($"[DataManager] 유저 데이터 설정: {_userData.Profile.Nickname}");
+        }
+
+        #endregion
+
         #region Utility Methods
 
         /// <summary>
