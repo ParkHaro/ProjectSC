@@ -7,7 +7,12 @@
         "Sc.Core",
         "Sc.Common",
         "Sc.Packet",
-        "UniTask"
+        "Sc.Contents.Title",
+        "Sc.Contents.Lobby",
+        "Sc.Contents.Gacha",
+        "Sc.Contents.Character",
+        "UniTask",
+        "Unity.TextMeshPro"
     ],
     "includePlatforms": [
         "Editor"
