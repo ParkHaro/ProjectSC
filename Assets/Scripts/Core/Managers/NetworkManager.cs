@@ -1,6 +1,7 @@
 using System;
 using Cysharp.Threading.Tasks;
 using Sc.Event.Network;
+using Sc.Foundation;
 using Sc.Packet;
 using UnityEngine;
 
@@ -84,8 +85,10 @@ namespace Sc.Core
 
             try
             {
-                // Dispatcher 생성
+                // Dispatcher 생성 및 콜백 등록
                 _dispatcher = new PacketDispatcher();
+                _dispatcher.OnDispatchCompleted += OnDispatchCompleted;
+                _dispatcher.OnDispatchError += OnDispatchError;
                 RegisterDefaultHandlers();
 
                 // 모드에 따라 클라이언트 생성
@@ -136,13 +139,16 @@ namespace Sc.Core
 
         /// <summary>
         /// 요청 전송 (큐에 추가, 이벤트로 결과 알림)
+        /// Request가 IRequest&lt;TResponse&gt;를 구현하면 TResponse를 자동으로 추론
         /// </summary>
-        /// <typeparam name="TRequest">요청 타입</typeparam>
-        /// <typeparam name="TResponse">응답 타입</typeparam>
+        /// <typeparam name="TRequest">요청 타입 (IRequest&lt;TResponse&gt; 구현 필수)</typeparam>
         /// <param name="request">요청 데이터</param>
-        public void Send<TRequest, TResponse>(TRequest request)
+        /// <example>
+        /// NetworkManager.Instance.Send(LoginRequest.CreateGuest("device", "1.0", "Editor"));
+        /// NetworkManager.Instance.Send(GachaRequest.CreateMulti("standard"));
+        /// </example>
+        public void Send<TRequest>(TRequest request)
             where TRequest : IRequest
-            where TResponse : IResponse
         {
             if (!_isInitialized)
             {
@@ -156,31 +162,7 @@ namespace Sc.Core
                 return;
             }
 
-            _requestQueue.Enqueue<TRequest, TResponse>(request);
-        }
-
-        /// <summary>
-        /// 로그인 요청
-        /// </summary>
-        public void SendLogin(LoginRequest request)
-        {
-            Send<LoginRequest, LoginResponse>(request);
-        }
-
-        /// <summary>
-        /// 가챠 요청
-        /// </summary>
-        public void SendGacha(GachaRequest request)
-        {
-            Send<GachaRequest, GachaResponse>(request);
-        }
-
-        /// <summary>
-        /// 상점 구매 요청
-        /// </summary>
-        public void SendPurchase(ShopPurchaseRequest request)
-        {
-            Send<ShopPurchaseRequest, ShopPurchaseResponse>(request);
+            _requestQueue.Enqueue(request);
         }
 
         /// <summary>
@@ -266,12 +248,36 @@ namespace Sc.Core
 
         private void OnRequestCompleted(QueuedRequest request, IResponse response)
         {
-            // RequestCompletedEvent는 PacketDispatcher에서 발행
+            // Dispatcher에서 처리하므로 여기서는 추가 작업 없음
         }
 
         private void OnRequestFailed(QueuedRequest request, Exception ex)
         {
-            // NetworkErrorEvent는 PacketDispatcher에서 발행
+            // Dispatcher에서 처리하므로 여기서는 추가 작업 없음
+        }
+
+        private void OnDispatchCompleted(QueuedRequest request, IResponse response)
+        {
+            EventManager.Instance.Publish(new RequestCompletedEvent
+            {
+                RequestId = request.RequestId,
+                RequestType = request.Metadata.RequestType,
+                IsSuccess = response.IsSuccess,
+                ErrorCode = response.ErrorCode,
+                ErrorMessage = response.ErrorMessage
+            });
+        }
+
+        private void OnDispatchError(QueuedRequest request, Exception ex)
+        {
+            EventManager.Instance.Publish(new NetworkErrorEvent
+            {
+                RequestId = request.RequestId,
+                RequestType = request.Metadata.RequestType,
+                ErrorCode = -1,
+                ErrorMessage = ex.Message,
+                IsRecoverable = ex is TimeoutException
+            });
         }
 
         private void OnWebSocketMessage(string message)
@@ -305,6 +311,12 @@ namespace Sc.Core
         protected override void OnSingletonDestroy()
         {
             _requestQueue?.Dispose();
+
+            if (_dispatcher != null)
+            {
+                _dispatcher.OnDispatchCompleted -= OnDispatchCompleted;
+                _dispatcher.OnDispatchError -= OnDispatchError;
+            }
 
             if (_wsClient != null)
             {

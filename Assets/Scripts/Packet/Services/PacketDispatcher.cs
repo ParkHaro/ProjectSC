@@ -1,17 +1,26 @@
 using System;
 using System.Collections.Generic;
-using Sc.Core;
 using UnityEngine;
 
 namespace Sc.Packet
 {
     /// <summary>
     /// 패킷 응답 디스패처
-    /// 응답을 이벤트로 변환하여 EventManager로 발행
+    /// 응답을 핸들러로 전달하고 완료/에러 콜백 발생
     /// </summary>
     public class PacketDispatcher
     {
         private readonly Dictionary<Type, IPacketHandler> _handlers = new();
+
+        /// <summary>
+        /// 응답 처리 완료 콜백
+        /// </summary>
+        public event Action<QueuedRequest, IResponse> OnDispatchCompleted;
+
+        /// <summary>
+        /// 에러 발생 콜백
+        /// </summary>
+        public event Action<QueuedRequest, Exception> OnDispatchError;
 
         /// <summary>
         /// 응답 핸들러 등록
@@ -43,7 +52,7 @@ namespace Sc.Packet
         }
 
         /// <summary>
-        /// 응답 처리 (이벤트 발행)
+        /// 응답 처리
         /// </summary>
         /// <param name="request">원본 요청</param>
         /// <param name="response">응답</param>
@@ -75,19 +84,12 @@ namespace Sc.Packet
                 Debug.LogWarning($"[PacketDispatcher] No handler for {responseType.Name}");
             }
 
-            // 공통 완료 이벤트 발행
-            EventManager.Instance.Publish(new RequestCompletedEvent
-            {
-                RequestId = request.RequestId,
-                RequestType = request.Metadata.RequestType,
-                IsSuccess = response.IsSuccess,
-                ErrorCode = response.ErrorCode,
-                ErrorMessage = response.ErrorMessage
-            });
+            // 완료 콜백 (NetworkManager에서 이벤트 발행)
+            OnDispatchCompleted?.Invoke(request, response);
         }
 
         /// <summary>
-        /// 에러 처리 (에러 이벤트 발행)
+        /// 에러 처리
         /// </summary>
         /// <param name="request">원본 요청</param>
         /// <param name="exception">예외</param>
@@ -95,15 +97,8 @@ namespace Sc.Packet
         {
             Debug.LogError($"[PacketDispatcher] Error for {request.Metadata.RequestType}: {exception.Message}");
 
-            // 네트워크 에러 이벤트 발행
-            EventManager.Instance.Publish(new NetworkErrorEvent
-            {
-                RequestId = request.RequestId,
-                RequestType = request.Metadata.RequestType,
-                ErrorCode = -1,
-                ErrorMessage = exception.Message,
-                IsRecoverable = exception is TimeoutException || exception is System.Net.WebException
-            });
+            // 에러 콜백 (NetworkManager에서 이벤트 발행)
+            OnDispatchError?.Invoke(request, exception);
         }
 
         /// <summary>
