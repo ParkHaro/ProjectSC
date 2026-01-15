@@ -87,13 +87,20 @@ namespace Sc.Common.UI
 
             public override async UniTask Load()
             {
-                // TODO: Provider에서 Popup 인스턴스 로드
-                // _popup = await PopupProvider.Instance.Get<TPopup>();
+                // 씬에서 Popup 인스턴스 찾기 (비활성화 포함)
+                _popup = UnityEngine.Object.FindObjectOfType<TPopup>(true);
+
+                if (_popup == null)
+                {
+                    UnityEngine.Debug.LogError($"[PopupWidget] {typeof(TPopup).Name}을 씬에서 찾을 수 없음");
+                }
+
                 await UniTask.CompletedTask;
             }
 
             public override async UniTask Enter()
             {
+                _popup?.Initialize();
                 _popup?.OnBind(_state);
                 await UniTask.CompletedTask;
             }
@@ -110,9 +117,13 @@ namespace Sc.Common.UI
 
             public override async UniTask Exit()
             {
+                // 상태 저장
                 var currentState = _popup?.GetState();
                 if (currentState != null)
                     _state = currentState;
+
+                // UI 숨김
+                _popup?.Hide();
 
                 await UniTask.CompletedTask;
             }

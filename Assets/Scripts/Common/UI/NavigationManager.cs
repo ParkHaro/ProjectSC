@@ -68,6 +68,21 @@ namespace Sc.Common.UI
         public bool HasPopupOnTop =>
             CurrentContext?.ContextType == NavigationContextType.Popup;
 
+        /// <summary>
+        /// Popup 개수.
+        /// </summary>
+        public int PopupCount => StackCount - ScreenCount;
+
+        /// <summary>
+        /// 전환 중 여부.
+        /// </summary>
+        public bool IsTransitioning => _isTransitioning;
+
+        /// <summary>
+        /// 네비게이션 스택 (읽기 전용, 디버그용).
+        /// </summary>
+        public IReadOnlyList<INavigationContext> NavigationStack => _navigationStack;
+
         #endregion
 
         #region Unity Lifecycle

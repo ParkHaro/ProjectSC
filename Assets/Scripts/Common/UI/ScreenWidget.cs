@@ -81,13 +81,20 @@ namespace Sc.Common.UI
 
             public override async UniTask Load()
             {
-                // TODO: Provider에서 Screen 인스턴스 로드
-                // _screen = await ScreenProvider.Instance.Get<TScreen>();
+                // 씬에서 Screen 인스턴스 찾기 (비활성화 포함)
+                _screen = UnityEngine.Object.FindObjectOfType<TScreen>(true);
+
+                if (_screen == null)
+                {
+                    UnityEngine.Debug.LogError($"[ScreenWidget] {typeof(TScreen).Name}을 씬에서 찾을 수 없음");
+                }
+
                 await UniTask.CompletedTask;
             }
 
             public override async UniTask Enter()
             {
+                _screen?.Initialize();
                 _screen?.OnBind(_state);
                 await UniTask.CompletedTask;
             }
@@ -104,9 +111,13 @@ namespace Sc.Common.UI
 
             public override async UniTask Exit()
             {
+                // 상태 저장
                 var currentState = _screen?.GetState();
                 if (currentState != null)
                     _state = currentState;
+
+                // UI 숨김
+                _screen?.Hide();
 
                 await UniTask.CompletedTask;
             }
