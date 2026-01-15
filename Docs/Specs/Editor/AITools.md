@@ -27,6 +27,7 @@ Unity Editor 메뉴를 통해 씬/프리팹 셋업을 자동화하는 도구 모
 |------|-----------|------|------|
 | [UITestSceneSetup](#uitestscenesetup) | SC Tools > UI Test | UI 시스템 테스트 씬/프리팹 자동 생성 | ✅ |
 | [NavigationDebugWindow](#navigationdebugwindow) | SC Tools > UI Test | Navigation 상태 시각화 윈도우 | ✅ |
+| [DataFlowTestWindow](#dataflowtestwindow) | SC > Test | 데이터 흐름 통합 테스트 | ✅ |
 
 ---
 
@@ -140,6 +141,61 @@ Top Popup: TestPopup_2
 ### 관련 클래스
 
 - `Sc.Common.UI.Tests.UITestSetup` - 스택 데이터 소스
+
+---
+
+## DataFlowTestWindow
+
+### 역할
+
+데이터 아키텍처 v2.0의 핵심 흐름(Login/Gacha)을 통합 테스트.
+
+### 메뉴
+
+| 메뉴 | 단축키 | 기능 |
+|------|--------|------|
+| `SC > Test > Data Flow Test Window` | - | 테스트 윈도우 열기 |
+
+### 기능
+
+- **API Client 초기화**: LocalApiClient 연결
+- **DataManager 초기화**: 마스터 데이터 검증
+- **로그인 테스트**: Login → SetUserData 흐름
+- **가챠 테스트**: Gacha → ApplyDelta 흐름
+- **데이터 뷰**: 현재 유저 데이터 실시간 표시
+- **저장 데이터 삭제**: 테스트 초기화
+
+### 테스트 흐름
+
+```
+Step 1: 초기화
+  1-1. API Client 초기화 (LocalApiClient)
+  1-2. DataManager 초기화 (마스터 데이터 검증)
+
+Step 2: 로그인
+  2-1. LoginRequest → LoginResponse → SetUserData()
+
+Step 3: 가챠
+  3-1. GachaRequest → GachaResponse → ApplyDelta()
+```
+
+### 사용 패턴
+
+```
+1. SC > Test > Data Flow Test Window
+2. Play 모드 진입 (DataManager 프리팹 필요)
+3. 1-1 → 1-2 → 2-1 순서로 초기화
+4. 3-1로 가챠 테스트 (Single/Multi)
+5. 테스트 로그 및 데이터 상태 확인
+```
+
+### 관련 클래스
+
+- `Sc.Packet.LocalApiClient` - 로컬 API 클라이언트
+- `Sc.Core.DataManager` - 데이터 매니저
+- `Sc.Packet.LoginRequest/Response` - 로그인 패킷
+- `Sc.Packet.GachaRequest/Response` - 가챠 패킷
+- `Sc.Packet.UserDataDelta` - 데이터 변경분
 
 ---
 

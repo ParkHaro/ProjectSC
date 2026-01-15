@@ -55,7 +55,7 @@
 
 ## 현재 진행 중인 작업
 
-### 데이터 아키텍처 v2.0 🔨
+### 데이터 아키텍처 v2.0 ✅
 
 **배경**: 라이브 서비스 기준 서버 중심 아키텍처로 재설계
 
@@ -192,14 +192,15 @@
 
 ---
 
-#### Phase 5: 통합 및 테스트 🔨
+#### Phase 5: 통합 및 테스트 ✅
 
-- [ ] 초기화 흐름 테스트 (Login → FetchUserData → 마스터 로드)
-- [ ] 가챠 흐름 테스트 (Request → Response → Delta 적용)
-- [ ] 문서 업데이트
-  - Data.md (마스터 데이터 파이프라인)
-  - Packet.md (IApiService, LocalApiService)
-  - Core.md (DataManager 역할 변경)
+- [x] DataFlowTestWindow 에디터 도구 생성
+- [x] 초기화 흐름 테스트 (Login → SetUserData → 마스터 로드)
+- [x] 가챠 흐름 테스트 (Request → Response → Delta 적용)
+- [x] 문서 업데이트
+  - Data.md (마스터 데이터 파이프라인, 유저 데이터 구조)
+  - Packet.md (IApiClient, LocalApiClient, Delta 패턴)
+  - Core.md (DataManager 역할 변경, 서버 중심 아키텍처)
 
 ---
 
@@ -232,6 +233,10 @@
 ## 작업 로그
 
 ### 2026-01-15
+- [x] DataFlowTestWindow 에디터 도구 생성
+  - [x] Login/Gacha 흐름 테스트 UI
+  - [x] DataManager 자동 생성 및 Database 에셋 할당
+  - [x] 실시간 데이터 상태 표시
 - [x] 네트워크 이벤트 큐 아키텍처 구현
   - [x] Sc.Foundation Assembly 생성 (순환 참조 해결)
   - [x] Singleton, EventManager → Foundation으로 이동

@@ -5,7 +5,9 @@
         "Sc.Foundation",
         "Sc.Data",
         "Sc.Core",
-        "Sc.Common"
+        "Sc.Common",
+        "Sc.Packet",
+        "UniTask"
     ],
     "includePlatforms": [
         "Editor"

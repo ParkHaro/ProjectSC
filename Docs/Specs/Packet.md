@@ -2,22 +2,22 @@
 type: overview
 assembly: Sc.Packet
 category: Network
-status: draft
-version: "1.0"
-dependencies: [Sc.Data, UniTask]
-detail_docs: [IPacketService, Requests, Responses, LocalPacketService]
+status: approved
+version: "2.0"
+dependencies: [Sc.Data, Sc.Foundation, UniTask]
+detail_docs: [IApiClient, Requests, Responses, LocalApiClient, NetworkManager]
 created: 2025-01-14
-updated: 2025-01-14
+updated: 2025-01-15
 ---
 
 # Sc.Packet
 
 ## 목적
-서버 통신 인터페이스 계층. Request/Response 패턴으로 데이터 교환. 로컬/네트워크 구현 교체 가능.
+서버 통신 인터페이스 계층. Request/Response + Delta 패턴으로 데이터 교환. 로컬/네트워크 구현 교체 가능.
 
 ## 의존성
-- **참조**: Sc.Data (요청/응답 데이터 타입), UniTask (비동기)
-- **참조됨**: Contents (Gacha, Shop, Battle 등)
+- **참조**: Sc.Data (요청/응답 데이터), Sc.Foundation (EventManager), UniTask (비동기)
+- **참조됨**: Sc.Core (DataManager), Contents (Gacha, Shop 등)
 
 ---
 
@@ -25,11 +25,11 @@ updated: 2025-01-14
 
 | 개념 | 설명 |
 |------|------|
-| **IPacketService** | 패킷 송수신 인터페이스 |
-| **Request** | 서버 요청 구조체 |
-| **Response** | 서버 응답 구조체 |
-| **LocalPacketService** | 로컬 구현 (현재) |
-| **NetworkPacketService** | 네트워크 구현 (추후) |
+| **IApiClient** | API 통신 인터페이스 |
+| **Request** | 서버 요청 클래스 (IRequest\<TResponse\>) |
+| **Response** | 서버 응답 클래스 (IResponse, IGameActionResponse) |
+| **UserDataDelta** | 유저 데이터 변경분 (부분 갱신) |
+| **NetworkManager** | 네트워크 요청 오케스트레이션 |
 
 ---
 
@@ -39,39 +39,54 @@ updated: 2025-01-14
 |------|--------|-------|
 | **목적** | 서버와 데이터 교환 | 클라이언트 내부 알림 |
 | **방향** | Request → Response | 단방향 Publish |
-| **응답** | 있음 (비동기) | 없음 |
-| **예시** | GachaRequest/Response | GachaResultEvent |
-| **교체** | Local ↔ Network | 변경 없음 |
+| **응답** | 있음 (비동기, Delta 포함) | 없음 |
+| **예시** | GachaRequest → GachaResponse | GachaResultEvent |
+| **교체** | LocalApiClient ↔ ServerApiClient | 변경 없음 |
 
 ---
 
 ## 클래스 역할 정의
 
+### Interfaces
+
+| 클래스 | 역할 | 주요 메서드 |
+|--------|------|-------------|
+| IRequest | 요청 기본 인터페이스 | Timestamp |
+| IRequest\<TResponse\> | 타입 안전 요청 | (IRequest 상속) |
+| IResponse | 응답 기본 인터페이스 | IsSuccess, ErrorCode, ServerTime |
+| IGameActionResponse | 게임 액션 응답 | Delta (UserDataDelta) |
+| IApiClient | API 클라이언트 계약 | InitializeAsync, SendAsync |
+
 ### Services
 
-| 클래스 | 역할 | 책임 | 하지 않는 것 |
-|--------|------|------|--------------|
-| IPacketService | 패킷 서비스 계약 | SendAsync 인터페이스 정의 | 구현 |
-| LocalPacketService | 로컬 처리 구현 | 즉시 로직 처리, 결과 반환 | 네트워크 통신 |
-| NetworkPacketService | 네트워크 구현 (추후) | 서버 통신, 직렬화 | 로컬 로직 |
+| 클래스 | 역할 | 책임 |
+|--------|------|------|
+| LocalApiClient | 로컬 구현 | 서버 응답 시뮬레이션, JSON 저장 |
+| NetworkManager | 요청 오케스트레이션 | RequestQueue, 콜백 핸들러 |
+| RequestQueue | 요청 큐 관리 | 순차 처리, 동시성 제어 |
+| PacketDispatcher | 응답 분배 | 타입별 핸들러 호출 |
 
 ### Requests
 
-| 클래스 | 역할 | 주요 필드 | 사용처 |
-|--------|------|-----------|--------|
-| GachaRequest | 가챠 요청 | PoolId, Count | Gacha |
-| ShopPurchaseRequest | 구매 요청 | ItemId, Amount, CurrencyType | Shop |
-| BattleResultRequest | 전투 결과 저장 | StageId, Result, Rewards | Battle |
-| SaveDataRequest | 데이터 저장 | SaveData | Save |
+| 클래스 | 역할 | 주요 필드 |
+|--------|------|-----------|
+| LoginRequest | 로그인 요청 | DeviceId, UserId, Platform |
+| GachaRequest | 가챠 요청 | GachaPoolId, PullType (Single/Multi) |
+| ShopPurchaseRequest | 구매 요청 | ProductId, Amount |
 
 ### Responses
 
-| 클래스 | 역할 | 주요 필드 | 사용처 |
-|--------|------|-----------|--------|
-| GachaResponse | 가챠 결과 | Success, Results[], RemainingGem | Gacha |
-| ShopPurchaseResponse | 구매 결과 | Success, NewItemCount, NewCurrency | Shop |
-| BattleResultResponse | 저장 확인 | Success | Battle |
-| SaveDataResponse | 저장 확인 | Success, Timestamp | Save |
+| 클래스 | 역할 | 주요 필드 |
+|--------|------|-----------|
+| LoginResponse | 로그인 응답 | UserData (전체), IsNewUser, SessionToken |
+| GachaResponse | 가챠 응답 | Results[], Delta, CurrentPityCount |
+| ShopPurchaseResponse | 구매 응답 | Rewards[], Delta |
+
+### Delta
+
+| 클래스 | 역할 | 주요 필드 |
+|--------|------|-----------|
+| UserDataDelta | 유저 데이터 변경분 | Profile?, Currency?, AddedCharacters, RemovedCharacterIds, AddedItems, ... |
 
 ---
 
@@ -85,7 +100,13 @@ updated: 2025-01-14
                    │ SendAsync<TReq, TRes>
                    ▼
 ┌─────────────────────────────────────────────────┐
-│           IPacketService (인터페이스)            │
+│              NetworkManager                      │
+│                                                 │
+│   RequestQueue → PacketDispatcher → Handlers   │
+└──────────────────┬──────────────────────────────┘
+                   │
+┌─────────────────────────────────────────────────┐
+│            IApiClient (인터페이스)               │
 │                                                 │
 │   UniTask<TRes> SendAsync<TReq, TRes>(TReq)    │
 └──────────────────┬──────────────────────────────┘
@@ -93,81 +114,73 @@ updated: 2025-01-14
         ┌──────────┴──────────┐
         ▼                     ▼
 ┌───────────────┐    ┌────────────────────┐
-│LocalPacketSvc │    │NetworkPacketSvc    │
-│ (즉시 처리)    │    │ (서버 통신)         │
+│LocalApiClient │    │ServerApiClient     │
+│ (시뮬레이션)   │    │ (실제 서버 통신)    │
 │               │    │ (추후 구현)         │
 └───────────────┘    └────────────────────┘
 ```
 
 ---
 
+## Delta 패턴
+
+### 개념
+서버 응답에서 변경된 유저 데이터만 전달. 전체 동기화 대신 부분 갱신으로 효율화.
+
+### 사용 흐름
+```
+1. Login: UserSaveData 전체 수신 → DataManager.SetUserData()
+2. 이후 액션: UserDataDelta만 수신 → DataManager.ApplyDelta()
+```
+
+### Delta 구조
+```csharp
+public class UserDataDelta
+{
+    public UserProfile? Profile;         // 변경 시에만 값 있음
+    public UserCurrency? Currency;
+    public List<OwnedCharacter> AddedCharacters;
+    public List<string> RemovedCharacterIds;
+    public List<OwnedItem> AddedItems;
+    public List<string> RemovedItemIds;
+    // ...
+}
+```
+
+---
+
 ## 사용 흐름
 
-### 가챠 예시
+### 로그인
 ```
-[사용자 가챠 버튼]
+[앱 시작]
        ↓
-GachaManager.RollGacha()
+LoginRequest.CreateGuest(deviceId, version, platform)
        ↓
-new GachaRequest { PoolId, Count }
+IApiClient.SendAsync<LoginRequest, LoginResponse>()
        ↓
-IPacketService.SendAsync<GachaRequest, GachaResponse>()
-       │
-       ├─ [LocalPacketService]
-       │    └─ 즉시 로직 처리 → Response 반환
-       │
-       └─ [NetworkPacketService] (추후)
-            └─ 서버 전송 → 응답 대기 → Response 반환
+LoginResponse { UserData, SessionToken }
        ↓
-GachaResponse { Success, Results, RemainingGem }
+DataManager.SetUserData(response.UserData)
+       ↓
+EventManager.Publish(new LoginCompleteEvent())
+```
+
+### 가챠
+```
+[가챠 버튼]
+       ↓
+GachaRequest.CreateSingle/Multi(poolId)
+       ↓
+IApiClient.SendAsync<GachaRequest, GachaResponse>()
+       ↓
+GachaResponse { Results[], Delta, PityCount }
+       ↓
+DataManager.ApplyDelta(response.Delta)
        ↓
 EventManager.Publish(new GachaResultEvent { Results })
        ↓
 UI 갱신
-```
-
----
-
-## 사용 패턴
-
-```csharp
-// 1. 요청 생성
-var request = new GachaRequest
-{
-    PoolId = "standard",
-    Count = 10
-};
-
-// 2. 패킷 전송 (인터페이스 사용)
-var response = await _packetService.SendAsync<GachaRequest, GachaResponse>(request);
-
-// 3. 결과 처리
-if (response.Success)
-{
-    // 내부 이벤트 발행 (UI 갱신용)
-    EventManager.Instance.Publish(new GachaResultEvent { Results = response.Results });
-}
-```
-
----
-
-## 서비스 교체
-
-```csharp
-// GameManager에서 초기화
-public class GameManager : Singleton<GameManager>
-{
-    public IPacketService PacketService { get; private set; }
-
-    protected override void OnInitialize()
-    {
-        // 로컬 모드 (현재)
-        PacketService = new LocalPacketService();
-
-        // 네트워크 모드 (추후)
-        // PacketService = new NetworkPacketService("server-url");
-    }
-}
 ```
 
 ---
@@ -178,35 +191,34 @@ public class GameManager : Singleton<GameManager>
 Assets/Scripts/Packet/
 ├── Sc.Packet.asmdef
 ├── Services/
-│   └── IPacketService.cs
+│   ├── IRequest.cs
+│   ├── IResponse.cs
+│   ├── IApiClient.cs
+│   ├── UserDataDelta.cs
+│   ├── NetworkManager.cs
+│   ├── RequestQueue.cs
+│   └── PacketDispatcher.cs
 ├── Requests/
+│   ├── LoginRequest.cs
 │   ├── GachaRequest.cs
-│   ├── ShopPurchaseRequest.cs
-│   └── ...
+│   └── ShopPurchaseRequest.cs
 ├── Responses/
+│   ├── LoginResponse.cs
 │   ├── GachaResponse.cs
-│   ├── ShopPurchaseResponse.cs
-│   └── ...
+│   └── ShopPurchaseResponse.cs
 └── Local/
-    └── LocalPacketService.cs
+    └── LocalApiClient.cs
 ```
 
 ---
 
 ## 설계 원칙
 
-1. **인터페이스 분리**: IPacketService로 구현 교체 용이
-2. **비동기 처리**: UniTask 기반 async/await
-3. **불변 구조체**: Request/Response는 struct
-4. **단일 책임**: Packet은 통신만, 로직은 Contents에서
-
----
-
-## 상세 문서
-- [IPacketService.md](Packet/IPacketService.md) - 서비스 인터페이스 상세
-- [Requests.md](Packet/Requests.md) - 요청 구조체 상세
-- [Responses.md](Packet/Responses.md) - 응답 구조체 상세
-- [LocalPacketService.md](Packet/LocalPacketService.md) - 로컬 구현 상세
+1. **서버 중심**: 모든 유저 데이터 변경은 서버 응답(Delta)으로만
+2. **인터페이스 분리**: IApiClient로 구현 교체 용이
+3. **Delta 패턴**: 부분 갱신으로 네트워크/메모리 효율화
+4. **비동기 처리**: UniTask 기반 async/await
+5. **Handler 분리**: Response 타입별 Handler 클래스 분리
 
 ---
 
@@ -214,7 +226,8 @@ Assets/Scripts/Packet/
 
 | 분류 | 파일 수 | 상태 |
 |------|---------|------|
-| Services | 1 | ⬜ |
-| Requests | 4+ | ⬜ |
-| Responses | 4+ | ⬜ |
-| Local | 1 | ⬜ |
+| Interfaces | 4 | ✅ |
+| Services | 4 | ✅ |
+| Requests | 3 | ✅ |
+| Responses | 3 | ✅ |
+| Local | 1 | ✅ |
