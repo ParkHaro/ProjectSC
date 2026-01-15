@@ -1,11 +1,7 @@
 {
-    "name": "Sc.Packet",
-    "rootNamespace": "Sc.Packet",
-    "references": [
-        "Sc.Foundation",
-        "Sc.Data",
-        "UniTask"
-    ],
+    "name": "Sc.Foundation",
+    "rootNamespace": "Sc.Foundation",
+    "references": [],
     "includePlatforms": [],
     "excludePlatforms": [],
     "allowUnsafeCode": false,

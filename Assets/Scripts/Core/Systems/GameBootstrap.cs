@@ -1,5 +1,7 @@
 using Cysharp.Threading.Tasks;
 using Sc.Data;
+using Sc.Event.OutGame;
+using Sc.Foundation;
 using Sc.Packet;
 using UnityEngine;
 
@@ -22,13 +24,38 @@ namespace Sc.Core
         [SerializeField] private long _currentGold;
         [SerializeField] private int _currentGem;
 
-        private IApiService _apiService;
+        // 이벤트 완료 대기용
+        private UniTaskCompletionSource<bool> _loginCompletionSource;
+        private UniTaskCompletionSource<GachaResponse> _gachaCompletionSource;
 
         private async void Start()
         {
             if (_autoInitialize)
             {
                 await InitializeGameAsync();
+            }
+        }
+
+        private void OnEnable()
+        {
+            // 이벤트 구독
+            EventManager.Instance.Subscribe<LoginCompletedEvent>(OnLoginCompleted);
+            EventManager.Instance.Subscribe<LoginFailedEvent>(OnLoginFailed);
+            EventManager.Instance.Subscribe<GachaCompletedEvent>(OnGachaCompleted);
+            EventManager.Instance.Subscribe<GachaFailedEvent>(OnGachaFailed);
+            EventManager.Instance.Subscribe<UserDataSyncedEvent>(OnUserDataSynced);
+        }
+
+        private void OnDisable()
+        {
+            // 이벤트 구독 해제
+            if (EventManager.HasInstance)
+            {
+                EventManager.Instance.Unsubscribe<LoginCompletedEvent>(OnLoginCompleted);
+                EventManager.Instance.Unsubscribe<LoginFailedEvent>(OnLoginFailed);
+                EventManager.Instance.Unsubscribe<GachaCompletedEvent>(OnGachaCompleted);
+                EventManager.Instance.Unsubscribe<GachaFailedEvent>(OnGachaFailed);
+                EventManager.Instance.Unsubscribe<UserDataSyncedEvent>(OnUserDataSynced);
             }
         }
 
@@ -48,14 +75,20 @@ namespace Sc.Core
         {
             Debug.Log("========== 게임 초기화 시작 ==========");
 
-            // 1. API 서비스 생성
-            Debug.Log("[1/3] API 서비스 생성...");
-            _apiService = new LocalApiService();
+            // 1. NetworkManager 초기화
+            Debug.Log("[1/3] NetworkManager 초기화...");
+            var networkSuccess = await NetworkManager.Instance.InitializeAsync();
+            if (!networkSuccess)
+            {
+                Debug.LogError("NetworkManager 초기화 실패!");
+                return false;
+            }
+            Debug.Log("NetworkManager 초기화 성공");
 
-            // 2. DataManager 초기화
+            // 2. DataManager 초기화 (마스터 데이터만)
             Debug.Log("[2/3] DataManager 초기화...");
-            var initResult = await DataManager.Instance.InitializeAsync(_apiService);
-            if (!initResult)
+            var dataSuccess = DataManager.Instance.Initialize();
+            if (!dataSuccess)
             {
                 Debug.LogError("DataManager 초기화 실패!");
                 return false;
@@ -64,20 +97,24 @@ namespace Sc.Core
 
             // 3. 로그인
             Debug.Log("[3/3] 로그인 시도...");
+            _loginCompletionSource = new UniTaskCompletionSource<bool>();
+
             var loginRequest = LoginRequest.CreateGuest(
                 SystemInfo.deviceUniqueIdentifier,
                 Application.version,
                 Application.platform.ToString()
             );
 
-            var loginResponse = await DataManager.Instance.LoginAsync(loginRequest);
-            if (!loginResponse.IsSuccess)
+            // 통합 Send 사용
+            NetworkManager.Instance.Send(loginRequest);
+
+            // 이벤트 대기
+            var loginResult = await _loginCompletionSource.Task;
+            if (!loginResult)
             {
-                Debug.LogError($"로그인 실패: {loginResponse.ErrorMessage}");
+                Debug.LogError("로그인 실패!");
                 return false;
             }
-
-            Debug.Log($"로그인 성공! 신규유저: {loginResponse.IsNewUser}");
 
             // 상태 업데이트
             UpdateStatus();
@@ -114,13 +151,19 @@ namespace Sc.Core
 
             Debug.Log($"========== 가챠 테스트 ({pullType}) ==========");
 
+            _gachaCompletionSource = new UniTaskCompletionSource<GachaResponse>();
+
             var request = pullType == GachaPullType.Single
                 ? GachaRequest.CreateSingle("gacha_standard")
                 : GachaRequest.CreateMulti("gacha_standard");
 
-            var response = await _apiService.GachaAsync(request);
+            // 통합 Send 사용
+            NetworkManager.Instance.Send(request);
 
-            if (response.IsSuccess)
+            // 이벤트 대기 (타임아웃 10초)
+            var response = await _gachaCompletionSource.Task;
+
+            if (response != null && response.IsSuccess)
             {
                 Debug.Log($"가챠 성공! 결과 {response.Results.Count}개:");
                 foreach (var result in response.Results)
@@ -129,18 +172,54 @@ namespace Sc.Core
                     var pity = result.IsPity ? "[PITY]" : "";
                     Debug.Log($"  - {result.CharacterId} ({result.Rarity}) {marker}{pity}");
                 }
-
-                // Delta 적용
-                DataManager.Instance.ApplyDelta(response.Delta);
                 Debug.Log($"현재 천장: {response.CurrentPityCount}");
 
                 UpdateStatus();
             }
             else
             {
-                Debug.LogError($"가챠 실패: {response.ErrorMessage}");
+                Debug.LogError($"가챠 실패: {response?.ErrorMessage ?? "Unknown error"}");
             }
         }
+
+        #region Event Handlers
+
+        private void OnLoginCompleted(LoginCompletedEvent evt)
+        {
+            Debug.Log($"로그인 성공! 신규유저: {evt.IsNewUser}, 닉네임: {evt.Nickname}");
+            _loginCompletionSource?.TrySetResult(true);
+        }
+
+        private void OnLoginFailed(LoginFailedEvent evt)
+        {
+            Debug.LogError($"로그인 실패: {evt.ErrorCode} - {evt.ErrorMessage}");
+            _loginCompletionSource?.TrySetResult(false);
+        }
+
+        private void OnGachaCompleted(GachaCompletedEvent evt)
+        {
+            // GachaResponse 재구성 (이벤트에서 필요한 정보 추출)
+            var response = new GachaResponse
+            {
+                Results = evt.Results,
+                CurrentPityCount = evt.PityCount
+            };
+            _gachaCompletionSource?.TrySetResult(response);
+        }
+
+        private void OnGachaFailed(GachaFailedEvent evt)
+        {
+            Debug.LogError($"가챠 실패: {evt.ErrorCode} - {evt.ErrorMessage}");
+            _gachaCompletionSource?.TrySetResult(null);
+        }
+
+        private void OnUserDataSynced(UserDataSyncedEvent evt)
+        {
+            Debug.Log("[GameBootstrap] 유저 데이터 동기화됨");
+            UpdateStatus();
+        }
+
+        #endregion
 
         /// <summary>
         /// 현재 상태 로그 출력

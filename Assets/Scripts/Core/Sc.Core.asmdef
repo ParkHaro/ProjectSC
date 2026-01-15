@@ -2,6 +2,7 @@
     "name": "Sc.Core",
     "rootNamespace": "Sc.Core",
     "references": [
+        "Sc.Foundation",
         "Sc.Data",
         "Sc.Event",
         "Sc.Packet",

@@ -2,6 +2,7 @@
     "name": "Sc.Editor.Data",
     "rootNamespace": "Sc.Editor.Data",
     "references": [
+        "Sc.Foundation",
         "Sc.Data",
         "Sc.Core"
     ],

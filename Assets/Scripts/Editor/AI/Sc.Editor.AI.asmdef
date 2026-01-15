@@ -2,6 +2,7 @@
     "name": "Sc.Editor.AI",
     "rootNamespace": "Sc.Editor.AI",
     "references": [
+        "Sc.Foundation",
         "Sc.Data",
         "Sc.Core",
         "Sc.Common"

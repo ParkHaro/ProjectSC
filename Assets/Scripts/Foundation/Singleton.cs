@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace Sc.Core
+namespace Sc.Foundation
 {
     /// <summary>
     /// MonoBehaviour 싱글톤 베이스 클래스

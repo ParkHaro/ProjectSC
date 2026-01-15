@@ -1,6 +1,6 @@
 using System;
-using Cysharp.Threading.Tasks;
 using Sc.Data;
+using Sc.Foundation;
 using Sc.Packet;
 using UnityEngine;
 
@@ -19,7 +19,6 @@ namespace Sc.Core
         [SerializeField] private StageDatabase _stageDatabase;
         [SerializeField] private GachaPoolDatabase _gachaPoolDatabase;
 
-        private IApiService _apiService;
         private UserSaveData _userData;
         private bool _isInitialized;
 
@@ -104,24 +103,14 @@ namespace Sc.Core
         #region Initialization
 
         /// <summary>
-        /// DataManager 초기화
+        /// DataManager 초기화 (마스터 데이터 검증)
         /// </summary>
-        /// <param name="apiService">API 서비스 인스턴스</param>
-        public async UniTask<bool> InitializeAsync(IApiService apiService)
+        public bool Initialize()
         {
             if (_isInitialized)
             {
                 Debug.LogWarning("[DataManager] 이미 초기화됨");
                 return true;
-            }
-
-            _apiService = apiService;
-
-            // API 서비스 초기화
-            if (!await _apiService.InitializeAsync())
-            {
-                Debug.LogError("[DataManager] API 서비스 초기화 실패");
-                return false;
             }
 
             // 마스터 데이터 검증
@@ -131,44 +120,31 @@ namespace Sc.Core
                 return false;
             }
 
+            // 빈 유저 데이터로 초기화 (로그인 전까지)
+            _userData = new UserSaveData();
+
             _isInitialized = true;
             Debug.Log("[DataManager] 초기화 완료");
             return true;
         }
 
-        /// <summary>
-        /// 로그인 및 유저 데이터 로드
-        /// </summary>
-        public async UniTask<LoginResponse> LoginAsync(LoginRequest request)
-        {
-            if (!_isInitialized)
-            {
-                Debug.LogError("[DataManager] 초기화되지 않음");
-                return LoginResponse.Fail(-1, "DataManager not initialized");
-            }
-
-            var response = await _apiService.LoginAsync(request);
-
-            if (response.IsSuccess)
-            {
-                _userData = response.UserData;
-                OnUserDataChanged?.Invoke();
-                Debug.Log($"[DataManager] 로그인 성공: {_userData.Profile.Nickname}");
-            }
-            else
-            {
-                Debug.LogError($"[DataManager] 로그인 실패: {response.ErrorMessage}");
-            }
-
-            return response;
-        }
-
         #endregion
 
-        #region Delta Application (서버 응답으로만 갱신)
+        #region User Data Management
+
+        /// <summary>
+        /// 유저 데이터 직접 설정 (로그인 시 LoginResponseHandler에서 호출)
+        /// </summary>
+        public void SetUserData(UserSaveData userData)
+        {
+            _userData = userData;
+            OnUserDataChanged?.Invoke();
+            Debug.Log($"[DataManager] 유저 데이터 설정: {_userData.Profile.Nickname}");
+        }
 
         /// <summary>
         /// 서버 응답 Delta 적용 (유저 데이터 갱신)
+        /// Handler에서 호출
         /// </summary>
         public void ApplyDelta(UserDataDelta delta)
         {
@@ -284,20 +260,6 @@ namespace Sc.Core
 
         #endregion
 
-        #region User Data Setter
-
-        /// <summary>
-        /// 유저 데이터 직접 설정 (로그인 시 사용)
-        /// </summary>
-        public void SetUserData(UserSaveData userData)
-        {
-            _userData = userData;
-            OnUserDataChanged?.Invoke();
-            Debug.Log($"[DataManager] 유저 데이터 설정: {_userData.Profile.Nickname}");
-        }
-
-        #endregion
-
         #region Utility Methods
 
         /// <summary>
@@ -367,7 +329,6 @@ namespace Sc.Core
         protected override void OnSingletonDestroy()
         {
             _isInitialized = false;
-            _apiService = null;
         }
     }
 }

@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace Sc.Core
+namespace Sc.Foundation
 {
     /// <summary>
     /// 전역 이벤트 매니저
