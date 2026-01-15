@@ -43,9 +43,22 @@ Unity 2022.x / C# / UniTask / Addressables
 - 문서에 전체 코드 포함 금지
 - 메타데이터 형식 준수 (DOC_RULES.md 참조)
 
-## 제약 사항
-- **문서 작업 전**: [Docs/DOC_RULES.md](Docs/DOC_RULES.md)를 읽지 않았다면 반드시 먼저 읽을 것
-- **코드 작업 전**: 관련 스펙 문서(대분류)를 먼저 확인할 것
+## 필수 작업 절차
+
+### Progress 추적 (필수)
+1. **작업 시작 전**: [Docs/PROGRESS.md](Docs/PROGRESS.md) 확인
+2. **항목 없으면**: 해당 작업을 작업 로그에 추가 (`- [ ] 작업내용`)
+3. **항목 있으면**: 현재 상태 파악 후 이어서 진행
+4. **단계 완료 시**: 즉시 Progress 업데이트 (`- [ ]` → `- [x]`)
+5. **작업 완료 시**: 관련 테이블 상태도 업데이트 (⬜ → 🔨 → ✅)
+
+### 문서/코드 작업 전
+- **문서 작업**: [Docs/DOC_RULES.md](Docs/DOC_RULES.md) 먼저 읽을 것
+- **코드 작업**: 관련 스펙 문서(대분류) 먼저 확인할 것
+
+### AI 에디터 도구
+- **씬/프리팹 셋업 필요 시**: Editor 스크립트 생성 우선 제안
+- **도구 문서**: [Docs/Specs/Editor/AITools.md](Docs/Specs/Editor/AITools.md) 참조
 
 ## 커밋 규칙
 - 커밋 메시지에 AI 사용 관련 문구 추가 금지 (Co-Authored-By 등)
