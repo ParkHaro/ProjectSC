@@ -21,6 +21,37 @@
 ## 기술 스택
 Unity 2022.x / C# / UniTask / Addressables
 
+## MCP 플러그인 활용
+
+> **원칙**: 작업 유형에 맞는 플러그인을 적극 활용할 것
+
+| 작업 유형 | 플러그인 | 용도 |
+|-----------|----------|------|
+| Unity API/라이브러리 문서 | **Context7** | Unity API, DOTween, UniTask 등 공식 문서 조회 |
+| 코드 탐색/분석 | **Serena** | 심볼 검색, 참조 추적, 코드베이스 탐색 |
+| 기능 개발 | **feature-dev** | 아키텍처 분석, 구현 설계 |
+| 코드 리뷰 | **code-review** | PR 코드 리뷰, 변경사항 분석 |
+| UI 작업 | **frontend-design** | UI 컴포넌트 디자인, 레이아웃 구현 |
+| Git 작업 | **commit-commands** | 커밋, 푸시, PR 생성, 브랜치 정리 |
+
+### 사용 시점
+- **Unity API 확인 필요**: Context7로 최신 문서 조회 (예: `UniTask`, `Addressables` 사용법)
+- **기존 코드 파악 필요**: Serena로 심볼/참조 탐색 (예: 특정 클래스 사용처 찾기)
+- **새 기능 구현**: feature-dev로 설계 → Serena로 기존 패턴 확인 → 구현
+- **UI 구현**: frontend-design으로 컴포넌트 설계
+- **커밋/PR**: commit-commands 스킬 활용 (`/commit`, `/commit-push-pr`)
+
+### 조합 예시
+```
+새 시스템 구현:
+1. feature-dev:code-explorer → 기존 유사 시스템 분석
+2. Context7 → 사용할 라이브러리 API 확인
+3. feature-dev:code-architect → 구현 설계
+4. Serena → 코드 작성 및 심볼 관리
+5. code-review → 코드 리뷰
+6. commit-commands → 커밋
+```
+
 ## 문서 규칙
 
 > **필수**: 문서 작업 전 [문서 작성 규칙](Docs/DOC_RULES.md)을 반드시 먼저 읽을 것
