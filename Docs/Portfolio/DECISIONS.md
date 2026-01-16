@@ -417,6 +417,64 @@ LobbyScreen.Open(new LobbyState());
 
 ---
 
+## Screen/Popup Transition 애니메이션 설계
+
+**일자**: 2025-01-17
+**상태**: 결정됨
+**관련 커밋**: `45ae44e` 등 8개
+
+### 컨텍스트
+- Screen/Popup 전환 시 애니메이션 없이 즉시 전환되어 사용자 경험 부족
+- CrossFade 형태의 부드러운 화면 전환 필요
+- DOTween이 이미 프로젝트에 포함되어 있음
+
+### 선택지
+1. **Unity Animation/Animator**
+   - 장점: Unity 네이티브, Timeline 연동 가능
+   - 단점: 설정 복잡, 프리팹마다 Animator 필요, 코드 제어 어려움
+
+2. **DOTween 직접 사용**
+   - 장점: 코드 기반으로 유연, 이미 프로젝트에 포함
+   - 단점: Transition 추상화 없이 사용하면 코드 분산
+
+3. **Transition 추상화 + DOTween**
+   - 장점: 일관된 인터페이스, 확장 용이, Context와 자연스럽게 통합
+   - 단점: 추상화 레이어 추가
+
+### 결정
+**Transition 추상화 + DOTween** 선택
+
+**이유**:
+- Context 패턴과 자연스럽게 통합 (Context.Enter/Exit에서 Transition 호출)
+- 새로운 Transition 타입 추가 용이 (SlideTransition, ScaleTransition 등)
+- Screen과 Popup이 동일한 인터페이스로 Transition 사용 가능
+- Widget.CachedCanvasGroup으로 성능 최적화
+
+### 결과
+```csharp
+// Transition 베이스 클래스
+public abstract class Transition
+{
+    public abstract UniTask Enter(Widget widget);
+    public abstract UniTask Exit(Widget widget);
+}
+
+// 사용 예시
+LobbyScreen.Open(state, new FadeTransition(0.3f));
+ConfirmPopup.Open(state, new PopupScaleTransition());
+```
+
+- Transition, FadeTransition (Screen용)
+- PopupTransition, PopupScaleTransition (Popup용)
+- Widget.CachedCanvasGroup 프로퍼티 추가
+
+### 회고
+- Assembly Definition 문제로 DOTween.Modules 참조 추가 필요
+- UniTask.DOTween 통합에서 UNITASK_DOTWEEN_SUPPORT define 이슈 발생
+- **배운 점**: 외부 플러그인 사용 시 asmdef 의존성 확인 필수
+
+---
+
 ## [템플릿] 새 의사결정
 
 **일자**: YYYY-MM-DD

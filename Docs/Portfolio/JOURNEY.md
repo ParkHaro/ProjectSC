@@ -205,6 +205,38 @@
 
 ---
 
+## Phase 9: Transition 애니메이션
+
+### Screen/Popup Transition 구현
+
+**커밋**: `45ae44e` 등 8개
+- Screen/Popup 전환 시 애니메이션 지원
+- DOTween 기반 구현
+- **상세**: [DECISIONS.md](DECISIONS.md#screenpopup-transition-애니메이션-설계) 참조
+
+**구현 내용**:
+| 클래스 | 역할 |
+|--------|------|
+| Transition | 베이스 추상 클래스 (Enter/Exit) |
+| FadeTransition | Screen용 페이드 인/아웃 |
+| PopupTransition | Popup용 베이스 클래스 |
+| PopupScaleTransition | Popup용 스케일+페이드 |
+
+**Widget 개선**:
+- CachedCanvasGroup 프로퍼티 추가 (성능 최적화)
+- CanvasGroup 컴포넌트 자동 캐싱
+
+**Context 통합**:
+- ScreenWidget.Context.Enter/Exit에서 Transition 호출
+- PopupWidget.Context.Enter/Exit에서 Transition 호출
+- Builder 패턴으로 Transition 설정 가능
+
+**Assembly Definition 수정**:
+- Sc.Common.asmdef에 DOTween.Modules, UniTask.DOTween 참조 추가
+- DOTween 확장 메서드 사용 가능
+
+---
+
 ## 진행 중
 
 현재 진행 중인 작업은 [PROGRESS.md](../PROGRESS.md) 참조

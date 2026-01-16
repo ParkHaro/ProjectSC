@@ -1,13 +1,13 @@
 ---
 type: spec
 assembly: Sc.Common
-class: Widget, ScreenWidget, PopupWidget, Panel
+class: Widget, ScreenWidget, PopupWidget, Panel, Transition
 category: UI
 status: draft
-version: "3.1"
-dependencies: [NavigationManager, EventManager]
+version: "3.2"
+dependencies: [NavigationManager, EventManager, DOTween]
 created: 2025-01-14
-updated: 2025-01-15
+updated: 2025-01-17
 ---
 
 # UI 시스템
@@ -289,6 +289,54 @@ NavigationManager.Instance.Push(
 - Popup의 OnEscape()가 false 반환 시 Back()으로 닫히지 않음
 - **Screen/Popup에 Canvas 컴포넌트 필수** (가시성 제어용)
 - **Show/Hide에 GameObject.SetActive 사용 금지** (OnEnable/OnDisable 부작용)
+
+---
+
+## Transition 시스템
+
+### 개요
+
+Screen/Popup 전환 시 애니메이션을 적용하는 시스템.
+DOTween 기반 구현.
+
+### Transition 클래스
+
+| 클래스 | 설명 |
+|--------|------|
+| Transition | 베이스 추상 클래스 |
+| FadeTransition | 페이드 인/아웃 (CanvasGroup.alpha) |
+| PopupTransition | Popup 전용 베이스 |
+| PopupScaleTransition | 스케일 + 페이드 애니메이션 |
+
+### Transition 인터페이스
+
+| 멤버 | 타입 | 설명 |
+|------|------|------|
+| Enter(Widget) | UniTask | 진입 애니메이션 |
+| Exit(Widget) | UniTask | 퇴장 애니메이션 |
+
+### 사용 패턴
+
+```csharp
+// Screen 전환 시 Transition 적용
+LobbyScreen.Open(new LobbyState(), new FadeTransition(0.3f));
+
+// Popup 전환 시 Transition 적용
+ConfirmPopup.Open(new ConfirmState(), new PopupScaleTransition());
+
+// Builder 방식
+NavigationManager.Instance.Push(
+    LobbyScreen.CreateContext(state)
+        .SetTransition(new FadeTransition())
+        .Build()
+);
+```
+
+### 구현 요구사항
+
+- Widget에 CanvasGroup 필요 (alpha 제어용)
+- Widget.CachedCanvasGroup 프로퍼티로 캐싱
+- Transition은 Context.Enter()/Exit()에서 호출됨
 
 ---
 
