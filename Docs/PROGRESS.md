@@ -18,10 +18,11 @@
 - GameBootstrap + GameFlowController 초기화 흐름
 - CharacterDetailScreen (캐릭터 상세 화면)
 - ScreenHeader (상단 공용 UI) - 데이터 기반 설정
+- ScreenHeader 뒤로가기 버튼 → Navigation 연동 (Initialize 라이프사이클 수정)
 
 **다음 단계**:
-1. ⬜ Unity 에디터에서 Rebuild All (SC Tools/MVP/Rebuild All)
-2. ⬜ 버그 수정 및 UI 연출 개선
+1. ✅ Screen/Popup Transition 애니메이션 구현
+2. ⬜ Unity 에디터에서 테스트 (Play 모드 → CharacterDetail → 뒤로가기)
 3. ⬜ 인벤토리 화면 구현
 
 ---
@@ -316,7 +317,67 @@
 
 ---
 
+### Screen/Popup Transition 애니메이션 ✅
+
+**배경**: Screen 전환 및 Popup 열기/닫기 시 부드러운 시각적 전환 필요
+
+**요구사항**:
+- Screen: Transition 애니메이션 (CrossFade - Out/In 동시)
+- Popup: PopupTransition 클래스로 Tween 지원 (즉시 전환하되 구조 확보)
+- Transition 중 입력 차단
+- 기본 Transition: FadeTransition (DOTween 사용)
+
+**현재 상태 분석**:
+- `Transition.cs`: 클래스 존재하나 TODO 상태 (미구현)
+- `ScreenWidget.Context`: `_transition` 필드 있음, `GetTransition()` 있음
+- `PopupWidget.Context`: Transition 지원 없음
+- `NavigationManager`: Transition 호출하지 않음
+
+**구현 계획**:
+
+Phase 1: 기반 준비
+- [ ] Widget.cs - CanvasGroup 캐싱 추가
+- [ ] Transition.cs - DOTween 기반 FadeTransition 구현
+
+Phase 2: Screen Transition
+- [ ] NavigationManager - Screen Push에 CrossFade 통합
+- [ ] NavigationManager - Screen Pop에 Transition 통합
+
+Phase 3: Popup Transition
+- [ ] PopupTransition.cs - Popup 전용 Tween 클래스 생성
+- [ ] PopupWidget.cs - Context에 Transition 지원 추가
+- [ ] NavigationManager - Popup Push/Pop에 Transition 통합
+
+Phase 4: 검증
+- [ ] 기존 Screen 전환 테스트
+- [ ] Popup 전환 테스트
+- [ ] 입력 차단 동작 확인
+
+**파일 변경 목록**:
+- `Widget.cs` (+3줄) - CanvasGroup 캐싱
+- `Transition.cs` (+50줄) - DOTween 기반 구현
+- `PopupTransition.cs` (신규, ~80줄) - Popup 전용
+- `PopupWidget.cs` (+20줄) - Transition 지원
+- `NavigationManager.cs` (+35줄) - Transition 호출 로직
+
+---
+
 ## 작업 로그
+
+### 2026-01-16 (저녁)
+- [x] Screen/Popup Transition 애니메이션 구현
+  - [x] Widget.cs - CanvasGroup 캐싱 (GetOrAddCanvasGroup)
+  - [x] Transition.cs - DOTween FadeTransition, SlideTransition, CrossFade 구현
+  - [x] PopupTransition.cs 생성 (PopupFadeTransition, PopupScaleTransition, PopupSlideTransition)
+  - [x] PopupWidget.cs - abstract GetTransition, Context.Builder.SetTransition
+  - [x] ScreenWidget.cs - abstract GetTransition, Context.Builder.SetTransition
+  - [x] NavigationManager.cs - PushAsync/PopAsync에 Transition 호출 통합
+
+### 2026-01-16 (오후)
+- [x] ScreenHeader 뒤로가기 버튼 → Navigation 연동 버그 수정
+  - [x] 원인 분석: ScreenHeader.Initialize()가 호출되지 않아 버튼 리스너 미등록
+  - [x] Start()에서 Initialize() 자동 호출 추가
+  - [x] Configure()에 방어적 초기화 추가 (Start 이전 호출 대비)
 
 ### 2026-01-16
 - [x] 재화 시스템 확장 (Full 복잡도)
