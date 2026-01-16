@@ -22,6 +22,9 @@ namespace Sc.Editor.AI
         {
             Debug.Log("[MVPSceneSetup] ========== Full Rebuild Start ==========");
 
+            // 0. 마스터 데이터 확인 및 생성
+            EnsureMasterDataGenerated();
+
             // 1. 프리팹 전체 삭제 및 재생성
             RecreateAllPrefabs();
 
@@ -38,6 +41,9 @@ namespace Sc.Editor.AI
         public static void SetupMVPScene()
         {
             EnsureFolders();
+
+            // 0. 마스터 데이터 확인 및 생성
+            EnsureMasterDataGenerated();
 
             // 1. Canvas 생성
             var canvas = CreateOrGetCanvas("MVPCanvas");
@@ -58,11 +64,13 @@ namespace Sc.Editor.AI
             // 6. GameFlowController 생성
             CreateGameFlowController();
 
-            // 7. Screen/Popup Containers
+            // 7. Header/Screen/Popup Containers
+            var headerContainer = CreateContainer(canvas.transform, "HeaderContainer", 50);
             var screenContainer = CreateContainer(canvas.transform, "ScreenContainer", 0);
             var popupContainer = CreateContainer(canvas.transform, "PopupContainer", 100);
 
             // 8. 프리팹 생성
+            var screenHeaderPrefab = CreateScreenHeaderPrefab();
             var titlePrefab = CreateTitleScreenPrefab();
             var lobbyPrefab = CreateLobbyScreenPrefab();
             var gachaPrefab = CreateGachaScreenPrefab();
@@ -70,7 +78,10 @@ namespace Sc.Editor.AI
             var characterDetailPrefab = CreateCharacterDetailScreenPrefab();
             var gachaResultPrefab = CreateGachaResultPopupPrefab();
 
-            // 9. 모든 Screen/Popup 프리팹을 씬에 배치 (비활성화 상태)
+            // 9. ScreenHeader 배치 (상단 고정)
+            InstantiateHeaderPrefab(screenHeaderPrefab, headerContainer);
+
+            // 10. 모든 Screen/Popup 프리팹을 씬에 배치 (비활성화 상태)
             InstantiateScreenPrefab(titlePrefab, screenContainer, true);  // TitleScreen만 활성화
             InstantiateScreenPrefab(lobbyPrefab, screenContainer, false);
             InstantiateScreenPrefab(gachaPrefab, screenContainer, false);
@@ -87,6 +98,7 @@ namespace Sc.Editor.AI
         {
             EnsureFolders();
 
+            CreateScreenHeaderPrefab();
             CreateTitleScreenPrefab();
             CreateLobbyScreenPrefab();
             CreateGachaScreenPrefab();
@@ -110,6 +122,7 @@ namespace Sc.Editor.AI
             DeleteAllPrefabs();
 
             // 새로 생성
+            CreateScreenHeaderPrefab();
             CreateTitleScreenPrefab();
             CreateLobbyScreenPrefab();
             CreateGachaScreenPrefab();
@@ -129,6 +142,7 @@ namespace Sc.Editor.AI
         {
             var prefabFiles = new[]
             {
+                "ScreenHeader.prefab",
                 "TitleScreen.prefab",
                 "LobbyScreen.prefab",
                 "GachaScreen.prefab",
@@ -153,6 +167,17 @@ namespace Sc.Editor.AI
             AssetDatabase.Refresh();
         }
 
+        [MenuItem("SC Tools/MVP/Generate Master Data", priority = 104)]
+        public static void GenerateMasterData()
+        {
+            const string jsonPath = "Assets/Data/MasterData/";
+
+            Debug.Log("[MVPSceneSetup] Force reimporting all Master Data...");
+            AssetDatabase.ImportAsset(jsonPath, ImportAssetOptions.ImportRecursive | ImportAssetOptions.ForceUpdate);
+            AssetDatabase.Refresh();
+            Debug.Log("[MVPSceneSetup] Master Data generation complete!");
+        }
+
         [MenuItem("SC Tools/MVP/Clear MVP Objects", priority = 200)]
         public static void ClearMVPObjects()
         {
@@ -173,6 +198,12 @@ namespace Sc.Editor.AI
 
             var gameFlowController = GameObject.Find("GameFlowController");
             if (gameFlowController != null) Object.DestroyImmediate(gameFlowController);
+
+            // ScreenHeader 싱글턴 인스턴스 정리
+            if (Common.UI.Widgets.ScreenHeader.Instance != null)
+            {
+                Object.DestroyImmediate(Common.UI.Widgets.ScreenHeader.Instance.gameObject);
+            }
 
             EditorSceneManager.MarkSceneDirty(EditorSceneManager.GetActiveScene());
             Debug.Log("[MVPSceneSetup] MVP objects cleared!");
@@ -265,6 +296,47 @@ namespace Sc.Editor.AI
             else
             {
                 Debug.Log("[MVPSceneSetup] DataManager에 Database 에셋 할당 완료");
+            }
+        }
+
+        private static void EnsureMasterDataGenerated()
+        {
+            const string generatedPath = "Assets/Data/Generated/";
+            const string jsonPath = "Assets/Data/MasterData/";
+
+            // 필요한 Database들 확인
+            var databases = new[]
+            {
+                ("CharacterDatabase.asset", "Character.json"),
+                ("SkillDatabase.asset", "Skill.json"),
+                ("ItemDatabase.asset", "Item.json"),
+                ("StageDatabase.asset", "Stage.json"),
+                ("GachaPoolDatabase.asset", "GachaPool.json"),
+                ("ScreenHeaderConfigDatabase.asset", "ScreenHeaderConfig.json")
+            };
+
+            bool needsReimport = false;
+
+            foreach (var (dbFile, jsonFile) in databases)
+            {
+                var dbPath = generatedPath + dbFile;
+                var srcPath = jsonPath + jsonFile;
+
+                if (AssetDatabase.LoadAssetAtPath<ScriptableObject>(dbPath) == null)
+                {
+                    if (System.IO.File.Exists(srcPath))
+                    {
+                        needsReimport = true;
+                        Debug.Log($"[MVPSceneSetup] Missing: {dbFile}, will reimport from {jsonFile}");
+                    }
+                }
+            }
+
+            if (needsReimport)
+            {
+                Debug.Log("[MVPSceneSetup] Reimporting Master Data...");
+                AssetDatabase.ImportAsset(jsonPath, ImportAssetOptions.ImportRecursive);
+                AssetDatabase.Refresh();
             }
         }
 
@@ -650,6 +722,200 @@ namespace Sc.Editor.AI
 
             Debug.Log($"[MVPSceneSetup] Created: {prefabPath}");
             return prefab;
+        }
+
+        #endregion
+
+        #region ScreenHeader Prefab
+
+        private static GameObject CreateScreenHeaderPrefab()
+        {
+            var prefabPath = $"{PrefabPath}/ScreenHeader.prefab";
+
+            var existingPrefab = AssetDatabase.LoadAssetAtPath<GameObject>(prefabPath);
+            if (existingPrefab != null) return existingPrefab;
+
+            // 상단 고정 패널 (높이 100)
+            var panel = new GameObject("ScreenHeader");
+            var panelRect = panel.AddComponent<RectTransform>();
+            panelRect.anchorMin = new Vector2(0, 1);
+            panelRect.anchorMax = new Vector2(1, 1);
+            panelRect.pivot = new Vector2(0.5f, 1);
+            panelRect.anchoredPosition = Vector2.zero;
+            panelRect.sizeDelta = new Vector2(0, 100);
+
+            var panelImage = panel.AddComponent<Image>();
+            panelImage.color = new Color(0.08f, 0.08f, 0.12f, 0.95f);
+
+            // Canvas 추가 (가시성 제어용)
+            panel.AddComponent<Canvas>();
+            panel.AddComponent<GraphicRaycaster>();
+
+            // 뒤로가기 버튼 (좌측) - Y=0은 앵커(수직중앙) 기준
+            var backBtn = CreateHeaderButton(panel.transform, "BackButton", "<",
+                new Vector2(50, 0), new Vector2(70, 50), new Color(0.3f, 0.3f, 0.4f, 1f));
+
+            // 타이틀 텍스트 (중앙)
+            var titleText = CreateHeaderTMPText(panel.transform, "TitleText", "",
+                new Vector2(0, 0), new Vector2(400, 50), 28, TextAlignmentOptions.Center);
+
+            // 우측 버튼들 (공지, 메일, 메뉴, 프로필 순서 - 오른쪽에서 왼쪽으로)
+            var profileBtn = CreateHeaderButton(panel.transform, "ProfileButton", "P",
+                new Vector2(-40, 0), new Vector2(50, 50), new Color(0.3f, 0.5f, 0.6f, 1f), true);
+
+            var menuBtn = CreateHeaderButton(panel.transform, "MenuButton", "≡",
+                new Vector2(-100, 0), new Vector2(50, 50), new Color(0.4f, 0.4f, 0.5f, 1f), true);
+
+            var mailBtn = CreateHeaderButton(panel.transform, "MailButton", "✉",
+                new Vector2(-160, 0), new Vector2(50, 50), new Color(0.5f, 0.4f, 0.3f, 1f), true);
+
+            var noticeBtn = CreateHeaderButton(panel.transform, "NoticeButton", "!",
+                new Vector2(-220, 0), new Vector2(50, 50), new Color(0.6f, 0.3f, 0.3f, 1f), true);
+
+            // CurrencyHUD 프리팹 로드 또는 생성
+            var currencyHudPrefab = CreateCurrencyHUDPrefab();
+
+            // CurrencyHUD 인스턴스 배치 (타이틀 우측)
+            GameObject currencyHudInstance = null;
+            if (currencyHudPrefab != null)
+            {
+                currencyHudInstance = Object.Instantiate(currencyHudPrefab);
+                currencyHudInstance.name = "CurrencyHUD";
+                currencyHudInstance.transform.SetParent(panel.transform, false);
+
+                var hudRect = currencyHudInstance.GetComponent<RectTransform>();
+                hudRect.anchorMin = new Vector2(0.5f, 0.5f);
+                hudRect.anchorMax = new Vector2(0.5f, 0.5f);
+                hudRect.anchoredPosition = new Vector2(250, 0);
+                hudRect.localScale = new Vector3(0.8f, 0.8f, 1f);  // 약간 축소
+            }
+
+            // ScreenHeader 컴포넌트 추가
+            var screenHeader = panel.AddComponent<Common.UI.Widgets.ScreenHeader>();
+
+            var so = new SerializedObject(screenHeader);
+            so.FindProperty("_titleText").objectReferenceValue = titleText;
+            so.FindProperty("_backButton").objectReferenceValue = backBtn;
+            so.FindProperty("_profileButton").objectReferenceValue = profileBtn;
+            so.FindProperty("_menuButton").objectReferenceValue = menuBtn;
+            so.FindProperty("_mailButton").objectReferenceValue = mailBtn;
+            so.FindProperty("_noticeButton").objectReferenceValue = noticeBtn;
+
+            if (currencyHudInstance != null)
+            {
+                so.FindProperty("_currencyHUD").objectReferenceValue =
+                    currencyHudInstance.GetComponent<Common.UI.Widgets.CurrencyHUD>();
+            }
+
+            // Database 에셋 로드 및 할당
+            var configDb = AssetDatabase.LoadAssetAtPath<Data.ScreenHeaderConfigDatabase>(
+                "Assets/Data/Generated/ScreenHeaderConfigDatabase.asset");
+            if (configDb != null)
+            {
+                so.FindProperty("_configDatabase").objectReferenceValue = configDb;
+            }
+            else
+            {
+                Debug.LogWarning("[MVPSceneSetup] ScreenHeaderConfigDatabase not found. Run SC/Data/Master Data Generator first.");
+            }
+
+            so.ApplyModifiedPropertiesWithoutUndo();
+
+            var prefab = PrefabUtility.SaveAsPrefabAsset(panel, prefabPath);
+            Object.DestroyImmediate(panel);
+
+            Debug.Log($"[MVPSceneSetup] Created: {prefabPath}");
+            return prefab;
+        }
+
+        private static Button CreateHeaderButton(Transform parent, string name, string label,
+            Vector2 position, Vector2 size, Color bgColor, bool rightAnchor = false)
+        {
+            var go = new GameObject(name);
+            go.transform.SetParent(parent, false);
+
+            var rect = go.AddComponent<RectTransform>();
+
+            if (rightAnchor)
+            {
+                // 우측 앵커 (우측 가장자리, 수직 중앙)
+                rect.anchorMin = new Vector2(1, 0.5f);
+                rect.anchorMax = new Vector2(1, 0.5f);
+            }
+            else
+            {
+                // 좌측 앵커 (좌측 가장자리, 수직 중앙)
+                rect.anchorMin = new Vector2(0, 0.5f);
+                rect.anchorMax = new Vector2(0, 0.5f);
+            }
+
+            rect.pivot = new Vector2(0.5f, 0.5f);
+            rect.anchoredPosition = position;
+            rect.sizeDelta = size;
+
+            var image = go.AddComponent<Image>();
+            image.color = bgColor;
+
+            var button = go.AddComponent<Button>();
+            var colors = button.colors;
+            colors.highlightedColor = bgColor * 1.2f;
+            colors.pressedColor = bgColor * 0.8f;
+            button.colors = colors;
+
+            // Label
+            var labelGo = new GameObject("Label");
+            labelGo.transform.SetParent(go.transform, false);
+
+            var labelRect = labelGo.AddComponent<RectTransform>();
+            labelRect.anchorMin = Vector2.zero;
+            labelRect.anchorMax = Vector2.one;
+            labelRect.sizeDelta = Vector2.zero;
+
+            var labelText = labelGo.AddComponent<TextMeshProUGUI>();
+            labelText.text = label;
+            labelText.fontSize = 24;
+            labelText.alignment = TextAlignmentOptions.Center;
+            labelText.color = Color.white;
+
+            var defaultFont = ProjectEditorSettings.Instance.DefaultFont;
+            if (defaultFont != null)
+            {
+                labelText.font = defaultFont;
+            }
+
+            return button;
+        }
+
+        /// <summary>
+        /// Header 전용 텍스트 생성 (수직 중앙 앵커)
+        /// </summary>
+        private static TMP_Text CreateHeaderTMPText(Transform parent, string name, string content,
+            Vector2 position, Vector2 size, int fontSize, TextAlignmentOptions alignment)
+        {
+            var go = new GameObject(name);
+            go.transform.SetParent(parent, false);
+
+            var rect = go.AddComponent<RectTransform>();
+            // 수평 중앙, 수직 중앙 앵커
+            rect.anchorMin = new Vector2(0.5f, 0.5f);
+            rect.anchorMax = new Vector2(0.5f, 0.5f);
+            rect.pivot = new Vector2(0.5f, 0.5f);
+            rect.anchoredPosition = position;
+            rect.sizeDelta = size;
+
+            var text = go.AddComponent<TextMeshProUGUI>();
+            text.text = content;
+            text.fontSize = fontSize;
+            text.alignment = alignment;
+            text.color = Color.white;
+
+            var defaultFont = ProjectEditorSettings.Instance.DefaultFont;
+            if (defaultFont != null)
+            {
+                text.font = defaultFont;
+            }
+
+            return text;
         }
 
         #endregion
@@ -1143,6 +1409,39 @@ namespace Sc.Editor.AI
                 }
 
                 instance.SetActive(true);  // GameObject는 항상 활성화
+            }
+        }
+
+        private static void InstantiateHeaderPrefab(GameObject prefab, RectTransform container)
+        {
+            if (prefab == null) return;
+
+            // 이미 씬에 있는지 확인
+            var existingName = prefab.name;
+            var existing = container.Find(existingName);
+            if (existing != null)
+            {
+                return;
+            }
+
+            var instance = PrefabUtility.InstantiatePrefab(prefab, container) as GameObject;
+            if (instance != null)
+            {
+                var rect = instance.GetComponent<RectTransform>();
+                // Header는 상단 고정
+                rect.anchorMin = new Vector2(0, 1);
+                rect.anchorMax = new Vector2(1, 1);
+                rect.pivot = new Vector2(0.5f, 1);
+                rect.anchoredPosition = Vector2.zero;
+
+                // Canvas.enabled로 가시성 제어 (기본 숨김 - TitleScreen에서는 Header 사용 안 함)
+                var canvas = instance.GetComponent<Canvas>();
+                if (canvas != null)
+                {
+                    canvas.enabled = false;
+                }
+
+                instance.SetActive(true);
             }
         }
 
