@@ -133,13 +133,18 @@ namespace Sc.Common.UI
                 // 중복 Screen 검사 및 제거
                 await RemoveDuplicateScreen(context.ScreenType);
 
-                // 현재 최상위 항목 Pause
-                CurrentContext?.Pause();
+                // 이전 Screen 참조 (Transition용)
+                var previousScreen = CurrentScreen;
 
-                // 새 Screen 로드 및 진입
+                // 새 Screen 로드 및 진입 (Show 없이)
                 await context.Load();
                 await context.Enter();
-                context.Resume();
+
+                // Transition 설정 및 실행
+                var transition = context.GetTransition();
+                transition.OutScreen = previousScreen;
+                transition.InScreen = context.View;
+                await transition.CrossFade();
 
                 // 스택에 추가
                 _navigationStack.Add(context);
@@ -172,13 +177,17 @@ namespace Sc.Common.UI
 
             try
             {
-                // 현재 최상위 항목 Pause
+                // 현재 최상위 항목 Pause (상호작용 차단)
                 CurrentContext?.Pause();
 
-                // 새 Popup 로드 및 진입
+                // 새 Popup 로드 및 진입 (Show 없이)
                 await context.Load();
                 await context.Enter();
-                context.Resume();
+
+                // Transition 설정 및 실행
+                var transition = context.GetTransition();
+                transition.Target = context.View;
+                await transition.Show();
 
                 // 스택에 추가
                 _navigationStack.Add(context);
@@ -223,16 +232,45 @@ namespace Sc.Common.UI
 
             try
             {
-                // 현재 최상위 항목 Exit
                 var currentContext = CurrentContext;
                 if (currentContext != null)
                 {
+                    // Popup: Hide Transition 실행
+                    if (currentContext is PopupWidget.Context popupContext)
+                    {
+                        var transition = popupContext.GetTransition();
+                        transition.Target = popupContext.View;
+                        await transition.Hide();
+                    }
+                    // Screen: CrossFade Transition 실행
+                    else if (currentContext is ScreenWidget.Context screenContext)
+                    {
+                        // 이전 Screen 찾기
+                        ScreenWidget previousScreen = null;
+                        for (int i = _navigationStack.Count - 2; i >= 0; i--)
+                        {
+                            if (_navigationStack[i] is ScreenWidget.Context prevCtx)
+                            {
+                                previousScreen = prevCtx.View;
+                                break;
+                            }
+                        }
+
+                        var transition = screenContext.GetTransition();
+                        transition.OutScreen = screenContext.View;
+                        transition.InScreen = previousScreen;
+                        await transition.CrossFade();
+                    }
+
                     await currentContext.Exit();
                     _navigationStack.RemoveAt(_navigationStack.Count - 1);
                 }
 
-                // 이전 항목 Resume
-                CurrentContext?.Resume();
+                // Popup인 경우 이전 항목 Resume (Pause 해제)
+                if (currentContext?.ContextType == NavigationContextType.Popup)
+                {
+                    CurrentContext?.Resume();
+                }
             }
             finally
             {
@@ -293,6 +331,11 @@ namespace Sc.Common.UI
                     if (_navigationStack[i] is PopupWidget.Context popupContext &&
                         popupContext.View == popup)
                     {
+                        // Transition으로 Hide
+                        var transition = popupContext.GetTransition();
+                        transition.Target = popupContext.View;
+                        await transition.Hide();
+
                         // 최상위 항목인 경우
                         if (i == _navigationStack.Count - 1)
                         {
@@ -338,9 +381,14 @@ namespace Sc.Common.UI
                 // 뒤에서부터 Popup만 제거
                 for (int i = _navigationStack.Count - 1; i >= 0; i--)
                 {
-                    if (_navigationStack[i].ContextType == NavigationContextType.Popup)
+                    if (_navigationStack[i] is PopupWidget.Context popupContext)
                     {
-                        await _navigationStack[i].Exit();
+                        // Transition으로 Hide
+                        var transition = popupContext.GetTransition();
+                        transition.Target = popupContext.View;
+                        await transition.Hide();
+
+                        await popupContext.Exit();
                         _navigationStack.RemoveAt(i);
                     }
                 }
