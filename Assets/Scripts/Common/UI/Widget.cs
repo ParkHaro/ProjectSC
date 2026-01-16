@@ -14,11 +14,27 @@ namespace Sc.Common.UI
         private bool _isInitialized;
         private bool _isVisible;
         private Canvas _canvas;
+        private CanvasGroup _canvasGroup;
 
         public Widget Parent => _parent;
         public IReadOnlyList<Widget> Children => _children;
         public bool IsInitialized => _isInitialized;
         public bool IsVisible => _isVisible;
+        public CanvasGroup CanvasGroup => _canvasGroup;
+
+        /// <summary>
+        /// CanvasGroup 반환. 없으면 자동 추가.
+        /// </summary>
+        public CanvasGroup GetOrAddCanvasGroup()
+        {
+            if (_canvasGroup == null)
+            {
+                _canvasGroup = GetComponent<CanvasGroup>();
+                if (_canvasGroup == null)
+                    _canvasGroup = gameObject.AddComponent<CanvasGroup>();
+            }
+            return _canvasGroup;
+        }
 
         #region Lifecycle
 
@@ -186,6 +202,7 @@ namespace Sc.Common.UI
         protected virtual void Awake()
         {
             _canvas = GetComponent<Canvas>();
+            _canvasGroup = GetComponent<CanvasGroup>();
             CollectChildWidgets();
         }
 
