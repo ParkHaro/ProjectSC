@@ -1,4 +1,3 @@
-using Sc.Core;
 using Sc.Data;
 using Sc.Event.UI;
 using Sc.Foundation;
@@ -46,6 +45,15 @@ namespace Sc.Common.UI.Widgets
             }
 
             Instance = this;
+        }
+
+        /// <summary>
+        /// Unity Start에서 Widget 초기화 시작.
+        /// ScreenHeader는 Navigation 시스템 밖에 있으므로 자체적으로 Initialize() 호출.
+        /// </summary>
+        private void Start()
+        {
+            Initialize();
         }
 
         protected override void OnInitialize()
@@ -97,6 +105,12 @@ namespace Sc.Common.UI.Widgets
         /// <param name="configId">설정 ID (예: "lobby_default", "gacha_main")</param>
         public void Configure(string configId)
         {
+            // 방어적 초기화: Start() 이전에 Configure() 호출되는 경우 대비
+            if (!IsInitialized)
+            {
+                Initialize();
+            }
+
             if (_configDatabase == null)
             {
                 Debug.LogWarning("[ScreenHeader] ConfigDatabase not assigned");
@@ -119,6 +133,12 @@ namespace Sc.Common.UI.Widgets
         /// </summary>
         public void Configure(ScreenHeaderConfigData config)
         {
+            // 방어적 초기화: Start() 이전에 Configure() 호출되는 경우 대비
+            if (!IsInitialized)
+            {
+                Initialize();
+            }
+
             if (config == null)
             {
                 Debug.LogWarning("[ScreenHeader] Config is null");
