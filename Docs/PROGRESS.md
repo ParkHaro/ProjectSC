@@ -19,7 +19,7 @@
 | 1 | 공통 모듈 | ✅ 설계 완료 | RewardInfo, TimeService, SystemPopup, RewardPopup |
 | 2 | 상점 | ✅ 설계 완료 | ShopScreen, ShopHandler |
 | 3 | 스테이지 진입 | ✅ 설계 완료 | StageDashboardScreen, StageListScreen, PartySelectScreen |
-| 4 | 라이브 이벤트 | ⬜ 대기 | EventDashboard, EventDetail |
+| 4 | 라이브 이벤트 | ✅ 설계 완료 | LiveEventScreen, EventDetailScreen, EventSubContent |
 | 5 | 기존 강화 | ⬜ 대기 | 가챠 연출, 캐릭터 필터 |
 
 **이전 작업 (MVP 완료)**: ✅
@@ -141,27 +141,27 @@ UI:
 - [ ] UI 구현 (Sc.Contents.Stage Assembly)
 ```
 
-#### Phase 4: 라이브 이벤트 ⬜
+#### Phase 4: 라이브 이벤트 ✅ 설계완료
 > 스펙: [LiveEvent.md](Specs/LiveEvent.md)
 
 ```
-마스터 데이터:
-- [ ] EventType.cs, MissionConditionType.cs
-- [ ] LiveEventData.cs, EventMissionData.cs
-- [ ] LiveEvent.json, EventMission.json
+설계 완료:
+- [x] EventType, EventSubContentType, MissionConditionType
+- [x] EventSubContent (모듈형 서브컨텐츠)
+- [x] EventCurrencyPolicy (유예 기간 + 범용 재화 전환)
+- [x] LiveEventData, EventMissionData, EventMissionGroup
+- [x] LiveEventProgress, EventMissionProgress
+- [x] Request/Response (GetActiveEvents, ClaimMission, VisitEvent)
+- [x] UI 설계 (LiveEventScreen, EventDetailScreen, 탭 구조)
+- [x] 에러 코드 (6001~6007)
 
-유저 데이터:
-- [ ] LiveEventProgress, EventMissionProgress
-- [ ] UserSaveData.EventProgress
-
-API:
-- [ ] GetActiveEventsRequest/Response
-- [ ] ClaimEventMissionRequest/Response
-- [ ] LocalApiClient.GetActiveEventsAsync, ClaimEventMissionAsync
-
-UI:
-- [ ] Sc.Contents.Event Assembly 생성
-- [ ] EventDashboardScreen, EventDetailScreen, EventMissionItem
+구현 대기:
+- [ ] Enums 구현 (EventType, EventSubContentType, MissionConditionType)
+- [ ] 마스터 데이터 구현 (LiveEventData, EventMissionData)
+- [ ] 유저 데이터 구현 (LiveEventProgress)
+- [ ] Request/Response 구현
+- [ ] LocalApiClient API 구현
+- [ ] UI 구현 (Sc.Contents.Event Assembly)
 ```
 
 #### Phase 5: 기존 강화 ⬜
@@ -518,6 +518,24 @@ Phase 4: 검증
 ## 작업 로그
 
 ### 2026-01-18
+- [x] Phase 4 라이브 이벤트 시스템 설계 완료
+  - [x] LiveEvent.md v2.0 구조 설계
+    - [x] 모듈형 서브컨텐츠 (EventSubContent)
+    - [x] EventType: Story, Collection, Raid, Login, Celebration, Collaboration
+    - [x] EventSubContentType: Mission, Stage, Shop, Minigame, Story
+  - [x] 이벤트 재화 정책 설계
+    - [x] EventCurrencyPolicy (유예 기간 + 범용 재화 전환)
+  - [x] 미션 시스템 설계
+    - [x] MissionConditionType (16종)
+    - [x] EventMissionData, EventMissionGroup
+    - [x] EventMissionProgress
+  - [x] UI 설계
+    - [x] LiveEventScreen (배너 목록)
+    - [x] EventDetailScreen (서브컨텐츠 탭)
+    - [x] EventMissionTab, EventStageTab, EventShopTab
+  - [x] Request/Response 설계
+    - [x] GetActiveEvents, ClaimEventMission, VisitEvent
+  - [x] 에러 코드 (6001~6007)
 - [x] Phase 3 스테이지 시스템 설계 완료
   - [x] Stage.md v2.0 구조 설계
     - [x] StageDashboardScreen (타입 선택 대시보드)
