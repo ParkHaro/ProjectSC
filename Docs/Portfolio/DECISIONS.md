@@ -1179,6 +1179,68 @@ Services.Register<ISaveStorage>(new MockSaveStorage());
 
 ---
 
+## SaveManager 저장소 추상화 (ISaveStorage)
+
+**일자**: 2026-01-18
+**상태**: 결정됨
+**관련 커밋**: (이번 커밋)
+
+### 컨텍스트
+- SaveManager 구현 시 저장소 의존성 처리 방식 결정 필요
+- LocalApiClient에서 직접 파일 I/O 수행 중 → 테스트 어려움
+- Mock 저장소로 교체 가능한 구조 필요
+
+### 선택지
+1. **직접 파일 I/O**
+   - 장점: 구현 단순, 추가 추상화 없음
+   - 단점: 테스트 시 실제 파일 생성/삭제 필요, 테스트 격리 어려움
+
+2. **ISaveStorage 인터페이스 추상화**
+   - 장점: 테스트 시 MockSaveStorage 주입, 저장소 교체 용이 (PlayerPrefs, Cloud 등)
+   - 단점: 인터페이스 레이어 추가
+
+3. **Static 헬퍼 클래스**
+   - 장점: 어디서든 호출 가능
+   - 단점: Mock 교체 불가, 테스트 어려움
+
+### 결정
+**ISaveStorage 인터페이스 추상화 (선택지 2)** 선택
+
+**구조**:
+```
+Sc.Foundation/
+├── ISaveStorage.cs      # 저장소 인터페이스
+└── FileSaveStorage.cs   # 파일 기반 구현
+
+Sc.Core/
+├── Interfaces/ISaveMigration.cs
+├── Services/SaveMigrator.cs
+└── Managers/SaveManager.cs
+
+Sc.Tests/
+└── Mocks/MockSaveStorage.cs
+```
+
+**이유**:
+- 테스트 시 MockSaveStorage로 교체하여 파일 I/O 없이 테스트 가능
+- LocalApiClient → ISaveStorage 의존성 주입으로 리팩토링
+- 추후 PlayerPrefs, Cloud Save 등 다른 저장소로 교체 용이
+- Foundation에 ISaveStorage 배치하여 순환 참조 방지 (Core, Packet 모두 참조 가능)
+
+### 결과
+- ISaveStorage: Save, Load, Exists, Delete 메서드 정의
+- FileSaveStorage: Application.persistentDataPath 기반 JSON 저장
+- MockSaveStorage: Dictionary 기반 메모리 저장 (테스트용)
+- SaveManager: Singleton, 자동 저장, 마이그레이션 지원
+- LocalApiClient: ISaveStorage 생성자 주입으로 변경
+
+### 회고
+- 초기 LocalApiClient에 저장 로직이 하드코딩되어 있어 테스트 불가능했음
+- ISaveStorage 분리 후 NUnit 단위 테스트 작성 가능해짐 (37개 테스트)
+- **배운 점**: 외부 의존성(파일, 네트워크)은 항상 인터페이스로 추상화해야 테스트 가능
+
+---
+
 ## [템플릿] 새 의사결정
 
 **일자**: YYYY-MM-DD

@@ -19,30 +19,5 @@ namespace Sc.Tests
         DateTime ServerDateTime { get; }
     }
 
-    /// <summary>
-    /// 테스트용 저장소 인터페이스.
-    /// Phase 0 구현 시 Core로 이동 예정.
-    /// </summary>
-    public interface ISaveStorage
-    {
-        /// <summary>
-        /// 데이터 저장
-        /// </summary>
-        bool Save(string key, string data);
-
-        /// <summary>
-        /// 데이터 로드
-        /// </summary>
-        string Load(string key);
-
-        /// <summary>
-        /// 데이터 존재 여부
-        /// </summary>
-        bool Exists(string key);
-
-        /// <summary>
-        /// 데이터 삭제
-        /// </summary>
-        bool Delete(string key);
-    }
+    // ISaveStorage는 Sc.Core.ISaveStorage로 이동됨
 }

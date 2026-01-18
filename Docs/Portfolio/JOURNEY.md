@@ -320,6 +320,56 @@ Assets/Scripts/
 
 ---
 
+## Phase 12: Foundation 시스템 구현
+
+### 테스트 인프라 Phase 1
+
+**커밋**: `16d33ee` Add test infrastructure phase 1
+- 테스트 인프라 기본 구조 구현
+- SystemTestRunner 베이스 클래스
+- ITestInterfaces (ITimeService, ISaveStorage)
+
+**커밋**: `65eb307` Refactor to system-based implementation approach
+- 시스템 기반 구현 접근법으로 리팩터링
+- Locator 패턴 설정 방식 개선
+
+### Foundation 시스템 구현
+
+**커밋**: `4815dee` Add Foundation systems with unit tests
+- **Log 시스템**: Log, LogLevel, LogCategory (Unity Debug.Log 래퍼)
+- **Error 시스템**: ErrorCode, Result<T> 패턴
+- **SaveManager**: 저장 추상화, 버전 마이그레이션
+- **상세**: [DECISIONS.md](DECISIONS.md#savemanager-저장소-추상화-isavestorage) 참조
+
+**핵심 구현**:
+| 컴포넌트 | 역할 | 위치 |
+|----------|------|------|
+| ISaveStorage | 저장소 추상화 인터페이스 | Foundation |
+| FileSaveStorage | 파일 기반 저장소 구현체 | Foundation |
+| MockSaveStorage | 테스트용 메모리 저장소 | Tests/Mocks |
+| SaveMigrator | 버전 마이그레이션 체인 | Core/Services |
+| SaveManager | Singleton, 자동 저장, 마이그레이션 | Core/Managers |
+
+**테스트 인프라**:
+| 테스트 | 대상 | 방식 |
+|--------|------|------|
+| SaveStorageTests | FileSaveStorage | NUnit (17개 테스트) |
+| SaveMigratorTests | SaveMigrator | NUnit (5개 테스트) |
+| MockSaveStorageTests | MockSaveStorage | NUnit (12개 테스트) |
+| SaveManagerTestRunner | SaveManager 통합 | 런타임 시나리오 |
+
+**설계 결정**:
+- ISaveStorage를 Foundation에 배치 (순환 참조 방지)
+- 테스트 가능성을 위한 생성자 DI 패턴 도입
+- NUnit 기반 에디터 테스트와 런타임 시나리오 테스트 병행
+
+**배운 점**:
+- 순환 참조 문제는 인터페이스 위치 조정으로 해결 가능
+- NUnit 테스트는 빠른 피드백에 효과적, 런타임 테스트는 실제 환경 검증에 효과적
+- Mock 객체를 별도로 테스트하면 테스트 신뢰도 향상
+
+---
+
 ## 진행 중
 
 현재 진행 중인 작업은 [PROGRESS.md](../PROGRESS.md) 참조

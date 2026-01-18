@@ -6,7 +6,7 @@ namespace Sc.Tests
     /// 테스트용 저장소 Mock.
     /// 메모리 기반으로 데이터를 저장하며, 테스트 간 격리 가능.
     /// </summary>
-    public class MockSaveStorage : ISaveStorage
+    public class MockSaveStorage : Sc.Foundation.ISaveStorage
     {
         private readonly Dictionary<string, string> _storage = new();
 
@@ -31,15 +31,19 @@ namespace Sc.Tests
             return _storage.Keys;
         }
 
-        public bool Save(string key, string data)
+        public Sc.Foundation.Result<bool> Save(string key, string data)
         {
             _storage[key] = data;
-            return true;
+            return Sc.Foundation.Result<bool>.Success(true);
         }
 
-        public string Load(string key)
+        public Sc.Foundation.Result<string> Load(string key)
         {
-            return _storage.TryGetValue(key, out var data) ? data : null;
+            if (_storage.TryGetValue(key, out var data))
+            {
+                return Sc.Foundation.Result<string>.Success(data);
+            }
+            return Sc.Foundation.Result<string>.Failure(Sc.Foundation.ErrorCode.LoadFailed);
         }
 
         public bool Exists(string key)
@@ -47,9 +51,10 @@ namespace Sc.Tests
             return _storage.ContainsKey(key);
         }
 
-        public bool Delete(string key)
+        public Sc.Foundation.Result<bool> Delete(string key)
         {
-            return _storage.Remove(key);
+            _storage.Remove(key);
+            return Sc.Foundation.Result<bool>.Success(true);
         }
     }
 }

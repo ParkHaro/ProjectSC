@@ -44,7 +44,7 @@
 #### Phase B: 기반 인프라 (Phase A 의존)
 | # | 시스템 | 상태 | 의존성 | 스펙 문서 |
 |---|--------|------|--------|-----------|
-| 3 | SaveManager | ⬜ | Result<T> | 마일스톤 내 |
+| 3 | SaveManager | ✅ | Result<T> | 마일스톤 내 |
 | 4 | LoadingIndicator | ⬜ | Widget (있음) | 마일스톤 내 |
 
 #### Phase C: 공통 데이터/서비스 (독립)
@@ -108,6 +108,7 @@
 | 1차 | Navigation 테스트 | ✅ 완료 | 첫 번째 시스템 |
 | 2차 | Unity Test Framework | ✅ 완료 | NUnit 기반 단위 테스트 |
 | 2차 | Foundation 테스트 | ✅ 완료 | Log, Result, ErrorMessages (36개) |
+| 2차 | Core 테스트 | ✅ 완료 | SaveStorage, SaveMigrator, MockSaveStorage (36개) |
 | 3차 | 시스템 확장 | ⬜ 대기 | Loading, Popup, ... |
 
 ### 1차 구축 체크리스트
@@ -512,9 +513,59 @@ Phase 4: 검증
 
 ---
 
+### SaveManager 체크리스트 ✅
+
+```
+인터페이스:
+- [x] ISaveStorage.cs (저장소 추상화) → Foundation/ISaveStorage.cs
+- [x] ISaveMigration.cs (마이그레이션 추상화) → Core/Interfaces/
+
+구현:
+- [x] FileSaveStorage.cs (파일 기반 저장소) → Foundation/FileSaveStorage.cs
+- [x] SaveMigrator.cs (마이그레이션 체인 실행) → Core/Services/
+- [x] SaveManager.cs (저장/로드 관리, Singleton) → Core/Managers/
+
+리팩토링:
+- [x] LocalApiClient에서 저장 로직 분리 (ISaveStorage 의존성 주입)
+- [x] LocalApiClient → ISaveStorage 연동
+
+테스트:
+- [x] SaveManagerTestScenarios.cs (시나리오 기반 테스트)
+- [x] SaveManagerTestRunner.cs (테스트 러너)
+- [x] SaveStorageTests.cs (NUnit, 17개 테스트)
+- [x] SaveMigratorTests.cs (NUnit, 마이그레이션 검증)
+- [x] MockSaveStorageTests.cs (NUnit, Mock 동작 검증)
+```
+
+---
+
 ## 작업 로그
 
+### 2026-01-18 (SaveManager 구현)
+- [x] SaveManager 시스템 구현 완료
+  - [x] ISaveStorage.cs (Foundation) - 저장소 인터페이스
+  - [x] FileSaveStorage.cs (Foundation) - 파일 기반 저장소 구현
+  - [x] ISaveMigration.cs (Core/Interfaces) - 마이그레이션 인터페이스
+  - [x] SaveMigrator.cs (Core/Services) - 마이그레이션 체인 실행
+  - [x] SaveManager.cs (Core/Managers) - Singleton 저장 관리자
+- [x] LocalApiClient 리팩토링
+  - [x] ISaveStorage 의존성 주입 방식 적용
+  - [x] 직접 파일 I/O → ISaveStorage 사용으로 변경
+  - [x] 테스트 가능한 구조로 개선
+- [x] MockSaveStorage 업데이트
+  - [x] Sc.Foundation.ISaveStorage 구현으로 변경
+  - [x] Result<T> 반환 타입 적용
+- [x] SaveManager 테스트 작성
+  - [x] SaveManagerTestScenarios.cs (6개 시나리오)
+  - [x] SaveManagerTestRunner.cs (런타임 테스트 러너)
+  - [x] 에디터 메뉴 테스트 지원
+
 ### 2026-01-18 (계속)
+- [x] SaveManager NUnit 단위 테스트 추가
+  - [x] SaveStorageTests.cs (17개 테스트) - FileSaveStorage 검증
+  - [x] SaveMigratorTests.cs - NeedsMigration, Migrate, Register 검증
+  - [x] MockSaveStorageTests.cs - Mock 인터페이스 동작 검증
+  - [x] Sc.Editor.Tests.asmdef에 Sc.Core, Sc.Data 참조 추가
 - [x] Unity Test Framework 기반 단위 테스트 추가
   - [x] LogTests.cs (11개 테스트) - Log 레벨, 카테고리, Output 관리
   - [x] ResultTests.cs (14개 테스트) - Success/Failure, OnSuccess/OnFailure, Map

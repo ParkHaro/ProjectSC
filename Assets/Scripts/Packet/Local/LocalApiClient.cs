@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.IO;
 using Cysharp.Threading.Tasks;
 using Sc.Data;
 using UnityEngine;
@@ -13,9 +12,10 @@ namespace Sc.Packet
     /// </summary>
     public class LocalApiClient : IApiClient
     {
-        private const string SaveFileName = "user_save_data.json";
+        private const string SaveKey = "user_save";
 
         private readonly int _simulatedLatencyMs;
+        private readonly Sc.Foundation.ISaveStorage _storage;
         private UserSaveData _userData;
         private string _sessionToken;
         private bool _isInitialized;
@@ -23,10 +23,20 @@ namespace Sc.Packet
         public bool IsInitialized => _isInitialized;
         public string SessionToken => _sessionToken;
 
-        private string SaveFilePath => Path.Combine(Application.persistentDataPath, SaveFileName);
-
+        /// <summary>
+        /// 기본 생성자 (FileSaveStorage 사용)
+        /// </summary>
         public LocalApiClient(int simulatedLatencyMs = 100)
+            : this(new Sc.Foundation.FileSaveStorage(), simulatedLatencyMs)
         {
+        }
+
+        /// <summary>
+        /// 의존성 주입 생성자 (테스트용)
+        /// </summary>
+        public LocalApiClient(Sc.Foundation.ISaveStorage storage, int simulatedLatencyMs = 100)
+        {
+            _storage = storage ?? throw new ArgumentNullException(nameof(storage));
             _simulatedLatencyMs = simulatedLatencyMs;
         }
 
@@ -39,33 +49,40 @@ namespace Sc.Packet
             await UniTask.Delay(_simulatedLatencyMs);
 
             // 기존 저장 데이터 로드 시도
-            if (File.Exists(SaveFilePath))
+            if (_storage.Exists(SaveKey))
             {
-                try
+                var loadResult = _storage.Load(SaveKey);
+                if (loadResult.IsSuccess)
                 {
-                    var json = await File.ReadAllTextAsync(SaveFilePath);
-                    _userData = JsonUtility.FromJson<UserSaveData>(json);
-
-                    // 마이그레이션 적용 (버전 업그레이드)
-                    if (_userData.Version < UserSaveData.CurrentVersion)
+                    try
                     {
-                        Debug.Log($"[LocalApiClient] 데이터 마이그레이션: v{_userData.Version} → v{UserSaveData.CurrentVersion}");
-                        _userData = UserSaveData.Migrate(_userData);
-                        await SaveUserDataAsync();
-                    }
+                        _userData = JsonUtility.FromJson<UserSaveData>(loadResult.Value);
 
-                    // EventCurrency null 체크 (JSON 역직렬화 특성)
-                    if (_userData.EventCurrency.Currencies == null)
+                        // 마이그레이션 적용 (버전 업그레이드)
+                        if (_userData.Version < UserSaveData.CurrentVersion)
+                        {
+                            Debug.Log($"[LocalApiClient] 데이터 마이그레이션: v{_userData.Version} → v{UserSaveData.CurrentVersion}");
+                            _userData = UserSaveData.Migrate(_userData);
+                            SaveUserData();
+                        }
+
+                        // EventCurrency null 체크 (JSON 역직렬화 특성)
+                        if (_userData.EventCurrency.Currencies == null)
+                        {
+                            _userData.EventCurrency = EventCurrencyData.CreateDefault();
+                        }
+
+                        Debug.Log($"[LocalApiClient] 저장 데이터 로드 완료: {_userData.Profile.Nickname}");
+                    }
+                    catch (Exception e)
                     {
-                        _userData.EventCurrency = EventCurrencyData.CreateDefault();
+                        Debug.LogWarning($"[LocalApiClient] 저장 데이터 파싱 실패: {e.Message}");
+                        _userData = default;
                     }
-
-                    Debug.Log($"[LocalApiClient] 저장 데이터 로드 완료: {_userData.Profile.Nickname}");
                 }
-                catch (Exception e)
+                else
                 {
-                    Debug.LogWarning($"[LocalApiClient] 저장 데이터 로드 실패: {e.Message}");
-                    _userData = default;
+                    Debug.LogWarning($"[LocalApiClient] 저장 데이터 로드 실패: {loadResult.Message}");
                 }
             }
 
@@ -114,19 +131,20 @@ namespace Sc.Packet
                 // 초기 캐릭터 지급 (튜토리얼 캐릭터)
                 _userData.Characters.Add(OwnedCharacter.Create("char_005"));
 
-                await SaveUserDataAsync();
+                SaveUserData();
                 Debug.Log($"[LocalApiClient] 신규 유저 생성: {nickname}");
             }
             else
             {
                 // 기존 유저 로그인
                 _userData.Profile.LastLoginAt = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
-                await SaveUserDataAsync();
+                SaveUserData();
                 Debug.Log($"[LocalApiClient] 기존 유저 로그인: {_userData.Profile.Nickname}");
             }
 
             _sessionToken = Guid.NewGuid().ToString();
 
+            await UniTask.CompletedTask;
             return LoginResponse.Success(_userData, isNewUser, _sessionToken);
         }
 
@@ -195,7 +213,7 @@ namespace Sc.Packet
             // 천장 정보 업데이트
             UpdatePityInfo(request.GachaPoolId, currentPity, pityInfo.TotalPullCount + pullCount);
 
-            await SaveUserDataAsync();
+            SaveUserData();
 
             // Delta 생성
             var delta = new UserDataDelta
@@ -205,6 +223,7 @@ namespace Sc.Packet
                 GachaPity = _userData.GachaPity
             };
 
+            await UniTask.CompletedTask;
             return GachaResponse.Success(results, delta, currentPity);
         }
 
@@ -234,7 +253,7 @@ namespace Sc.Packet
                 }
                 _userData.Currency.Gold += goldReward;
 
-                await SaveUserDataAsync();
+                SaveUserData();
 
                 var rewards = new List<PurchaseRewardItem>
                 {
@@ -248,9 +267,11 @@ namespace Sc.Packet
 
                 var delta = UserDataDelta.WithCurrency(_userData.Currency);
 
+                await UniTask.CompletedTask;
                 return ShopPurchaseResponse.Success(request.ProductId, rewards, delta);
             }
 
+            await UniTask.CompletedTask;
             return ShopPurchaseResponse.Fail(1002, "존재하지 않는 상품입니다.");
         }
 
@@ -258,18 +279,19 @@ namespace Sc.Packet
 
         #region Private Methods
 
-        private async UniTask SaveUserDataAsync()
+        private void SaveUserData()
         {
-            try
+            _userData.LastSyncAt = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
+            var json = JsonUtility.ToJson(_userData, true);
+            var result = _storage.Save(SaveKey, json);
+            
+            if (result.IsSuccess)
             {
-                _userData.LastSyncAt = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
-                var json = JsonUtility.ToJson(_userData, true);
-                await File.WriteAllTextAsync(SaveFilePath, json);
                 Debug.Log("[LocalApiClient] 데이터 저장 완료");
             }
-            catch (Exception e)
+            else
             {
-                Debug.LogError($"[LocalApiClient] 데이터 저장 실패: {e.Message}");
+                Debug.LogError($"[LocalApiClient] 데이터 저장 실패: {result.Message}");
             }
         }
 
