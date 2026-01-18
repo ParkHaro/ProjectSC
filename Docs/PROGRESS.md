@@ -45,7 +45,7 @@
 | # | 시스템 | 상태 | 의존성 | 스펙 문서 |
 |---|--------|------|--------|-----------|
 | 3 | SaveManager | ✅ | Result<T> | 마일스톤 내 |
-| 4 | LoadingIndicator | ⬜ | Widget (있음) | 마일스톤 내 |
+| 4 | LoadingIndicator | ✅ | Widget (있음) | ✅ Common/UI/Loading.md |
 
 #### Phase C: 공통 데이터/서비스 (독립)
 | # | 시스템 | 상태 | 의존성 | 스펙 문서 |
@@ -109,7 +109,8 @@
 | 2차 | Unity Test Framework | ✅ 완료 | NUnit 기반 단위 테스트 |
 | 2차 | Foundation 테스트 | ✅ 완료 | Log, Result, ErrorMessages (36개) |
 | 2차 | Core 테스트 | ✅ 완료 | SaveStorage, SaveMigrator, MockSaveStorage (36개) |
-| 3차 | 시스템 확장 | ⬜ 대기 | Loading, Popup, ... |
+| 3차 | Common 테스트 | ✅ 완료 | LoadingService, LoadingConfig (16개) |
+| 4차 | 시스템 확장 | ⬜ 대기 | Popup, ... |
 
 ### 1차 구축 체크리스트
 
@@ -539,7 +540,34 @@ Phase 4: 검증
 
 ---
 
+### LoadingIndicator 체크리스트 ✅
+
+```
+코어 구현:
+- [x] LoadingType.cs (Enum: FullScreen, Indicator, Progress)
+- [x] LoadingConfig.cs (ScriptableObject: 타임아웃, 애니메이션 설정)
+- [x] LoadingService.cs (Singleton: 레퍼런스 카운팅, 타임아웃)
+- [x] LoadingWidget.cs (Widget: UI 표시, DOTween 애니메이션)
+
+테스트:
+- [x] LoadingServiceTests.cs (레퍼런스 카운팅, 상태 전환)
+- [x] LoadingConfigTests.cs (기본값 검증)
+```
+
+---
+
 ## 작업 로그
+
+### 2026-01-18 (LoadingIndicator 구현)
+- [x] LoadingIndicator 시스템 구현 완료
+  - [x] LoadingType.cs - 로딩 타입 열거형 (FullScreen, Indicator, Progress)
+  - [x] LoadingConfig.cs - ScriptableObject 설정 (타임아웃, 애니메이션)
+  - [x] LoadingService.cs - Singleton 서비스 (레퍼런스 카운팅, 타임아웃)
+  - [x] LoadingWidget.cs - Widget UI (DOTween 페이드, 스피너 회전)
+- [x] LoadingIndicator 단위 테스트 작성
+  - [x] LoadingServiceTests.cs (레퍼런스 카운팅, 상태 전환)
+  - [x] LoadingConfigTests.cs (기본값 검증)
+- [x] 스펙 문서 Loading.md 상태 반영
 
 ### 2026-01-18 (SaveManager 구현)
 - [x] SaveManager 시스템 구현 완료

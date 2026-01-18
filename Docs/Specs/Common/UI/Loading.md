@@ -2,11 +2,11 @@
 type: spec
 assembly: Sc.Common
 category: UI
-status: draft
+status: implemented
 version: "1.0"
-dependencies: [Widget, EventManager]
+dependencies: [Widget, Singleton]
 created: 2026-01-17
-updated: 2026-01-17
+updated: 2026-01-18
 ---
 
 # 로딩 UI (Loading UI)
