@@ -50,7 +50,7 @@
 #### Phase C: 공통 데이터/서비스 (독립)
 | # | 시스템 | 상태 | 의존성 | 스펙 문서 |
 |---|--------|------|--------|-----------|
-| 5 | Reward | ⬜ | 없음 | ✅ Common/Reward.md |
+| 5 | Reward | ✅ | 없음 | ✅ Common/Reward.md |
 | 6 | TimeService | ⬜ | 없음 | 마일스톤 내 |
 
 #### Phase D: 공통 UI (Phase C 의존)
@@ -110,6 +110,7 @@
 | 2차 | Foundation 테스트 | ✅ 완료 | Log, Result, ErrorMessages (36개) |
 | 2차 | Core 테스트 | ✅ 완료 | SaveStorage, SaveMigrator, MockSaveStorage (36개) |
 | 3차 | Common 테스트 | ✅ 완료 | LoadingService, LoadingConfig (16개) |
+| 3차 | Reward 테스트 | ✅ 완료 | RewardInfo, RewardProcessor, RewardHelper (61개) |
 | 4차 | 시스템 확장 | ⬜ 대기 | Popup, ... |
 
 ### 1차 구축 체크리스트
@@ -556,7 +557,51 @@ Phase 4: 검증
 
 ---
 
+### Reward 체크리스트 ✅
+
+```
+Enum:
+- [x] RewardType.cs (Currency, Item, Character, PlayerExp)
+- [x] ItemCategory.cs (Equipment, Consumable, Material, CharacterShard, Furniture, Ticket)
+
+구조체:
+- [x] RewardInfo.cs (Data/Structs/Common/)
+
+유틸리티:
+- [x] RewardProcessor.cs (Core/Utility/) - Delta 생성, 검증
+- [x] RewardHelper.cs (Core/Utility/) - UI 헬퍼
+
+테스트:
+- [x] RewardInfoTests.cs (16개 테스트) - 생성자, 팩토리 메서드, ToString
+- [x] RewardProcessorTests.cs (28개 테스트) - CreateDelta, ValidateRewards, CanApplyRewards
+- [x] RewardHelperTests.cs (17개 테스트) - FormatText, GetIconPath, GetRarityColor, SortByRarity
+
+문서:
+- [x] Reward.md v2.0 업데이트
+```
+
+---
+
 ## 작업 로그
+
+### 2026-01-19 (Reward 시스템 구현)
+- [x] Reward 시스템 구현 완료
+  - [x] RewardType.cs - 보상 타입 열거형 (Currency, Item, Character, PlayerExp)
+  - [x] ItemCategory.cs - 아이템 세부 분류 (Equipment, Consumable, Material, CharacterShard, Furniture, Ticket)
+  - [x] RewardInfo.cs - 보상 정보 구조체 (팩토리 메서드 포함)
+  - [x] RewardProcessor.cs - Delta 생성, 검증 (서버 로직)
+  - [x] RewardHelper.cs - UI 헬퍼 (포맷팅, 아이콘, 희귀도 색상)
+- [x] Reward.md 스펙 문서 v2.0 업데이트
+  - [x] 마일스톤 기준으로 RewardType 변경 (5개 → 4개)
+  - [x] ItemCategory 추가
+  - [x] RewardProcessor/RewardHelper 분리
+- [x] Reward 시스템 단위 테스트 작성 (61개)
+  - [x] RewardInfoTests.cs (16개) - 생성자, 팩토리 메서드, ToString
+  - [x] RewardProcessorTests.cs (28개) - CreateDelta, ValidateRewards, CanApplyRewards
+  - [x] RewardHelperTests.cs (17개) - FormatText, GetIconPath, GetRarityColor, SortByRarity
+- [x] 컴파일 에러 수정
+  - [x] OwnedCharacter.CreateNew → Create
+  - [x] Rarity enum 값 (N, R, SR, SSR)
 
 ### 2026-01-18 (LoadingIndicator 구현)
 - [x] LoadingIndicator 시스템 구현 완료
