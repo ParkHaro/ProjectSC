@@ -106,7 +106,8 @@
 |------|------|------|------|
 | 1차 | 베이스 인프라 | ✅ 완료 | Services, SystemTestRunner |
 | 1차 | Navigation 테스트 | ✅ 완료 | 첫 번째 시스템 |
-| 2차 | 자동화 연동 | ⬜ 대기 | Unity Test Framework |
+| 2차 | Unity Test Framework | ✅ 완료 | NUnit 기반 단위 테스트 |
+| 2차 | Foundation 테스트 | ✅ 완료 | Log, Result, ErrorMessages (36개) |
 | 3차 | 시스템 확장 | ⬜ 대기 | Loading, Popup, ... |
 
 ### 1차 구축 체크리스트
@@ -514,6 +515,11 @@ Phase 4: 검증
 ## 작업 로그
 
 ### 2026-01-18 (계속)
+- [x] Unity Test Framework 기반 단위 테스트 추가
+  - [x] LogTests.cs (11개 테스트) - Log 레벨, 카테고리, Output 관리
+  - [x] ResultTests.cs (14개 테스트) - Success/Failure, OnSuccess/OnFailure, Map
+  - [x] ErrorMessagesTests.cs (11개 테스트) - GetKey, GetMessage, LocalizeFunc
+  - [x] Sc.Editor.Tests/Foundation/ 폴더 구조 생성
 - [x] ErrorHandling 시스템 구현 완료
   - [x] ErrorCode.cs (System/Network/Data/Auth/Game/UI 대역)
   - [x] ErrorMessages.cs (ErrorCode → StringData 키 매핑)
