@@ -166,8 +166,8 @@ Navigation 테스트:
 
 | Phase | 포함 시스템 | 상태 |
 |-------|------------|------|
-| 0 | Logging, ErrorHandling, SaveManager, LoadingIndicator | ⬜ |
-| 1 | Reward, TimeService, SystemPopup, RewardPopup, LocalServer | ⬜ |
+| 0 | Logging, ErrorHandling, SaveManager, LoadingIndicator | ✅ |
+| 1 | Reward, TimeService, SystemPopup, RewardPopup, LocalServer | 🔨 |
 | 2 | Shop | ⬜ |
 | 3 | Stage | ⬜ |
 | 4 | LiveEvent | ⬜ |

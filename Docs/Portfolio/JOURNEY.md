@@ -370,6 +370,60 @@ Assets/Scripts/
 
 ---
 
+## Phase 13: LoadingIndicator 시스템 구현
+
+### 로딩 인디케이터 구현
+
+**커밋**: `4b0e92a` Add LoadingIndicator system with editor tools
+- LoadingService: 레퍼런스 카운팅 기반 로딩 상태 관리
+- LoadingWidget: DOTween 기반 페이드/스피너 애니메이션
+- LoadingConfig: ScriptableObject 설정 (타임아웃, 애니메이션)
+
+**핵심 구현**:
+| 컴포넌트 | 역할 | 위치 |
+|----------|------|------|
+| LoadingType | 로딩 타입 (FullScreen, Indicator, Progress) | Common/Enums |
+| LoadingConfig | 타임아웃, 애니메이션 설정 SO | Common/Configs |
+| LoadingService | 레퍼런스 카운팅, 타임아웃 관리 | Common/Services |
+| LoadingWidget | UI 표시, 애니메이션 | Common/Widgets |
+
+**테스트 인프라**:
+- LoadingServiceTests.cs (NUnit) - 레퍼런스 카운팅, 상태 전환
+- LoadingConfigTests.cs (NUnit) - 기본값 검증
+
+---
+
+## Phase 14: Reward 시스템 구현
+
+### 보상 시스템 구현
+
+**커밋**: `924eb88` Add Reward system with unit tests
+- **중요 결정**: 처리 방식 기준 분류 (RewardType 4개 + ItemCategory 6개)
+- 수집형 RPG 표준 패턴 분석 (블루아카, FGO 등) 기반 설계
+- **상세**: [DECISIONS.md](DECISIONS.md#보상-시스템-rewardtype-설계) 참조
+
+**핵심 구현**:
+| 컴포넌트 | 역할 | 위치 |
+|----------|------|------|
+| RewardType | 보상 타입 (Currency, Item, Character, PlayerExp) | Data/Enums |
+| ItemCategory | 아이템 분류 (Equipment, Consumable, Material, ...) | Data/Enums |
+| RewardInfo | 보상 정보 구조체 (팩토리 메서드 포함) | Data/Structs |
+| RewardProcessor | Delta 생성, 검증 (서버 로직) | Core/Utility |
+| RewardHelper | UI 헬퍼 (포맷팅, 아이콘, 희귀도 색상) | Core/Utility |
+
+**테스트 인프라** (61개 테스트):
+- RewardInfoTests.cs (16개) - 생성자, 팩토리 메서드, ToString
+- RewardProcessorTests.cs (28개) - CreateDelta, ValidateRewards, CanApplyRewards
+- RewardHelperTests.cs (17개) - FormatText, GetIconPath, GetRarityColor, SortByRarity
+
+**설계 결정**:
+- RewardType: 처리 로직 기준 분류 (4개)
+- ItemCategory: UI 표시용 세분화 (6개)
+- 장비: 인벤토리=수량 기반, 장착=인스턴스 기반
+- 스킨: 별도 캐릭터로 처리 (CharacterData.BaseCharacterId)
+
+---
+
 ## 진행 중
 
 현재 진행 중인 작업은 [PROGRESS.md](../PROGRESS.md) 참조
