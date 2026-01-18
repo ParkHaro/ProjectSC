@@ -146,11 +146,11 @@ Assets/Scripts/Foundation/
 |------|--------|------|------|
 | 싱글턴 | Singleton<T> | ⬜ | ✅ |
 | 이벤트 | EventManager | ⬜ | ✅ |
-| 로깅 | LogLevel, LogCategory | ✅ | ⬜ |
-| 로깅 | Log, LogConfig | ✅ | ⬜ |
-| 로깅 | ILogOutput, UnityLogOutput | ✅ | ⬜ |
-| 에러 | ErrorCode, ErrorMessages | ✅ | ⬜ |
-| 에러 | Result<T> | ✅ | ⬜ |
+| 로깅 | LogLevel, LogCategory | ✅ | ✅ |
+| 로깅 | Log, LogConfig | ✅ | ✅ |
+| 로깅 | ILogOutput, UnityLogOutput | ✅ | ✅ |
+| 에러 | ErrorCode, ErrorMessages | ✅ | ✅ |
+| 에러 | Result<T> | ✅ | ✅ |
 
 ---
 

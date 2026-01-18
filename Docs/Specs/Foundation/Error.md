@@ -2,7 +2,7 @@
 type: spec
 assembly: Sc.Foundation
 category: System
-status: draft
+status: approved
 version: "1.0"
 dependencies: []
 created: 2026-01-17

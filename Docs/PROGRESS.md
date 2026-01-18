@@ -38,8 +38,8 @@
 #### Phase A: 기반 인프라 (독립)
 | # | 시스템 | 상태 | 의존성 | 스펙 문서 |
 |---|--------|------|--------|-----------|
-| 1 | Logging | ⬜ | 없음 | 작성 필요 |
-| 2 | ErrorHandling | ⬜ | 없음 | 작성 필요 |
+| 1 | Logging | ✅ | 없음 | ✅ Foundation/Logging.md |
+| 2 | ErrorHandling | ✅ | 없음 | ✅ Foundation/Error.md |
 
 #### Phase B: 기반 인프라 (Phase A 의존)
 | # | 시스템 | 상태 | 의존성 | 스펙 문서 |
@@ -514,6 +514,17 @@ Phase 4: 검증
 ## 작업 로그
 
 ### 2026-01-18 (계속)
+- [x] ErrorHandling 시스템 구현 완료
+  - [x] ErrorCode.cs (System/Network/Data/Auth/Game/UI 대역)
+  - [x] ErrorMessages.cs (ErrorCode → StringData 키 매핑)
+  - [x] Result.cs (성공/실패 명시적 래퍼, 체이닝 API)
+- [x] Logging 시스템 구현 완료
+  - [x] LogLevel.cs (Debug/Info/Warning/Error/None)
+  - [x] LogCategory.cs (System/Network/Data/UI/Battle/Gacha)
+  - [x] ILogOutput.cs (출력 인터페이스)
+  - [x] UnityLogOutput.cs (Unity 콘솔 출력)
+  - [x] LogConfig.cs (ScriptableObject, 카테고리별 레벨)
+  - [x] Log.cs (정적 API, Conditional 어트리뷰트)
 - [x] 시스템 단위 구현 방식으로 전환
   - [x] Phase 단위 → 시스템 단위 구현 순서 확정
   - [x] PROGRESS.md 시스템 구현 순서 섹션 추가
