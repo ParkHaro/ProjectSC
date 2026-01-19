@@ -38,6 +38,7 @@
 #### Phase A: 기반 인프라 (독립)
 | # | 시스템 | 상태 | 의존성 | 스펙 문서 |
 |---|--------|------|--------|-----------|
+| 0 | **AssetManager** | 📝 | Singleton, UniTask, Addressables | ✅ Core/AssetManager.md |
 | 1 | Logging | ✅ | 없음 | ✅ Foundation/Logging.md |
 | 2 | ErrorHandling | ✅ | 없음 | ✅ Foundation/Error.md |
 
@@ -80,6 +81,7 @@
 
 | 시스템 | 영향받는 기존 코드 | 조치 |
 |--------|-------------------|------|
+| **AssetManager** | RewardIconCache | AssetManager로 대체 |
 | SaveManager | LocalApiService 저장 로직 | SaveManager로 이관 |
 | ErrorHandling | LocalApiService 에러 반환 | Result<T> 적용 |
 | LocalServer | LocalApiService 전체 | Sc.LocalServer Assembly 분리 |

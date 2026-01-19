@@ -1462,6 +1462,69 @@ SpawnRewardItems()           ← 캐시에서 즉시 표시
 
 ---
 
+## AssetManager 아키텍처: Pragmatic Balance
+
+**일자**: 2026-01-19
+**상태**: 결정됨
+**관련 커밋**: (구현 시 추가)
+
+### 컨텍스트
+- 프로젝트 내 리소스 관리를 위한 중앙 집중화된 에셋 관리 시스템 필요
+- RewardIconCache 등 개별적으로 Addressables 사용 중 → 중복 및 일관성 부족
+- 메모리 관리, 로딩 최적화, 프리로딩/캐싱 등 종합적인 에셋 관리 필요
+- 기존 패턴(Singleton, Result<T>)과의 일관성 유지 필요
+
+### 선택지
+1. **최소 변경 (Monolithic)**
+   - 장점: 구현 단순, 파일 적음 (AssetManager.cs 단일)
+   - 단점: 클래스 비대화, 테스트 어려움, 책임 혼재
+
+2. **클린 아키텍처 (Full Abstraction)**
+   - 장점: 완전한 테스트 가능성, 명확한 책임 분리
+   - 단점: 파일 12개+, 오버엔지니어링, 보일러플레이트 과다
+
+3. **실용적 균형 (Pragmatic Balance)**
+   - 장점: 적절한 분리, 테스트 가능, 기존 패턴 호환
+   - 단점: 클린 아키텍처보다 추상화 수준 낮음
+
+### 결정
+**실용적 균형 (선택지 3)** 선택
+
+**구조**:
+```
+AssetManager (Singleton)
+├── AssetHandle<T>       # 레퍼런스 카운팅 래퍼
+├── AssetScope           # 영역별 에셋 그룹
+├── AssetScopeManager    # Scope 생성/삭제 헬퍼
+├── AssetCacheManager    # LRU 캐시 관리
+└── AssetLoader          # Addressables+Resources 로더
+```
+
+**이유**:
+- 기존 프로젝트 패턴(Singleton, 내부 헬퍼)과 일관성 유지
+- DataManager 구조와 유사하게 설계하여 학습 곡선 최소화
+- 책임은 분리하되 인터페이스 레이어 없이 internal 클래스로 구현
+- YAGNI 원칙: 당장 필요한 수준의 추상화만 적용
+
+**캐싱 전략 (하이브리드)**:
+- Scope 기반: 화면/팝업 단위로 사용자가 직접 생성/삭제
+- LRU 기반: RefCount == 0인 에셋 자동 해제 (임계값 100개)
+- 레퍼런스 카운팅: RefCount > 0이면 LRU 해제 보호
+
+### 결과
+- AssetManager.md 스펙 문서 작성 완료
+- 6개 클래스 구조 설계 (AssetManager + 5개 헬퍼)
+- 에러 코드 4개 정의 (1100-1103)
+- GameBootstrap 초기화 순서: AssetManager → NetworkManager → DataManager
+- RewardIconCache를 AssetManager로 대체 예정
+
+### 회고
+- 3가지 아키텍처 방향을 비교 분석하여 프로젝트에 맞는 수준 선택
+- 클린 아키텍처의 모든 원칙을 적용하기보다 핵심 개념만 흡수
+- **배운 점**: 아키텍처 결정은 프로젝트 맥락(규모, 팀 규모, 기존 패턴)에 맞춰야 함
+
+---
+
 ## [템플릿] 새 의사결정
 
 **일자**: YYYY-MM-DD

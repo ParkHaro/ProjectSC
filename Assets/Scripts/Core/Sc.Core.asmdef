@@ -6,7 +6,10 @@
         "Sc.Data",
         "Sc.Event",
         "Sc.Packet",
-        "UniTask"
+        "UniTask",
+        "Unity.Addressables",
+        "Unity.ResourceManager",
+        "UniTask.Addressables"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],

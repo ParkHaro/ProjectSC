@@ -12,6 +12,7 @@ namespace Sc.Foundation
     /// - 4000~4999: Auth (로그인, 인증)
     /// - 5000~5999: Game (재화, 조건)
     /// - 6000~6999: UI (화면 로드)
+    /// - 1100~1199: Asset (에셋 로딩)
     /// </remarks>
     public enum ErrorCode
     {
@@ -20,6 +21,12 @@ namespace Sc.Foundation
         // System (1000~)
         SystemInitFailed = 1001,
         ConfigLoadFailed = 1002,
+
+        // Asset (1100~)
+        AssetNotFound = 1100,
+        AssetLoadTimeout = 1101,
+        AssetLoadPartialFail = 1102,
+        AddressablesInitFailed = 1103,
 
         // Network (2000~)
         NetworkDisconnected = 2001,

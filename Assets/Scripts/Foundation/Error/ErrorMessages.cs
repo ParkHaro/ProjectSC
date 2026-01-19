@@ -25,6 +25,12 @@ namespace Sc.Foundation
             { ErrorCode.SystemInitFailed, "error.system.init_failed" },
             { ErrorCode.ConfigLoadFailed, "error.system.config_load_failed" },
 
+            // Asset
+            { ErrorCode.AssetNotFound, "error.asset.not_found" },
+            { ErrorCode.AssetLoadTimeout, "error.asset.load_timeout" },
+            { ErrorCode.AssetLoadPartialFail, "error.asset.load_partial_fail" },
+            { ErrorCode.AddressablesInitFailed, "error.asset.addressables_init_failed" },
+
             // Network
             { ErrorCode.NetworkDisconnected, "error.network.disconnected" },
             { ErrorCode.NetworkTimeout, "error.network.timeout" },
