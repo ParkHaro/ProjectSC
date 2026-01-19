@@ -622,27 +622,28 @@ Sc.Core (클라이언트)
 
 ---
 
-## SystemPopup 하이브리드 구조
+## SystemPopup 하이브리드 구조 (v2)
 
-**일자**: 2026-01-17
+**일자**: 2026-01-19 (v2 업데이트)
 **상태**: 결정됨
-**관련 커밋**: (Phase 1 구현 시 추가)
+**관련 커밋**: (구현 시 추가)
 
 ### 컨텍스트
-- 확인/취소, 알림, 입력, 재화 소비 확인 등 다양한 시스템 팝업 필요
-- ConfirmPopup 하나로 모든 케이스 처리 vs 기능별 분리 결정 필요
+- 확인/취소, 알림, 재화 소비 확인 등 시스템 팝업 필요
+- 기존 PopupWidget<TPopup, TState> 패턴과의 일관성 필요
+- GachaResultPopup과 동일한 패턴으로 구현해야 학습 곡선 최소화
 
 ### 선택지
-1. **분리형 (기능별 별도 팝업)**
-   - 장점: 단순한 책임, 타입 안전
-   - 단점: 팝업 개수 증가, 공통 로직 중복
+1. **최소 변경 (PopupWidget 직접 상속)**
+   - 장점: 기존 패턴 100% 호환, 파일 적음
+   - 단점: 공통 로직 중복 가능성
 
-2. **통합형 (SystemPopup + Mode)**
-   - 장점: 일관된 API, 공통 로직 한 곳
-   - 단점: State 비대화, 모드별 분기 복잡
+2. **클린 아키텍처 (인터페이스 분리 + Template Method)**
+   - 장점: 테스트 용이, 확장성 최대
+   - 단점: 파일 12개+, 오버엔지니어링
 
-3. **하이브리드 (Base + 특화)**
-   - 장점: 공통 로직 Base 관리 + 타입 안전
+3. **하이브리드 (기존 패턴 + State.Validate())**
+   - 장점: 기존 패턴 호환 + 검증 로직 추가, 적절한 복잡도
    - 단점: 클래스 여러 개
 
 ### 결정
@@ -650,23 +651,33 @@ Sc.Core (클라이언트)
 
 **구조**:
 ```
-SystemPopupBase (추상)
-├── ConfirmPopup      # 확인/취소
-├── AlertPopup        # 알림 (Info/Warning/Error)
-├── InputPopup        # 텍스트 입력
-└── CostConfirmPopup  # 재화 소비 확인
+PopupWidget<TPopup, TState>
+         ↑
+    ConfirmPopup (ConfirmState)      ← ShowCancelButton=false로 Alert 모드 지원
+    CostConfirmPopup (CostConfirmState)  ← 재화 아이콘+수량 추가
 ```
 
-**추가 결정**:
-- ButtonStyle enum 추가 (Default, Primary, Danger, Secondary)
-- 위험한 작업(삭제 등)에 Danger 스타일 적용
-- 프리팹은 팝업별 별도 관리
-- SelectPopup은 추후 필요 시 추가
+**핵심 설계**:
+1. **기존 패턴 유지**: `PopupWidget<TPopup, TState>` 직접 상속 (GachaResultPopup과 동일)
+2. **State 검증**: `State.Validate()` 메서드로 표시 전 유효성 검증
+3. **Alert 모드**: 별도 AlertPopup 대신 `ShowCancelButton = false`로 처리
+4. **배경 터치**: OnCancel 콜백 실행 후 닫기 (취소와 동일)
+5. **ESC 키**: OnEscape() → true 반환 (닫기 허용)
+
+**이유**:
+- GachaResultPopup과 동일한 패턴으로 일관성 유지
+- YAGNI 원칙: 당장 필요한 것만 구현
+- 클린 아키텍처의 핵심 개념(검증 로직)만 흡수
 
 ### 결과
-- SystemPopupBase: 공통 요소 (Title, Message, 애니메이션)
-- 각 팝업: 특화 필드만 보유
-- ButtonStyle로 시각적 구분 (Danger = 빨간 버튼)
+- ConfirmPopup: 확인/취소 + Alert 모드 (파일 2개: State + Popup)
+- CostConfirmPopup: 재화 표시 추가 (파일 2개: State + Popup)
+- InputPopup, SelectPopup 등은 추후 필요 시 동일 패턴으로 추가
+
+### 회고
+- 클린 아키텍처의 모든 것을 적용하기보다 핵심 개념만 흡수
+- 기존 패턴과의 일관성이 팀 생산성에 중요
+- **배운 점**: 아키텍처 패턴은 맥락에 맞게 선택적으로 적용해야 함
 
 ---
 

@@ -56,7 +56,7 @@
 #### Phase D: 공통 UI (Phase C 의존)
 | # | 시스템 | 상태 | 의존성 | 스펙 문서 |
 |---|--------|------|--------|-----------|
-| 7 | SystemPopup | ⬜ | Widget (있음) | ✅ Common/Popups/SystemPopup.md |
+| 7 | SystemPopup | ✅ | Widget (있음) | ✅ Common/Popups/ConfirmPopup.md, CostConfirmPopup.md |
 | 8 | RewardPopup | ⬜ | Reward | ✅ Common/Popups/RewardPopup.md |
 
 #### Phase E: 서버 분리 (리팩토링)
@@ -582,7 +582,54 @@ Enum:
 
 ---
 
+### SystemPopup 체크리스트 ✅
+
+```
+스펙 문서:
+- [x] ConfirmPopup.md v2.0 업데이트 (하이브리드 설계)
+- [x] CostConfirmPopup.md v1.0 작성
+
+State 클래스:
+- [x] ConfirmState.cs (IPopupState 구현)
+- [x] CostConfirmState.cs (IPopupState 구현)
+
+팝업 구현:
+- [x] ConfirmPopup.cs (PopupWidget<T,S> 상속)
+- [x] CostConfirmPopup.cs (PopupWidget<T,S> 상속)
+
+테스트:
+- [x] ConfirmStateTests.cs (12개 테스트 - 기본값, 검증, 콜백)
+- [x] CostConfirmStateTests.cs (22개 테스트 - 재화 검증, IsInsufficient)
+
+에디터 도구:
+- [x] SystemPopupSetup.cs (프리팹 자동 생성, SC Tools/SystemPopup 메뉴)
+- [x] SystemPopupTestController.cs (런타임 테스트, 키보드 1~7)
+```
+
+---
+
 ## 작업 로그
+
+### 2026-01-19 (SystemPopup 구현)
+- [x] SystemPopup 아키텍처 설계
+  - [x] 3가지 접근법 비교 (최소 변경, 클린 아키텍처, 하이브리드)
+  - [x] 하이브리드 방식 선택 (기존 패턴 + State.Validate())
+- [x] 스펙 문서 작성
+  - [x] ConfirmPopup.md v2.0 업데이트
+  - [x] CostConfirmPopup.md v1.0 작성
+- [x] PROGRESS.md 체크리스트 추가
+- [x] State 클래스 구현
+  - [x] ConfirmState.cs (IPopupState, Validate, Alert 모드 지원)
+  - [x] CostConfirmState.cs (CostType, IsInsufficient 계산)
+- [x] Popup 클래스 구현
+  - [x] ConfirmPopup.cs (PopupWidget<T,S> 상속, 배경터치=취소)
+  - [x] CostConfirmPopup.cs (재화 아이콘/수량 표시)
+- [x] 단위 테스트 작성 (34개)
+  - [x] ConfirmStateTests.cs (12개 테스트)
+  - [x] CostConfirmStateTests.cs (22개 테스트)
+- [x] 에디터 플레이 테스트 환경
+  - [x] SystemPopupTestController.cs (런타임 테스트, OnGUI + 키보드 단축키)
+  - [x] SystemPopupSetup.cs (SC Tools/SystemPopup 메뉴, 프리팹 자동 생성)
 
 ### 2026-01-19 (TimeService 구현)
 - [x] TimeService 시스템 구현 완료
