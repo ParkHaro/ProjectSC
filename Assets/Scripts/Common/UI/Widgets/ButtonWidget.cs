@@ -75,7 +75,7 @@ namespace Sc.Common.UI
         /// <summary>
         /// 버튼 활성화/비활성화 설정.
         /// </summary>
-        public void SetInteractable(bool interactable)
+        public override void SetInteractable(bool interactable)
         {
             if (_button != null)
             {

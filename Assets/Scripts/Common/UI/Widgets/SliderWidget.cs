@@ -101,7 +101,7 @@ namespace Sc.Common.UI
         /// <summary>
         /// 슬라이더 활성화/비활성화.
         /// </summary>
-        public void SetInteractable(bool interactable)
+        public override void SetInteractable(bool interactable)
         {
             if (_slider != null)
             {

@@ -36,6 +36,16 @@ namespace Sc.Common.UI
             return _canvasGroup;
         }
 
+        /// <summary>
+        /// 상호작용 활성화/비활성화. 화면은 보이지만 터치 불가.
+        /// </summary>
+        public virtual void SetInteractable(bool interactable)
+        {
+            var cg = GetOrAddCanvasGroup();
+            cg.interactable = interactable;
+            cg.blocksRaycasts = interactable;
+        }
+
         #region Lifecycle
 
         /// <summary>

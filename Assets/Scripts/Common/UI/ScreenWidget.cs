@@ -106,12 +106,14 @@ namespace Sc.Common.UI
 
             public override void Resume()
             {
-                _screen?.Show();
+                // 상호작용 다시 활성화 (화면은 이미 보이는 상태)
+                _screen?.SetInteractable(true);
             }
 
             public override void Pause()
             {
-                _screen?.Hide();
+                // 상호작용만 비활성화 (화면은 보이게 유지)
+                _screen?.SetInteractable(false);
             }
 
             public override async UniTask Exit()

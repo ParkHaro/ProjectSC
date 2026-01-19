@@ -97,7 +97,7 @@ namespace Sc.Common.UI
         /// <summary>
         /// 입력 필드 활성화/비활성화.
         /// </summary>
-        public void SetInteractable(bool interactable)
+        public override void SetInteractable(bool interactable)
         {
             if (_inputField != null)
             {
