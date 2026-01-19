@@ -2,7 +2,7 @@
 type: architecture
 category: Testing
 status: approved
-version: "1.1"
+version: "2.0"
 created: 2026-01-18
 updated: 2026-01-19
 ---
@@ -13,19 +13,34 @@ updated: 2026-01-19
 
 시스템 단위 테스트 가능한 구조. 마일스톤/Phase와 독립적으로 각 시스템별 테스트 환경 제공.
 
-**현재 상태**: 4차 구축 완료 (NUnit 149개+, PlayMode 인프라)
+**현재 상태**: NUnit 149개+, PlayMode 인프라 완료
 
 ---
 
-## 구축 현황
+## 테스트 레이어
 
-| 단계 | 내용 | 상태 |
-|------|------|------|
-| 1차 | 베이스 인프라 + 수동 테스트 | ✅ 완료 |
-| 2차 | NUnit 단위 테스트 (Foundation, Core) | ✅ 완료 |
-| 3차 | 시스템 확장 (Common, Reward) | ✅ 완료 |
-| 4차 | PlayMode 테스트 인프라 | ✅ 완료 |
-| 5차 | 컨텐츠 시스템 테스트 | ⬜ 대기 |
+| 레이어 | 위치 | 용도 | 실행 방식 |
+|--------|------|------|-----------|
+| **Edit Mode Tests** | `Editor/Tests/` | NUnit 단위 테스트 | Unity Test Runner (Edit Mode) |
+| **PlayMode Tests** | `Tests/PlayMode/` | 자동화 Play Mode 테스트 | Unity Test Runner (Play Mode) |
+| **Scenarios** | `Tests/Scenarios/` | 재사용 가능한 테스트 시나리오 | PlayMode 테스트에서 호출 |
+
+```
+┌─────────────────────────────────────────────────────────────┐
+│                       테스트 계층                            │
+├─────────────────────────────────────────────────────────────┤
+│                                                             │
+│  Level 3: E2E / Integration Test (PlayMode)                 │
+│  └── 시스템 간 연동 (Navigation + Popup + Data)              │
+│                                                             │
+│  Level 2: System Test (PlayMode + Scenarios)                │
+│  └── 시스템 단위 (Navigation만, RewardPopup만)               │
+│                                                             │
+│  Level 1: Unit Test (NUnit Edit Mode)                       │
+│  └── 클래스/함수 단위 (Result<T>, TimeHelper)                │
+│                                                             │
+└─────────────────────────────────────────────────────────────┘
+```
 
 ---
 
@@ -34,34 +49,9 @@ updated: 2026-01-19
 | 원칙 | 설명 |
 |------|------|
 | **시스템 단위** | Phase가 아닌 시스템 기준 테스트 |
-| **독립 테스트** | 각 기능을 격리하여 단독 테스트 가능 |
-| **통합 테스트** | 전체 시스템 통합 후 흐름 테스트 |
-| **에디터 기반** | Unity 에디터에서 직접 확인 가능 |
-| **자동화 연동** | Unity Test Framework와 시나리오 공유 |
-
----
-
-## 테스트 계층
-
-```
-┌─────────────────────────────────────────────────────────────┐
-│                       테스트 계층                            │
-├─────────────────────────────────────────────────────────────┤
-│                                                             │
-│  Level 4: E2E Test                                          │
-│  └── 전체 시나리오 (가챠 → 결과 → 보상 수령)                   │
-│                                                             │
-│  Level 3: Integration Test                                  │
-│  └── 시스템 간 연동 (Navigation + Popup + Data)              │
-│                                                             │
-│  Level 2: System Test (핵심)                                │
-│  └── 시스템 단위 (Navigation만, RewardPopup만)               │
-│                                                             │
-│  Level 1: Unit Test                                         │
-│  └── 클래스/함수 단위 (Result<T>, TimeHelper)                │
-│                                                             │
-└─────────────────────────────────────────────────────────────┘
-```
+| **시나리오 재사용** | PlayMode와 수동 테스트가 같은 시나리오 공유 |
+| **자동화 우선** | Unity Test Runner로 CI/CD 연동 가능 |
+| **Mock 기반 격리** | ServiceLocator + Mock으로 의존성 격리 |
 
 ---
 
@@ -69,138 +59,83 @@ updated: 2026-01-19
 
 ### 시스템별 구현 상태
 
-| 시스템 | NUnit | 시나리오 러너 | PlayMode | Mock 필요 |
-|--------|-------|--------------|----------|-----------|
+| 시스템 | NUnit | PlayMode | Scenario |
+|--------|-------|----------|----------|
 | **Foundation** |
-| Log | ✅ 11개 | - | - | 없음 |
-| Result<T> | ✅ 14개 | - | - | 없음 |
-| ErrorMessages | ✅ 11개 | - | - | 없음 |
+| Log | ✅ 11개 | - | - |
+| Result<T> | ✅ 14개 | - | - |
+| ErrorMessages | ✅ 11개 | - | - |
 | **Core** |
-| SaveStorage | ✅ 17개 | ✅ | - | ISaveStorage |
-| SaveMigrator | ✅ 완료 | ✅ | - | 없음 |
-| TimeService | ✅ 25개 | - | - | 없음 |
-| TimeHelper | ✅ 20개 | - | - | 없음 |
-| AssetManager | ✅ 완료 | ✅ | - | 없음 |
+| SaveStorage | ✅ 17개 | - | - |
+| SaveMigrator | ✅ 완료 | - | - |
+| TimeService | ✅ 25개 | - | - |
+| TimeHelper | ✅ 20개 | - | - |
 | **Common** |
-| LoadingService | ✅ 완료 | - | - | 없음 |
-| LoadingConfig | ✅ 완료 | - | - | 없음 |
-| RewardInfo | ✅ 16개 | - | - | 없음 |
-| RewardProcessor | ✅ 28개 | - | - | 없음 |
-| RewardHelper | ✅ 17개 | - | - | 없음 |
-| ConfirmState | ✅ 12개 | - | - | 없음 |
-| CostConfirmState | ✅ 22개 | - | - | 없음 |
-| RewardPopupState | ✅ 13개 | - | - | 없음 |
-| SimpleItemSpawner | ✅ 12개 | - | - | 없음 |
-| IPopupState | ✅ 8개 | - | - | 없음 |
+| LoadingService | ✅ 완료 | - | - |
+| RewardInfo | ✅ 16개 | - | - |
+| RewardProcessor | ✅ 28개 | - | - |
+| RewardHelper | ✅ 17개 | - | - |
+| ConfirmState | ✅ 12개 | - | - |
+| CostConfirmState | ✅ 22개 | - | - |
+| RewardPopupState | ✅ 13개 | - | - |
+| IPopupState | ✅ 8개 | - | - |
+| SimpleItemSpawner | ✅ 12개 | - | - |
 | **UI** |
-| Navigation | - | ✅ | ✅ | 없음 |
-| **Contents** |
-| Gacha | ⬜ | ⬜ | ⬜ | IApiClient |
-| Shop | ⬜ | ⬜ | ⬜ | IApiClient, ITimeService |
+| Navigation | - | ✅ 샘플 | ✅ 5개 시나리오 |
+| Prefab Load | - | ✅ 샘플 | - |
 
-**총계**: NUnit 149개+, 시나리오 러너 3개, PlayMode 샘플 2개
+**총계**: NUnit 149개+, PlayMode 샘플 2개, Scenario 5개
 
 ---
 
 ## 폴더 구조
-
-### 실제 구현된 구조
 
 ```
 Assets/Scripts/
 ├── Tests/                              # 런타임 테스트 (Sc.Tests)
 │   ├── Sc.Tests.asmdef
 │   │
+│   ├── PlayMode/                       # PlayMode 테스트 인프라
+│   │   ├── PlayModeTestBase.cs         # 베이스 클래스
+│   │   ├── Helpers/
+│   │   │   ├── PlayModeAssert.cs       # Unity 오브젝트 어서션
+│   │   │   └── PrefabTestHelper.cs     # Addressables 프리팹 로드
+│   │   └── Samples/
+│   │       ├── NavigationPlayModeTests.cs
+│   │       └── PrefabLoadPlayModeTests.cs
+│   │
+│   ├── Scenarios/                      # 재사용 시나리오
+│   │   └── NavigationTestScenarios.cs
+│   │
 │   ├── Helpers/                        # 테스트 유틸리티
-│   │   ├── TestCanvasFactory.cs        # Canvas 동적 생성
-│   │   ├── TestResult.cs               # 테스트 결과 구조체
-│   │   └── TestUIBuilder.cs            # UI 동적 생성
+│   │   ├── TestCanvasFactory.cs
+│   │   ├── TestResult.cs
+│   │   └── TestUIBuilder.cs
 │   │
 │   ├── Mocks/                          # Mock 구현체
-│   │   ├── ITestInterfaces.cs          # 테스트용 인터페이스
 │   │   ├── MockTimeService.cs
 │   │   ├── MockSaveStorage.cs
 │   │   └── MockApiClient.cs
 │   │
-│   ├── Scenarios/                      # 테스트 시나리오 (NUnit과 공유)
-│   │   ├── NavigationTestScenarios.cs
-│   │   ├── SaveManagerTestScenarios.cs
-│   │   └── AssetManagerTestScenarios.cs
-│   │
-│   ├── Runners/                        # 수동 테스트 러너
+│   ├── Runners/                        # 시나리오 러너 (선택적)
 │   │   ├── SystemTestRunner.cs         # 베이스 클래스
-│   │   ├── NavigationTestRunner.cs
-│   │   ├── SaveManagerTestRunner.cs
-│   │   └── AssetManagerTestRunner.cs
+│   │   └── NavigationTestRunner.cs     # 수동 테스트용
 │   │
-│   ├── TestWidgets/                    # 테스트용 위젯
-│   │   ├── SimpleTestScreen.cs
-│   │   └── SimpleTestPopup.cs
-│   │
-│   └── PlayMode/                       # PlayMode 테스트 인프라
-│       ├── PlayModeTestBase.cs         # 베이스 클래스
-│       ├── Helpers/
-│       │   ├── PlayModeAssert.cs       # Unity 오브젝트 어서션
-│       │   └── PrefabTestHelper.cs     # Addressables 프리팹 로드
-│       └── Samples/
-│           ├── NavigationPlayModeTests.cs
-│           └── PrefabLoadPlayModeTests.cs
+│   └── TestWidgets/                    # 테스트용 위젯
+│       ├── SimpleTestScreen.cs
+│       └── SimpleTestPopup.cs
 │
 ├── Editor/
-│   ├── AI/
-│   │   └── PlayModeTestSetup.cs        # SC Tools/PlayMode Tests 메뉴
-│   │
 │   └── Tests/                          # NUnit 단위 테스트 (Sc.Editor.Tests)
 │       ├── Sc.Editor.Tests.asmdef
-│       ├── SystemTestMenu.cs           # SC Tools/System Tests 메뉴
-│       │
 │       ├── Foundation/                 # 36개 테스트
-│       │   ├── LogTests.cs
-│       │   ├── ResultTests.cs
-│       │   └── ErrorMessagesTests.cs
-│       │
 │       ├── Core/                       # 36개+ 테스트
-│       │   ├── SaveStorageTests.cs
-│       │   ├── SaveMigratorTests.cs
-│       │   ├── MockSaveStorageTests.cs
-│       │   ├── TimeServiceTests.cs
-│       │   └── TimeHelperTests.cs
-│       │
 │       └── Common/                     # 77개+ 테스트
-│           ├── LoadingServiceTests.cs
-│           ├── LoadingConfigTests.cs
-│           ├── RewardInfoTests.cs
-│           ├── RewardProcessorTests.cs
-│           ├── RewardHelperTests.cs
-│           ├── ConfirmStateTests.cs
-│           ├── CostConfirmStateTests.cs
-│           ├── RewardPopupStateTests.cs
-│           ├── SimpleItemSpawnerTests.cs
-│           └── IPopupStateTests.cs
-```
-
-### 에디터 메뉴 구조
-
-```
-SC Tools/
-├── System Tests/
-│   ├── Navigation/
-│   │   └── Run Navigation Test
-│   ├── SaveManager/
-│   │   └── Run SaveManager Test
-│   └── AssetManager/
-│       └── Run AssetManager Test
-│
-└── PlayMode Tests/
-    ├── Create All Test Prefabs
-    ├── Create Simple Screen/Popup Prefabs
-    ├── Verify Test Scene
-    └── Delete All Test Prefabs
 ```
 
 ---
 
-## NUnit 단위 테스트
+## NUnit 단위 테스트 (Edit Mode)
 
 ### Assembly 구성
 
@@ -208,79 +143,60 @@ SC Tools/
 - 위치: `Assets/Scripts/Editor/Tests/`
 - 참조: Sc.Foundation, Sc.Core, Sc.Common, Sc.Data, NUnit
 
-### 테스트 파일 목록
+### 테스트 작성 패턴
 
-#### Foundation (3개 파일, 36개 테스트)
+```csharp
+[TestFixture]
+public class ResultTests
+{
+    [Test]
+    public void Success_WithValue_ReturnsIsSuccessTrue()
+    {
+        var result = Result<int>.Success(42);
 
-| 파일 | 테스트 수 | 검증 내용 |
-|------|----------|----------|
-| LogTests.cs | 11개 | Log 레벨, 카테고리, Output 관리 |
-| ResultTests.cs | 14개 | Success/Failure, OnSuccess/OnFailure, Map |
-| ErrorMessagesTests.cs | 11개 | GetKey, GetMessage, LocalizeFunc |
+        Assert.That(result.IsSuccess, Is.True);
+        Assert.That(result.Value, Is.EqualTo(42));
+    }
 
-#### Core (5개 파일, 36개+ 테스트)
+    [Test]
+    public void Failure_WithError_ReturnsIsSuccessFalse()
+    {
+        var result = Result<int>.Failure(ErrorCode.InvalidOperation);
 
-| 파일 | 테스트 수 | 검증 내용 |
-|------|----------|----------|
-| SaveStorageTests.cs | 17개 | FileSaveStorage CRUD, 경로 처리 |
-| SaveMigratorTests.cs | - | NeedsMigration, Migrate, Register |
-| MockSaveStorageTests.cs | - | Mock 인터페이스 동작 |
-| TimeServiceTests.cs | 25개 | ServerTimeUtc, SyncServerTime, GetNextResetTime |
-| TimeHelperTests.cs | 20개 | FormatRemainingTime, FormatRelativeTime |
-
-#### Common (10개 파일, 77개+ 테스트)
-
-| 파일 | 테스트 수 | 검증 내용 |
-|------|----------|----------|
-| LoadingServiceTests.cs | - | 레퍼런스 카운팅, 상태 전환 |
-| LoadingConfigTests.cs | - | 기본값 검증 |
-| RewardInfoTests.cs | 16개 | 생성자, 팩토리 메서드, ToString |
-| RewardProcessorTests.cs | 28개 | CreateDelta, ValidateRewards, CanApplyRewards |
-| RewardHelperTests.cs | 17개 | FormatText, GetIconPath, GetRarityColor |
-| ConfirmStateTests.cs | 12개 | 기본값, 검증, 콜백 |
-| CostConfirmStateTests.cs | 22개 | 재화 검증, IsInsufficient |
-| RewardPopupStateTests.cs | 13개 | 기본값, 검증, 콜백 |
-| SimpleItemSpawnerTests.cs | 12개 | Spawn, Despawn, DespawnAll |
-| IPopupStateTests.cs | 8개 | 기본값, 오버라이드, 호환성 |
+        Assert.That(result.IsSuccess, Is.False);
+        Assert.That(result.Error, Is.EqualTo(ErrorCode.InvalidOperation));
+    }
+}
+```
 
 ---
 
 ## PlayMode 테스트 인프라
 
-### 핵심 클래스
-
-#### PlayModeTestBase
+### PlayModeTestBase
 
 Addressables 초기화, TestCanvas 생성, 자동 정리를 담당하는 베이스 클래스.
 
 ```csharp
 public abstract class PlayModeTestBase
 {
-    protected Canvas TestCanvas { get; private set; }
-    protected PrefabTestHelper PrefabHelper { get; private set; }
+    protected Canvas TestCanvas { get; }
+    protected PrefabTestHelper PrefabHelper { get; }
 
     [UnitySetUp]
-    public IEnumerator SetUp()
+    public IEnumerator BaseSetUp()
     {
-        // Addressables 초기화
-        yield return Addressables.InitializeAsync();
-        
-        // TestCanvas 생성
-        TestCanvas = CreateTestCanvas();
-        PrefabHelper = new PrefabTestHelper();
-        
+        // 1. Addressables 초기화
+        // 2. TestCanvas 생성
+        // 3. PrefabHelper 생성
         yield return OnSetUp();
     }
 
     [UnityTearDown]
-    public IEnumerator TearDown()
+    public IEnumerator BaseTearDown()
     {
         yield return OnTearDown();
-        
-        // 자동 정리
-        PrefabHelper.ReleaseAll();
-        if (TestCanvas != null)
-            Object.Destroy(TestCanvas.gameObject);
+        // 자동 정리: 핸들 해제, Canvas 파괴
     }
 
     protected virtual IEnumerator OnSetUp() { yield break; }
@@ -288,71 +204,33 @@ public abstract class PlayModeTestBase
 }
 ```
 
-#### PrefabTestHelper
+### PrefabTestHelper
 
-Addressables 프리팹 로드 및 인스턴스 관리.
+Addressables 프리팹 로드 및 인스턴스 추적.
 
 ```csharp
-public class PrefabTestHelper
-{
-    private List<AsyncOperationHandle> _handles = new();
-    private List<GameObject> _instances = new();
+// 프리팹 로드
+GameObject prefab = null;
+yield return LoadAssetAsync<GameObject>(address, p => prefab = p);
 
-    public async UniTask<T> LoadPrefabAsync<T>(string address) where T : Object
-    {
-        var handle = Addressables.LoadAssetAsync<T>(address);
-        _handles.Add(handle);
-        return await handle;
-    }
-
-    public async UniTask<T> InstantiateAsync<T>(string address, Transform parent = null) 
-        where T : Component
-    {
-        var handle = Addressables.InstantiateAsync(address, parent);
-        _handles.Add(handle);
-        var go = await handle;
-        _instances.Add(go);
-        return go.GetComponent<T>();
-    }
-
-    public void ReleaseAll()
-    {
-        foreach (var instance in _instances)
-            if (instance != null) Addressables.ReleaseInstance(instance);
-        foreach (var handle in _handles)
-            if (handle.IsValid()) Addressables.Release(handle);
-        _instances.Clear();
-        _handles.Clear();
-    }
-}
+// 인스턴스 생성
+yield return PrefabHelper.InstantiateAsync(address, TestCanvas.transform);
 ```
 
-#### PlayModeAssert
+### PlayModeAssert
 
 Unity 오브젝트 전용 어서션 헬퍼.
 
 ```csharp
-public static class PlayModeAssert
-{
-    public static void IsActive(GameObject go, string message = null)
-        => Assert.IsTrue(go.activeInHierarchy, message ?? $"{go.name} should be active");
+PlayModeAssert.IsActive(gameObject);
+PlayModeAssert.HasComponent<RectTransform>(gameObject);
+PlayModeAssert.ChildCount(transform, 3);
 
-    public static void IsInactive(GameObject go, string message = null)
-        => Assert.IsFalse(go.activeInHierarchy, message ?? $"{go.name} should be inactive");
-
-    public static void HasComponent<T>(GameObject go) where T : Component
-        => Assert.IsNotNull(go.GetComponent<T>(), $"{go.name} should have {typeof(T).Name}");
-
-    public static void ChildCount(Transform t, int expected)
-        => Assert.AreEqual(expected, t.childCount, $"Expected {expected} children");
-}
+// 비동기 대기
+yield return PlayModeAssert.WaitUntilActive(gameObject, timeoutSeconds: 5f);
 ```
 
-### 샘플 테스트
-
-#### NavigationPlayModeTests
-
-기존 NavigationTestScenarios를 NUnit으로 래핑.
+### 테스트 작성 예시
 
 ```csharp
 [TestFixture]
@@ -362,125 +240,114 @@ public class NavigationPlayModeTests : PlayModeTestBase
 
     protected override IEnumerator OnSetUp()
     {
-        // NavigationManager 생성 및 시나리오 초기화
-        _scenarios = new NavigationTestScenarios(NavigationManager.Instance);
+        _scenarios = new NavigationTestScenarios(/*...*/);
         yield break;
     }
 
     [UnityTest]
-    public IEnumerator PushPopAll_ShouldWork()
+    public IEnumerator PushPopAll_ThreeScreens_CountsCorrectly()
     {
-        var result = default(TestResult);
-        yield return _scenarios.RunPushPopAllScenario().ToCoroutine(r => result = r);
-        Assert.IsTrue(result.Success, result.Message);
-    }
-}
-```
+        var task = _scenarios.RunPushPopAllScenario();
+        while (!task.Status.IsCompleted()) yield return null;
 
-#### PrefabLoadPlayModeTests
-
-Addressables 프리팹 로드 검증.
-
-```csharp
-[TestFixture]
-public class PrefabLoadPlayModeTests : PlayModeTestBase
-{
-    [UnityTest]
-    public IEnumerator LoadScreenPrefab_ShouldSucceed()
-    {
-        ScreenWidget screen = null;
-        yield return PrefabHelper.InstantiateAsync<ScreenWidget>(
-            "Assets/Prefabs/Screens/TestScreen.prefab", 
-            TestCanvas.transform
-        ).ToCoroutine(s => screen = s);
-
-        Assert.IsNotNull(screen);
-        PlayModeAssert.IsActive(screen.gameObject);
+        var result = task.GetAwaiter().GetResult();
+        Assert.That(result.Success, Is.True, result.Message);
     }
 }
 ```
 
 ---
 
-## 시나리오 러너 (수동 테스트)
+## 시나리오 재사용
 
-### SystemTestRunner 베이스
+### 패턴: 시나리오 클래스 분리
+
+시나리오 로직을 별도 클래스로 분리하여 PlayMode와 수동 테스트에서 공유.
 
 ```csharp
-public abstract class SystemTestRunner : MonoBehaviour
+// Scenarios/NavigationTestScenarios.cs
+public class NavigationTestScenarios
 {
-    protected GameObject _testRoot;
-    protected TestCanvas _testCanvas;
-
-    public virtual void SetupTest()
+    public async UniTask<TestResult> RunPushPopAllScenario()
     {
-        _testRoot = new GameObject($"[TEST] {GetSystemName()}");
-        _testCanvas = TestCanvasFactory.Create(_testRoot.transform);
-        OnSetup();
+        // 1. Screen 3개 Push
+        // 2. Pop All
+        // 3. 스택 카운트 검증
+        return TestResult.Pass("Push/Pop All succeeded");
     }
 
-    public virtual void TeardownTest()
-    {
-        OnTeardown();
-        if (_testRoot != null) DestroyImmediate(_testRoot);
-    }
-
-    protected abstract string GetSystemName();
-    protected abstract void OnSetup();
-    protected abstract void OnTeardown();
+    public async UniTask<TestResult> RunVisibilityScenario() { /*...*/ }
+    public async UniTask<TestResult> RunBackNavigationScenario() { /*...*/ }
 }
 ```
 
-### 구현된 러너
+### 사용 방식
 
-| 러너 | 시스템 | 시나리오 |
-|------|--------|----------|
-| NavigationTestRunner | Navigation | Push/Pop, Visibility, Back |
-| SaveManagerTestRunner | SaveManager | Save/Load, Migration |
-| AssetManagerTestRunner | AssetManager | Load/Unload, Scope |
+| 환경 | 호출 방식 |
+|------|----------|
+| **PlayMode Test** | `yield return scenarios.RunScenario().ToCoroutine()` |
+| **수동 런타임** | `async void OnButtonClick() => await scenarios.RunScenario()` |
 
 ---
 
-## 의존성 관리
+## Mock 시스템
 
-### 패턴: SO + ServiceLocator 혼합
+### ServiceLocator 패턴
 
 ```csharp
-// 1. 인터페이스 정의
-public interface ITimeService
-{
-    long ServerTimeUtc { get; }
-    DateTime ServerDateTime { get; }
-}
+// 서비스 등록
+Services.Register<ITimeService>(new MockTimeService());
+Services.Register<ISaveStorage>(new MockSaveStorage());
 
-// 2. Mock 구현 (테스트용)
-public class MockTimeService : ITimeService
-{
-    public long FixedTime { get; set; } = 1700000000;
-    public long ServerTimeUtc => FixedTime;
-    public DateTime ServerDateTime => DateTimeOffset.FromUnixTimeSeconds(FixedTime).DateTime;
-}
+// 서비스 조회
+var timeService = Services.Get<ITimeService>();
 
-// 3. ServiceLocator
-public static class Services
-{
-    private static readonly Dictionary<Type, object> _services = new();
-    public static void Register<T>(T service) where T : class => _services[typeof(T)] = service;
-    public static T Get<T>() where T : class => _services.TryGetValue(typeof(T), out var s) ? (T)s : null;
-    public static void Clear() => _services.Clear();
-}
+// 테스트 후 정리
+Services.Clear();
 ```
 
-### 장점
+### Mock 구현체
 
-- Inspector에서 Mock 교체 가능
-- 테스트 시 Services.Register로 Mock 주입
-- 기존 Singleton 코드와 공존 가능
+| Mock | 인터페이스 | 용도 |
+|------|-----------|------|
+| MockTimeService | ITimeService | 고정 시간 반환 |
+| MockSaveStorage | ISaveStorage | 메모리 저장 |
+| MockApiClient | IApiClient | 네트워크 시뮬레이션 |
+
+---
+
+## 테스트 프리팹 생성
+
+**메뉴**: `SC Tools/Setup/Prefabs/`
+
+| 메뉴 | 생성 항목 |
+|------|----------|
+| Create All Test Prefabs | SimpleTestScreen, SimpleTestPopup, TestSystemPopup |
+| Delete All Test Prefabs | 위 프리팹 삭제 |
+
+**생성 위치**: `Assets/Prefabs/Tests/`
+
+---
+
+## 확장 가이드
+
+### 새 시스템 테스트 추가
+
+1. **NUnit 테스트**: `Editor/Tests/{Layer}/{System}Tests.cs`
+2. **시나리오 필요 시**: `Tests/Scenarios/{System}TestScenarios.cs`
+3. **PlayMode 테스트**: `Tests/PlayMode/Samples/{System}PlayModeTests.cs`
+
+### 새 Mock 추가
+
+1. `Tests/Mocks/Mock{Service}.cs` 생성
+2. 인터페이스 구현
+3. `SystemTestRunner.RegisterMockServices()`에 등록
 
 ---
 
 ## 관련 문서
 
-- [AITools.md](../Editor/AITools.md) - 에디터 도구
+- [EditorTools.md](../Editor/EditorTools.md) - 에디터 도구
+- [EDITOR_REFACTORING.md](../Editor/EDITOR_REFACTORING.md) - 리팩토링 계획
 - [UISystem.md](../Common/UISystem.md) - UI 시스템
 - [Navigation.md](../Navigation.md) - Navigation 시스템

@@ -114,6 +114,7 @@
 | 3차 | Common 테스트 | ✅ 완료 | LoadingService, LoadingConfig (16개) |
 | 3차 | Reward 테스트 | ✅ 완료 | RewardInfo, RewardProcessor, RewardHelper (61개) |
 | 4차 | **PlayMode 테스트 인프라** | ✅ 완료 | TestRunner 기반 PlayMode 환경 |
+| 4.5차 | **에디터 도구 리팩토링** | ✅ 완료 | SC Tools 메뉴 재구성 |
 | 5차 | 시스템 확장 | ⬜ 대기 | Popup, ... |
 
 ### 1차 구축 체크리스트
@@ -158,6 +159,35 @@ Editor 도구:
 
 Assembly 수정:
 - [x] Sc.Tests.asmdef - UnityEngine.TestRunner, UnityEditor.TestRunner 참조 추가
+```
+
+### 4.5차 에디터 도구 리팩토링 체크리스트
+
+```
+문서화:
+- [x] EDITOR_REFACTORING.md (변경 사항 정의)
+- [x] TestArchitecture.md v2.0 (새 구조 반영)
+- [x] EditorTools.md v2.1 (AITools.md 대체, Bootstrap 레벨 추가)
+
+파일 삭제:
+- [x] Editor/Tests/SystemTestMenu.cs
+- [x] Tests/Runners/SaveManagerTestRunner.cs
+- [x] Tests/Runners/AssetManagerTestRunner.cs
+- [x] Tests/Scenarios/SaveManagerTestScenarios.cs
+- [x] Tests/Scenarios/AssetManagerTestScenarios.cs
+
+메뉴 경로 변경:
+- [x] PlayModeTestSetup.cs → SC Tools/Setup/Prefabs/
+- [x] UITestSceneSetup.cs → SC Tools/Setup/Scenes/
+- [x] LoadingSetup.cs → SC Tools/Setup/
+- [x] MVPSceneSetup.cs → SC Tools/Setup/
+- [x] SystemPopupSetup.cs → SC Tools/Setup/Prefabs/Dialog/
+
+코드 정리:
+- [x] EditorUIHelpers.cs 생성 (공용 UI 헬퍼)
+- [x] 기존 Setup 파일 리팩토링 (중복 코드 제거)
+- [x] Bootstrap 레벨 체계화 (None/Partial/Full)
+- [x] AITools.md 삭제 (EditorTools.md로 대체)
 ```
 
 ### 시스템별 테스트 우선순위
@@ -657,6 +687,41 @@ Popup 구현:
 ---
 
 ## 작업 로그
+
+### 2026-01-19 (에디터 도구 코드 정리)
+- [x] 공용 유틸리티 생성
+  - [x] EditorUIHelpers.cs (UI 생성 공용 헬퍼)
+  - [x] Canvas/Panel/Text/Button 생성 메서드 통합
+  - [x] EventSystem/폴더 생성 유틸리티 추가
+- [x] 기존 Setup 파일 리팩토링
+  - [x] PlayModeTestSetup.cs (헬퍼 사용, 중복 코드 제거)
+  - [x] SystemPopupSetup.cs (메뉴 경로 수정: SC Tools/Setup/Prefabs/Dialog/)
+  - [x] LoadingSetup.cs, UITestSceneSetup.cs, MVPSceneSetup.cs (Bootstrap 레벨 명시, 공용 헬퍼 사용)
+- [x] Bootstrap 레벨 체계화
+  - [x] None: 프리팹 생성 전용 (PlayModeTestSetup, SystemPopupSetup)
+  - [x] Partial: EventSystem + 일부 매니저 (UITestSceneSetup, LoadingSetup)
+  - [x] Full: 모든 매니저 생성 (MVPSceneSetup)
+- [x] EditorTools.md v2.1 업데이트
+  - [x] Bootstrap 레벨 섹션 추가
+  - [x] EditorUIHelpers 문서화
+  - [x] 도구 상태 ✅ 완료로 갱신
+
+### 2026-01-19 (에디터 도구 리팩토링 문서화)
+- [x] 현황 분석
+  - [x] 기존 SC Tools 메뉴 구조 파악 (6개 카테고리, 22개 메뉴)
+  - [x] 중복/미완성 코드 식별
+- [x] 리팩토링 방향 확정
+  - [x] 기능별 통합 (Setup/Debug/Data/Settings)
+  - [x] System Tests 메뉴 제거 (PlayMode 테스트로 대체)
+  - [x] 미완성 러너/시나리오 제거 예정 (SaveManager, AssetManager)
+- [x] 문서 작성
+  - [x] EDITOR_REFACTORING.md (변경 사항 정의)
+  - [x] TestArchitecture.md v2.0 (새 구조 반영)
+  - [x] EditorTools.md v2.0 (AITools.md 대체, 새 메뉴 구조)
+- [x] 구현 완료
+  - [x] 미완성 파일 삭제 (5개)
+  - [x] 메뉴 경로 변경 (4개 파일)
+  - [x] AITools.md 삭제 (EditorTools.md로 대체)
 
 ### 2026-01-19 (PlayMode 테스트 인프라 구축)
 - [x] PlayMode 테스트 환경 재구성
