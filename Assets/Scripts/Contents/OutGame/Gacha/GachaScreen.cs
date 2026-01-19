@@ -1,6 +1,7 @@
 using Sc.Common.UI;
 using Sc.Common.UI.Widgets;
 using Sc.Core;
+using Sc.Data;
 using Sc.Event.OutGame;
 using Sc.Event.UI;
 using Sc.Foundation;

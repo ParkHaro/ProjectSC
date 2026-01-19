@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
+using Sc.Data;
 using Sc.Packet;
 
 namespace Sc.Tests

@@ -1,3 +1,4 @@
+using Sc.Data;
 using Sc.Event.OutGame;
 using Sc.Foundation;
 using Sc.Packet;

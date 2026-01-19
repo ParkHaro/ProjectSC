@@ -1,4 +1,4 @@
-namespace Sc.Packet
+namespace Sc.Data
 {
     /// <summary>
     /// API 요청 기본 인터페이스

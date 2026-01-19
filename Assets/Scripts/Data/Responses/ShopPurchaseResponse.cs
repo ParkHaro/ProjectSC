@@ -1,8 +1,7 @@
 using System;
 using System.Collections.Generic;
-using Sc.Data;
 
-namespace Sc.Packet
+namespace Sc.Data
 {
     /// <summary>
     /// 구매 보상 아이템

@@ -4,6 +4,7 @@
     "references": [
         "Sc.Foundation",
         "Sc.Data",
+        "Sc.LocalServer",
         "UniTask"
     ],
     "includePlatforms": [],

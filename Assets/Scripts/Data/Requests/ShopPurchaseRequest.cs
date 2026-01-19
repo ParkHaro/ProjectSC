@@ -1,6 +1,6 @@
 using System;
 
-namespace Sc.Packet
+namespace Sc.Data
 {
     /// <summary>
     /// 상점 구매 요청

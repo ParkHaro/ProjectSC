@@ -1,6 +1,6 @@
 using System;
 
-namespace Sc.Packet
+namespace Sc.Data
 {
     /// <summary>
     /// 로그인 요청

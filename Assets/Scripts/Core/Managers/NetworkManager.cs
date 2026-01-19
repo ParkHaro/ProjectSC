@@ -1,5 +1,6 @@
 using System;
 using Cysharp.Threading.Tasks;
+using Sc.Data;
 using Sc.Event.Network;
 using Sc.Foundation;
 using Sc.Packet;

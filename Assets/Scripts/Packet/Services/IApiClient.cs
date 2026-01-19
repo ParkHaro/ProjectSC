@@ -1,5 +1,6 @@
 using System;
 using Cysharp.Threading.Tasks;
+using Sc.Data;
 
 namespace Sc.Packet
 {

@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using Sc.Data;
 using UnityEngine;
 
 namespace Sc.Packet

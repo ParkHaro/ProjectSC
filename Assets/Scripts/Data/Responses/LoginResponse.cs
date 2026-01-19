@@ -1,7 +1,6 @@
 using System;
-using Sc.Data;
 
-namespace Sc.Packet
+namespace Sc.Data
 {
     /// <summary>
     /// 로그인 응답

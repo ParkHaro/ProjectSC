@@ -1,8 +1,7 @@
 using System;
 using System.Collections.Generic;
-using Sc.Data;
 
-namespace Sc.Packet
+namespace Sc.Data
 {
     /// <summary>
     /// 유저 데이터 변경분 (서버 응답으로 전달)

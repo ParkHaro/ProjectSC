@@ -1,7 +1,7 @@
 using System;
-using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
 using Sc.Data;
+using Sc.LocalServer;
 using UnityEngine;
 
 namespace Sc.Packet
@@ -10,12 +10,17 @@ namespace Sc.Packet
     /// 로컬 API 클라이언트 (서버 응답 시뮬레이션)
     /// 개발/테스트용 더미 서버 구현
     /// </summary>
+    /// <remarks>
+    /// 서버 로직은 LocalGameServer로 위임
+    /// 이 클래스는 IApiClient 인터페이스 구현 및 저장/로드만 담당
+    /// </remarks>
     public class LocalApiClient : IApiClient
     {
         private const string SaveKey = "user_save";
 
         private readonly int _simulatedLatencyMs;
         private readonly Sc.Foundation.ISaveStorage _storage;
+        private readonly LocalGameServer _server;
         private UserSaveData _userData;
         private string _sessionToken;
         private bool _isInitialized;
@@ -38,6 +43,7 @@ namespace Sc.Packet
         {
             _storage = storage ?? throw new ArgumentNullException(nameof(storage));
             _simulatedLatencyMs = simulatedLatencyMs;
+            _server = new LocalGameServer();
         }
 
         #region IApiClient Implementation
@@ -102,177 +108,27 @@ namespace Sc.Packet
         {
             await UniTask.Delay(_simulatedLatencyMs);
 
-            // 요청 타입별 처리
-            return request switch
+            try
             {
-                LoginRequest loginRequest => await HandleLoginAsync(loginRequest),
-                GachaRequest gachaRequest => await HandleGachaAsync(gachaRequest),
-                ShopPurchaseRequest purchaseRequest => await HandlePurchaseAsync(purchaseRequest),
-                _ => throw new NotImplementedException($"Handler not found for {request.GetType().Name}")
-            };
-        }
+                // 서버로 요청 위임
+                var response = _server.HandleRequest(request, ref _userData);
 
-        #endregion
-
-        #region Request Handlers
-
-        private async UniTask<LoginResponse> HandleLoginAsync(LoginRequest request)
-        {
-            bool isNewUser = false;
-
-            // 기존 유저 데이터가 없으면 신규 생성
-            if (string.IsNullOrEmpty(_userData.Profile.Uid))
-            {
-                var uid = request.UserId ?? Guid.NewGuid().ToString();
-                var nickname = $"Player_{uid.Substring(0, 6)}";
-                _userData = UserSaveData.CreateNew(uid, nickname);
-                isNewUser = true;
-
-                // 초기 캐릭터 지급 (튜토리얼 캐릭터)
-                _userData.Characters.Add(OwnedCharacter.Create("char_005"));
-
-                SaveUserData();
-                Debug.Log($"[LocalApiClient] 신규 유저 생성: {nickname}");
-            }
-            else
-            {
-                // 기존 유저 로그인
-                _userData.Profile.LastLoginAt = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
-                SaveUserData();
-                Debug.Log($"[LocalApiClient] 기존 유저 로그인: {_userData.Profile.Nickname}");
-            }
-
-            _sessionToken = Guid.NewGuid().ToString();
-
-            await UniTask.CompletedTask;
-            return LoginResponse.Success(_userData, isNewUser, _sessionToken);
-        }
-
-        private async UniTask<GachaResponse> HandleGachaAsync(GachaRequest request)
-        {
-            // 가챠 풀 정보 조회 (실제로는 마스터 데이터에서)
-            var pullCount = request.PullType == GachaPullType.Multi ? 10 : 1;
-            var costPerPull = 300;
-            var totalCost = request.PullType == GachaPullType.Multi ? 2700 : costPerPull;
-
-            // 재화 확인
-            if (_userData.Currency.TotalGem < totalCost)
-            {
-                return GachaResponse.Fail(1001, "보석이 부족합니다.");
-            }
-
-            // 가챠 실행
-            var results = new List<GachaResultItem>();
-            var addedCharacters = new List<OwnedCharacter>();
-
-            // 천장 정보
-            var pityInfo = _userData.GachaPity.GetOrCreatePityInfo(request.GachaPoolId);
-            var currentPity = pityInfo.PityCount;
-
-            for (int i = 0; i < pullCount; i++)
-            {
-                currentPity++;
-
-                var rarity = CalculateGachaRarity(currentPity);
-                var characterId = GetRandomCharacterByRarity(rarity);
-
-                var isNew = !_userData.HasCharacter(characterId);
-                var isPity = currentPity >= 90 && rarity == Rarity.SSR;
-
-                results.Add(new GachaResultItem
+                // 로그인 시 세션 토큰 저장
+                if (response is LoginResponse loginResponse && loginResponse.IsSuccess)
                 {
-                    CharacterId = characterId,
-                    Rarity = rarity,
-                    IsNew = isNew,
-                    IsPity = isPity
-                });
-
-                var newCharacter = OwnedCharacter.Create(characterId);
-                addedCharacters.Add(newCharacter);
-                _userData.Characters.Add(newCharacter);
-
-                // SSR 획득 시 천장 초기화
-                if (rarity == Rarity.SSR)
-                {
-                    currentPity = 0;
-                }
-            }
-
-            // 재화 차감
-            if (_userData.Currency.FreeGem >= totalCost)
-            {
-                _userData.Currency.FreeGem -= totalCost;
-            }
-            else
-            {
-                var remaining = totalCost - _userData.Currency.FreeGem;
-                _userData.Currency.FreeGem = 0;
-                _userData.Currency.Gem -= remaining;
-            }
-
-            // 천장 정보 업데이트
-            UpdatePityInfo(request.GachaPoolId, currentPity, pityInfo.TotalPullCount + pullCount);
-
-            SaveUserData();
-
-            // Delta 생성
-            var delta = new UserDataDelta
-            {
-                Currency = _userData.Currency,
-                AddedCharacters = addedCharacters,
-                GachaPity = _userData.GachaPity
-            };
-
-            await UniTask.CompletedTask;
-            return GachaResponse.Success(results, delta, currentPity);
-        }
-
-        private async UniTask<ShopPurchaseResponse> HandlePurchaseAsync(ShopPurchaseRequest request)
-        {
-            // 상품 정보 조회 (실제로는 마스터 데이터에서)
-            if (request.ProductId == "gold_pack_small")
-            {
-                var gemCost = 100;
-                var goldReward = 10000;
-
-                if (_userData.Currency.TotalGem < gemCost)
-                {
-                    return ShopPurchaseResponse.Fail(1001, "보석이 부족합니다.");
+                    _sessionToken = loginResponse.SessionToken;
                 }
 
-                // 재화 차감 및 지급
-                if (_userData.Currency.FreeGem >= gemCost)
-                {
-                    _userData.Currency.FreeGem -= gemCost;
-                }
-                else
-                {
-                    var remaining = gemCost - _userData.Currency.FreeGem;
-                    _userData.Currency.FreeGem = 0;
-                    _userData.Currency.Gem -= remaining;
-                }
-                _userData.Currency.Gold += goldReward;
-
+                // 데이터 저장
                 SaveUserData();
 
-                var rewards = new List<PurchaseRewardItem>
-                {
-                    new PurchaseRewardItem
-                    {
-                        RewardType = "Currency",
-                        RewardId = "Gold",
-                        Amount = goldReward
-                    }
-                };
-
-                var delta = UserDataDelta.WithCurrency(_userData.Currency);
-
-                await UniTask.CompletedTask;
-                return ShopPurchaseResponse.Success(request.ProductId, rewards, delta);
+                return response;
             }
-
-            await UniTask.CompletedTask;
-            return ShopPurchaseResponse.Fail(1002, "존재하지 않는 상품입니다.");
+            catch (Exception ex)
+            {
+                Debug.LogError($"[LocalApiClient] Request failed: {ex.Message}");
+                throw;
+            }
         }
 
         #endregion
@@ -284,7 +140,7 @@ namespace Sc.Packet
             _userData.LastSyncAt = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
             var json = JsonUtility.ToJson(_userData, true);
             var result = _storage.Save(SaveKey, json);
-            
+
             if (result.IsSuccess)
             {
                 Debug.Log("[LocalApiClient] 데이터 저장 완료");
@@ -293,60 +149,6 @@ namespace Sc.Packet
             {
                 Debug.LogError($"[LocalApiClient] 데이터 저장 실패: {result.Message}");
             }
-        }
-
-        private Rarity CalculateGachaRarity(int pityCount)
-        {
-            // 천장 시스템
-            if (pityCount >= 90)
-                return Rarity.SSR;
-
-            var random = UnityEngine.Random.Range(0f, 1f);
-
-            // 기본 확률: SSR 3%, SR 12%, R 85%
-            if (random < 0.03f)
-                return Rarity.SSR;
-            if (random < 0.15f)
-                return Rarity.SR;
-            return Rarity.R;
-        }
-
-        private string GetRandomCharacterByRarity(Rarity rarity)
-        {
-            // 간단한 시뮬레이션 (실제로는 가챠 풀의 캐릭터 목록에서 선택)
-            return rarity switch
-            {
-                Rarity.SSR => UnityEngine.Random.Range(0, 2) == 0 ? "char_001" : "char_002",
-                Rarity.SR => UnityEngine.Random.Range(0, 2) == 0 ? "char_003" : "char_004",
-                _ => UnityEngine.Random.Range(0, 2) == 0 ? "char_005" : "char_006"
-            };
-        }
-
-        private void UpdatePityInfo(string gachaPoolId, int pityCount, int totalPullCount)
-        {
-            _userData.GachaPity.PityInfos ??= new List<GachaPityInfo>();
-
-            for (int i = 0; i < _userData.GachaPity.PityInfos.Count; i++)
-            {
-                if (_userData.GachaPity.PityInfos[i].GachaPoolId == gachaPoolId)
-                {
-                    var info = _userData.GachaPity.PityInfos[i];
-                    info.PityCount = pityCount;
-                    info.TotalPullCount = totalPullCount;
-                    info.LastPullAt = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
-                    _userData.GachaPity.PityInfos[i] = info;
-                    return;
-                }
-            }
-
-            // 새로운 풀 정보 추가
-            _userData.GachaPity.PityInfos.Add(new GachaPityInfo
-            {
-                GachaPoolId = gachaPoolId,
-                PityCount = pityCount,
-                TotalPullCount = totalPullCount,
-                LastPullAt = DateTimeOffset.UtcNow.ToUnixTimeSeconds()
-            });
         }
 
         #endregion

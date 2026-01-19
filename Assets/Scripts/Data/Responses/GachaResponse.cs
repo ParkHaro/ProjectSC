@@ -1,8 +1,7 @@
 using System;
 using System.Collections.Generic;
-using Sc.Data;
 
-namespace Sc.Packet
+namespace Sc.Data
 {
     /// <summary>
     /// 가챠 결과 아이템
