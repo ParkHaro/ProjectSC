@@ -1324,6 +1324,144 @@ Sc.Tests/
 
 ---
 
+## RewardPopup 동적 아이템 관리 설계
+
+**일자**: 2026-01-19
+**상태**: 결정됨
+**관련 커밋**: (이번 커밋)
+
+### 컨텍스트
+- RewardPopup 구현 시 보상 아이템을 동적으로 생성/해제해야 함
+- 향후 오브젝트 풀링 도입을 고려해야 함
+- 기존 코드 변경 없이 풀링으로 전환 가능한 구조 필요
+
+### 선택지
+1. **직접 Instantiate/Destroy**
+   - 장점: 구현 단순, 즉시 사용 가능
+   - 단점: 풀링 도입 시 호출부 수정 필요, 테스트 어려움
+
+2. **풀링 시스템 먼저 구현**
+   - 장점: 성능 최적화
+   - 단점: 초기 구현 비용 높음, 아직 필요성 미검증
+
+3. **IItemSpawner 추상화 + SimpleItemSpawner 구현**
+   - 장점: 풀링 도입 시 구현체만 교체, 호출부 변경 없음
+   - 단점: 인터페이스 레이어 추가
+
+### 결정
+**IItemSpawner 추상화 + SimpleItemSpawner 구현 (선택지 3)** 선택
+
+**구조**:
+```csharp
+public interface IItemSpawner<T> where T : Component
+{
+    T Spawn(Transform parent);
+    void Despawn(T item);
+    void DespawnAll();
+    int ActiveCount { get; }
+}
+
+// 1차 구현: Instantiate/Destroy
+public class SimpleItemSpawner<T> : IItemSpawner<T> { ... }
+
+// 2차 구현 (필요 시): ObjectPool 기반
+public class PooledItemSpawner<T> : IItemSpawner<T> { ... }
+```
+
+**이유**:
+- 기존 패턴과 일관성: ISaveStorage → FileSaveStorage/MockSaveStorage
+- 풀링 필요성이 검증되면 PooledItemSpawner로 교체하면 됨
+- 테스트 시 MockItemSpawner 주입 가능
+
+### 결과
+- IItemSpawner<T> 인터페이스 생성
+- SimpleItemSpawner<T> 구현 (Instantiate/Destroy 기반)
+- RewardPopup에서 IItemSpawner<RewardItem> 사용
+- 단위 테스트 12개 작성 (Spawn, Despawn, DespawnAll, ActiveCount)
+
+### 회고
+- YAGNI 원칙을 따르면서도 확장성을 확보하는 방법
+- 인터페이스 추상화 비용은 낮지만 교체 유연성은 높음
+- **배운 점**: "구현은 단순하게, 인터페이스는 확장 가능하게"
+
+---
+
+## RewardPopup 아이콘 로딩 전략
+
+**일자**: 2026-01-19
+**상태**: 결정됨
+**관련 커밋**: (이번 커밋)
+
+### 컨텍스트
+- RewardPopup에서 보상 아이콘을 Addressables로 로드해야 함
+- 아이콘이 늦게 로드되면 UI가 "튀는" 현상 발생 (아이콘 없이 표시 → 갑자기 나타남)
+- 사용자 경험에 영향
+
+### 선택지
+1. **동기 로드 (Resources.Load)**
+   - 장점: 즉시 표시, 구현 단순
+   - 단점: 빌드 크기 증가, Addressables 미활용
+
+2. **지연 로드 (Lazy Loading)**
+   - 장점: 빌드 크기 최적화
+   - 단점: UI 튀는 현상, 사용자 경험 저하
+
+3. **프리로드 캐시 (Preload Cache)**
+   - 장점: Addressables 활용하면서 튀는 현상 방지
+   - 단점: 팝업 열기 전 로딩 시간 추가
+
+### 결정
+**프리로드 캐시 (선택지 3)** 선택
+
+**구조**:
+```csharp
+public class RewardIconCache
+{
+    private readonly Dictionary<string, Sprite> _cache = new();
+    private readonly List<AsyncOperationHandle<Sprite>> _handles = new();
+
+    public async UniTask PreloadAsync(RewardInfo[] rewards)
+    {
+        // 필요한 아이콘 경로 수집 → 일괄 로드 → 캐시 저장
+    }
+
+    public Sprite GetIcon(RewardInfo reward)
+    {
+        // 캐시에서 즉시 반환
+    }
+
+    public void Release()
+    {
+        // Addressables 핸들 해제
+    }
+}
+```
+
+**흐름**:
+```
+RewardPopup.OnBind(state)
+    │
+    ▼
+PreloadAsync(state.Rewards)  ← 아이콘 미리 로드
+    │
+    ▼
+SpawnRewardItems()           ← 캐시에서 즉시 표시
+```
+
+**이유**:
+- 팝업 열기 전 아이콘을 미리 로드하므로 UI 구성 시 즉시 표시
+- Addressables의 비동기 로드 활용으로 빌드 크기 최적화
+- Release()로 메모리 관리 가능
+
+### 결과
+- RewardIconCache 클래스 구현
+- PreloadAsync로 일괄 프리로드
+- GetIcon으로 캐시된 아이콘 반환
+- Release로 Addressables 핸들 정리
+- RewardPopup.OnRelease()에서 자동 해제
+
+---
+
 ## [템플릿] 새 의사결정
 
 **일자**: YYYY-MM-DD

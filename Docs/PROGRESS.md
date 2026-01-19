@@ -57,7 +57,7 @@
 | # | 시스템 | 상태 | 의존성 | 스펙 문서 |
 |---|--------|------|--------|-----------|
 | 7 | SystemPopup | ✅ | Widget (있음) | ✅ Common/Popups/ConfirmPopup.md, CostConfirmPopup.md |
-| 8 | RewardPopup | ⬜ | Reward | ✅ Common/Popups/RewardPopup.md |
+| 8 | RewardPopup | ✅ | Reward | ✅ Common/Popups/RewardPopup.md |
 
 #### Phase E: 서버 분리 (리팩토링)
 | # | 시스템 | 상태 | 의존성 | 스펙 문서 |
@@ -608,7 +608,50 @@ State 클래스:
 
 ---
 
+### RewardPopup 체크리스트 ✅
+
+```
+공통 인프라:
+- [x] IItemSpawner.cs (동적 아이템 생성 인터페이스, 풀링 준비)
+- [x] SimpleItemSpawner.cs (Instantiate/Destroy 기반 구현)
+- [x] RewardIconCache.cs (Addressables 기반 아이콘 프리로드)
+- [x] IPopupState.cs (AllowBackgroundDismiss 기본 메서드 추가)
+
+Popup 구현:
+- [x] RewardItem.cs (개별 보상 표시 위젯)
+- [x] RewardPopup.cs (보상 목록 팝업)
+- [x] RewardPopup.State (nested class, Validate 포함)
+
+테스트:
+- [x] RewardPopupStateTests.cs (13개 테스트 - 기본값, 검증, 콜백)
+- [x] SimpleItemSpawnerTests.cs (12개 테스트 - Spawn, Despawn, DespawnAll)
+- [x] IPopupStateTests.cs (8개 테스트 - 기본값, 오버라이드, 호환성)
+```
+
+---
+
 ## 작업 로그
+
+### 2026-01-19 (RewardPopup 구현)
+- [x] RewardPopup 아키텍처 설계
+  - [x] State nested class 패턴 선택 (사용자 피드백)
+  - [x] IItemSpawner 추상화 적용 (향후 풀링 준비)
+  - [x] RewardIconCache 프리로드 방식 선택 (튀는 현상 방지)
+- [x] 공통 인프라 구현
+  - [x] IItemSpawner.cs (인터페이스)
+  - [x] SimpleItemSpawner.cs (Instantiate/Destroy 구현)
+  - [x] RewardIconCache.cs (Addressables 비동기 로드)
+  - [x] IPopupState.cs (AllowBackgroundDismiss 기본 메서드)
+- [x] RewardPopup 구현
+  - [x] RewardItem.cs (개별 보상 위젯)
+  - [x] RewardPopup.cs (보상 목록 팝업)
+  - [x] State nested class (Validate, AllowBackgroundDismiss)
+  - [x] ConfigureLayout (개수 기반 레이아웃 변경)
+- [x] 단위 테스트 작성 (33개)
+  - [x] RewardPopupStateTests.cs (13개)
+  - [x] SimpleItemSpawnerTests.cs (12개)
+  - [x] IPopupStateTests.cs (8개)
+- [x] PROGRESS.md 업데이트
 
 ### 2026-01-19 (SystemPopup 구현)
 - [x] SystemPopup 아키텍처 설계
