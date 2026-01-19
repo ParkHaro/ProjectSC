@@ -91,11 +91,11 @@ namespace Sc.Tests
         }
 
         [Test]
-        public void ForceRelease_SetsIsReleasedTrue()
+        public void ForceRelease_ViaInterface_SetsIsReleasedTrue()
         {
-            var forceReleaseMethod = typeof(AssetHandle<Texture2D>).GetMethod("ForceRelease",
-                System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic);
-            forceReleaseMethod.Invoke(_handle, null);
+            // IAssetHandle 인터페이스를 통한 ForceRelease 테스트
+            IAssetHandle iHandle = _handle;
+            iHandle.ForceRelease();
 
             Assert.IsFalse(_handle.IsValid);
             Assert.AreEqual(0, _handle.RefCount);
@@ -104,11 +104,53 @@ namespace Sc.Tests
         [Test]
         public void Asset_AfterForceRelease_ReturnsNull()
         {
-            var forceReleaseMethod = typeof(AssetHandle<Texture2D>).GetMethod("ForceRelease",
-                System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic);
-            forceReleaseMethod.Invoke(_handle, null);
+            IAssetHandle iHandle = _handle;
+            iHandle.ForceRelease();
 
             Assert.IsNull(_handle.Asset);
+        }
+
+        [Test]
+        public void IAssetHandle_Key_ReturnsCorrectKey()
+        {
+            IAssetHandle iHandle = _handle;
+            Assert.AreEqual("test_key", iHandle.Key);
+        }
+
+        [Test]
+        public void IAssetHandle_RefCount_ReturnsCorrectValue()
+        {
+            IAssetHandle iHandle = _handle;
+            Assert.AreEqual(1, iHandle.RefCount);
+        }
+
+        [Test]
+        public void IAssetHandle_IsValid_ReturnsTrue_WhenNotReleased()
+        {
+            IAssetHandle iHandle = _handle;
+            Assert.IsTrue(iHandle.IsValid);
+        }
+
+        [Test]
+        public void IAssetHandle_IsValid_ReturnsFalse_AfterForceRelease()
+        {
+            IAssetHandle iHandle = _handle;
+            iHandle.ForceRelease();
+            Assert.IsFalse(iHandle.IsValid);
+        }
+
+        [Test]
+        public void IAssetHandle_Release_DecrementsRefCount()
+        {
+            // AddRef로 RefCount 증가
+            var addRefMethod = typeof(AssetHandle<Texture2D>).GetMethod("AddRef",
+                System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic);
+            addRefMethod.Invoke(_handle, null);
+
+            IAssetHandle iHandle = _handle;
+            iHandle.Release();
+
+            Assert.AreEqual(1, iHandle.RefCount);
         }
 
         [Test]

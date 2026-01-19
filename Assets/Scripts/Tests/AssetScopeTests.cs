@@ -129,6 +129,31 @@ namespace Sc.Tests
             Object.DestroyImmediate(texture);
         }
 
+        [Test]
+        public void Release_ForceReleasesHandles_ViaIAssetHandle()
+        {
+            var texture = new Texture2D(1, 1);
+            var handle = CreateHandle("test", texture);
+
+            // Register
+            var registerMethod = typeof(AssetScope).GetMethod("RegisterHandle",
+                System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic);
+            registerMethod = registerMethod.MakeGenericMethod(typeof(Texture2D));
+            registerMethod.Invoke(_scope, new object[] { handle });
+
+            // IAssetHandle 인터페이스로 확인
+            IAssetHandle iHandle = handle;
+            Assert.IsTrue(iHandle.IsValid);
+
+            // Release scope
+            _scope.Release();
+
+            // Handle should be force released via IAssetHandle interface
+            Assert.IsFalse(iHandle.IsValid);
+
+            Object.DestroyImmediate(texture);
+        }
+
         private AssetHandle<Texture2D> CreateHandle(string key, Texture2D asset)
         {
             var constructor = typeof(AssetHandle<Texture2D>).GetConstructor(
