@@ -1,0 +1,24 @@
+{
+    "name": "Sc.Contents.Stage",
+    "rootNamespace": "Sc.Contents.Stage",
+    "references": [
+        "Sc.Common",
+        "Sc.Core",
+        "Sc.Data",
+        "Sc.Packet",
+        "Sc.Foundation",
+        "Sc.Event",
+        "Sc.Contents.Character",
+        "UniTask",
+        "Unity.TextMeshPro"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}
