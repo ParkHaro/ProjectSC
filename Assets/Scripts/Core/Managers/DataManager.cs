@@ -18,6 +18,8 @@ namespace Sc.Core
         [SerializeField] private ItemDatabase _itemDatabase;
         [SerializeField] private StageDatabase _stageDatabase;
         [SerializeField] private GachaPoolDatabase _gachaPoolDatabase;
+        [SerializeField] private ShopProductDatabase _shopProductDatabase;
+        [SerializeField] private LiveEventDatabase _liveEventDatabase;
 
         private UserSaveData _userData;
         private bool _isInitialized;
@@ -58,6 +60,31 @@ namespace Sc.Core
         /// 가챠 풀 마스터 데이터베이스
         /// </summary>
         public GachaPoolDatabase GachaPools => _gachaPoolDatabase;
+
+        /// <summary>
+        /// 상점 상품 마스터 데이터베이스
+        /// </summary>
+        public ShopProductDatabase ShopProducts => _shopProductDatabase;
+
+        /// <summary>
+        /// 라이브 이벤트 마스터 데이터베이스
+        /// </summary>
+        public LiveEventDatabase LiveEvents => _liveEventDatabase;
+
+        /// <summary>
+        /// 타입으로 데이터베이스 조회
+        /// </summary>
+        public T GetDatabase<T>() where T : ScriptableObject
+        {
+            if (typeof(T) == typeof(CharacterDatabase)) return _characterDatabase as T;
+            if (typeof(T) == typeof(SkillDatabase)) return _skillDatabase as T;
+            if (typeof(T) == typeof(ItemDatabase)) return _itemDatabase as T;
+            if (typeof(T) == typeof(StageDatabase)) return _stageDatabase as T;
+            if (typeof(T) == typeof(GachaPoolDatabase)) return _gachaPoolDatabase as T;
+            if (typeof(T) == typeof(ShopProductDatabase)) return _shopProductDatabase as T;
+            if (typeof(T) == typeof(LiveEventDatabase)) return _liveEventDatabase as T;
+            return null;
+        }
 
         #endregion
 
@@ -127,6 +154,9 @@ namespace Sc.Core
 
             // 빈 유저 데이터로 초기화 (로그인 전까지)
             _userData = new UserSaveData();
+
+            // 데이터베이스 주입 (LocalServer용)
+            InjectDatabasesToNetwork();
 
             _isInitialized = true;
             Debug.Log("[DataManager] 초기화 완료");
@@ -303,6 +333,37 @@ namespace Sc.Core
         public ItemData GetItemMasterData(OwnedItem owned)
         {
             return _itemDatabase?.GetById(owned.ItemId);
+        }
+
+        /// <summary>
+        /// 상점 구매 기록 조회
+        /// </summary>
+        public ShopPurchaseRecord? FindShopPurchaseRecord(string productId)
+        {
+            return _userData.FindShopPurchaseRecord(productId);
+        }
+
+        /// <summary>
+        /// 데이터베이스를 NetworkManager에 주입 (LocalServer용)
+        /// NetworkManager 초기화 후 호출 필요
+        /// </summary>
+        public void InjectDatabasesToNetwork()
+        {
+            if (NetworkManager.Instance == null || !NetworkManager.Instance.IsInitialized)
+            {
+                Debug.LogWarning("[DataManager] NetworkManager가 아직 초기화되지 않음. 데이터베이스 주입 건너뜀.");
+                return;
+            }
+
+            if (_shopProductDatabase != null)
+            {
+                NetworkManager.Instance.SetShopProductDatabase(_shopProductDatabase);
+            }
+
+            if (_liveEventDatabase != null)
+            {
+                NetworkManager.Instance.SetEventDatabase(_liveEventDatabase);
+            }
         }
 
         private bool ValidateMasterData()

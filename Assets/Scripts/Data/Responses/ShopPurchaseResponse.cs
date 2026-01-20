@@ -4,7 +4,7 @@ using System.Collections.Generic;
 namespace Sc.Data
 {
     /// <summary>
-    /// 구매 보상 아이템
+    /// 구매 보상 아이템 (레거시 호환용)
     /// </summary>
     [Serializable]
     public class PurchaseRewardItem
@@ -23,6 +23,19 @@ namespace Sc.Data
         /// 보상 수량
         /// </summary>
         public int Amount;
+
+        /// <summary>
+        /// RewardInfo에서 변환
+        /// </summary>
+        public static PurchaseRewardItem FromRewardInfo(RewardInfo info)
+        {
+            return new PurchaseRewardItem
+            {
+                RewardType = info.Type.ToString(),
+                RewardId = info.ItemId,
+                Amount = info.Amount
+            };
+        }
     }
 
     /// <summary>
@@ -64,12 +77,21 @@ namespace Sc.Data
         /// <summary>
         /// 획득한 보상 목록
         /// </summary>
-        public List<PurchaseRewardItem> Rewards;
+        public List<RewardInfo> Rewards;
+
+        /// <summary>
+        /// 갱신된 구매 기록
+        /// </summary>
+        public ShopPurchaseRecord? UpdatedRecord;
 
         /// <summary>
         /// 성공 응답 생성
         /// </summary>
-        public static ShopPurchaseResponse Success(string productId, List<PurchaseRewardItem> rewards, UserDataDelta delta)
+        public static ShopPurchaseResponse Success(
+            string productId,
+            List<RewardInfo> rewards,
+            UserDataDelta delta,
+            ShopPurchaseRecord? updatedRecord = null)
         {
             return new ShopPurchaseResponse
             {
@@ -79,7 +101,8 @@ namespace Sc.Data
                 ServerTime = DateTimeOffset.UtcNow.ToUnixTimeSeconds(),
                 Delta = delta,
                 ProductId = productId,
-                Rewards = rewards
+                Rewards = rewards ?? new List<RewardInfo>(),
+                UpdatedRecord = updatedRecord
             };
         }
 
@@ -94,7 +117,9 @@ namespace Sc.Data
                 ErrorCode = errorCode,
                 ErrorMessage = errorMessage,
                 ServerTime = DateTimeOffset.UtcNow.ToUnixTimeSeconds(),
-                Delta = UserDataDelta.Empty()
+                Delta = UserDataDelta.Empty(),
+                Rewards = new List<RewardInfo>(),
+                UpdatedRecord = null
             };
         }
     }

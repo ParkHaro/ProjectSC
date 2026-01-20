@@ -1,0 +1,69 @@
+{
+  "id": "main-scene-s2-structure",
+  "name": "Main Scene Setup - Session 2: 씬 구조 및 초기화 시스템",
+  "status": "completed",
+  "created": "2026-01-20",
+  "completed": "2026-01-20",
+  "plan_doc": "Docs/Specs/Editor/MainSceneSetup_PLAN.md",
+  "tracks": {
+    "A": {
+      "name": "씬 계층 구조",
+      "status": "completed",
+      "todos": [
+        { "task": "Main.unity 씬 생성", "status": "completed" },
+        { "task": "Canvas 계층 구성 (Screen/Popup/Header/Loading)", "status": "completed" },
+        { "task": "Manager 배치 구조", "status": "completed" },
+        { "task": "MainSceneSetup 에디터 도구 생성", "status": "completed" }
+      ]
+    },
+    "B": {
+      "name": "초기화 시스템",
+      "status": "completed",
+      "todos": [
+        { "task": "IInitStep 인터페이스 생성", "status": "completed" },
+        { "task": "InitializationSequence 서비스 생성", "status": "completed" },
+        { "task": "InitializationEvents 이벤트 정의", "status": "completed" },
+        { "task": "AssetManagerInitStep 구현", "status": "completed" },
+        { "task": "NetworkManagerInitStep 구현", "status": "completed" },
+        { "task": "DataManagerInitStep 구현", "status": "completed" },
+        { "task": "LoginStep 구현", "status": "completed" },
+        { "task": "GameBootstrap 리팩토링", "status": "completed" },
+        { "task": "ErrorCode 추가 (InitializationFailed, InitStepFailed)", "status": "completed" },
+        { "task": "코드 리뷰 및 버그 수정", "status": "completed" }
+      ]
+    }
+  },
+  "decisions": [
+    { "item": "씬 경로", "value": "Assets/Scenes/Main.unity" },
+    { "item": "MVP 관계", "value": "Main이 MVP 대체" },
+    { "item": "로딩 UI", "value": "프로그레스 표시 (스텝별 진행률)" },
+    { "item": "에러 처리", "value": "사용자 알림 + 재시도 (최대 3회)" },
+    { "item": "아키텍처", "value": "클린 아키텍처 (IInitStep 인터페이스 기반)" }
+  ],
+  "outputs": {
+    "created": [
+      "Assets/Scripts/Core/Initialization/IInitStep.cs",
+      "Assets/Scripts/Core/Initialization/InitializationEvents.cs",
+      "Assets/Scripts/Core/Initialization/InitializationSequence.cs",
+      "Assets/Scripts/Core/Initialization/Steps/AssetManagerInitStep.cs",
+      "Assets/Scripts/Core/Initialization/Steps/NetworkManagerInitStep.cs",
+      "Assets/Scripts/Core/Initialization/Steps/DataManagerInitStep.cs",
+      "Assets/Scripts/Core/Initialization/Steps/LoginStep.cs",
+      "Assets/Scripts/Editor/Wizard/MainSceneSetup.cs"
+    ],
+    "modified": [
+      "Assets/Scripts/Core/Systems/GameBootstrap.cs",
+      "Assets/Scripts/Core/Sc.Core.asmdef",
+      "Assets/Scripts/Foundation/Error/ErrorCode.cs",
+      "Assets/Scripts/Editor/Wizard/SetupTab.cs"
+    ]
+  },
+  "review_summary": {
+    "fixed_issues": [
+      "Event 타입을 class에서 readonly struct로 변경 (EventManager 호환)",
+      "EventManager.HasInstance 검사 추가 (OnEnable, GameInitializedEvent)",
+      "LoginStep 레이스 컨디션 수정 (_isCompleted 플래그)",
+      "OnProgressChanged 이벤트 정리 (Clear 메서드)"
+    ]
+  }
+}

@@ -14,8 +14,7 @@ namespace Sc.Core
     /// </summary>
     public class NetworkManager : Singleton<NetworkManager>
     {
-        [SerializeField]
-        private NetworkConfig _config;
+        [SerializeField] private NetworkConfig _config;
 
         private IApiClient _apiClient;
         private IWebSocketClient _wsClient;
@@ -226,6 +225,30 @@ namespace Sc.Core
             where TResponse : IResponse
         {
             _dispatcher?.RegisterHandler(handler);
+        }
+
+        /// <summary>
+        /// ShopProductDatabase 설정 (LocalApiClient에 주입)
+        /// </summary>
+        public void SetShopProductDatabase(ShopProductDatabase database)
+        {
+            if (_apiClient is LocalApiClient localClient)
+            {
+                localClient.SetShopProductDatabase(database);
+                Debug.Log("[NetworkManager] ShopProductDatabase injected");
+            }
+        }
+
+        /// <summary>
+        /// LiveEventDatabase 설정 (LocalApiClient에 주입)
+        /// </summary>
+        public void SetEventDatabase(LiveEventDatabase database)
+        {
+            if (_apiClient is LocalApiClient localClient)
+            {
+                localClient.SetEventDatabase(database);
+                Debug.Log("[NetworkManager] LiveEventDatabase injected");
+            }
         }
 
         #region Private Methods

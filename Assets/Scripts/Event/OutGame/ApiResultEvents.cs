@@ -111,7 +111,7 @@ namespace Sc.Event.OutGame
         /// <summary>
         /// 획득한 보상 목록
         /// </summary>
-        public List<PurchaseRewardItem> Rewards { get; init; }
+        public List<RewardInfo> Rewards { get; init; }
 
         /// <summary>
         /// 유저 데이터 변경분

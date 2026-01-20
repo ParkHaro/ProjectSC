@@ -10,6 +10,7 @@ namespace Sc.Editor.Wizard
     /// </summary>
     public class SetupTab
     {
+        private bool _showMainSection = true;
         private bool _showMVPSection = true;
         private bool _showTestSection = true;
         private bool _showDialogSection = true;
@@ -17,6 +18,11 @@ namespace Sc.Editor.Wizard
 
         public void Draw()
         {
+            // Main Scene Section (Production)
+            DrawMainSection();
+
+            EditorGUILayout.Space(10);
+
             // MVP Scene Section
             DrawMVPSection();
             
@@ -242,6 +248,47 @@ namespace Sc.Editor.Wizard
                 EditorGUILayout.EndVertical();
             }
             
+            EditorGUILayout.EndFoldoutHeaderGroup();
+        }
+
+        private void DrawMainSection()
+        {
+            _showMainSection = EditorGUILayout.BeginFoldoutHeaderGroup(_showMainSection, "Main Scene (Production)");
+
+            if (_showMainSection)
+            {
+                EditorGUILayout.BeginVertical("box");
+
+                EditorGUILayout.HelpBox(
+                    "프로덕션용 Main 씬을 생성합니다.\n" +
+                    "- 동적 프리팹 로딩 (Addressables)\n" +
+                    "- 초기화 시퀀스 + 로딩 UI\n" +
+                    "- 에러 처리 및 재시도",
+                    MessageType.Info);
+
+                EditorGUILayout.BeginHorizontal();
+
+                GUI.backgroundColor = new Color(0.6f, 0.8f, 1f);
+                if (GUILayout.Button("Setup Main Scene", GUILayout.Height(35)))
+                {
+                    MainSceneSetup.SetupMainScene();
+                }
+                GUI.backgroundColor = Color.white;
+
+                if (GUILayout.Button("Clear", GUILayout.Height(35)))
+                {
+                    if (EditorUtility.DisplayDialog("Main 씬 정리",
+                        "Main 씬의 모든 오브젝트를 삭제하시겠습니까?", "삭제", "취소"))
+                    {
+                        MainSceneSetup.ClearMainSceneObjects();
+                    }
+                }
+
+                EditorGUILayout.EndHorizontal();
+
+                EditorGUILayout.EndVertical();
+            }
+
             EditorGUILayout.EndFoldoutHeaderGroup();
         }
     }

@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using Sc.Data;
 
 namespace Sc.LocalServer
@@ -12,6 +13,15 @@ namespace Sc.LocalServer
         private readonly ServerValidator _validator;
         private readonly RewardService _rewardService;
         private readonly ServerTimeService _timeService;
+        private readonly PurchaseLimitValidator _limitValidator;
+        private ShopProductDatabase _productDatabase;
+
+        // 에러 코드
+        private const int ERROR_PRODUCT_NOT_FOUND = 1001;
+        private const int ERROR_LIMIT_EXCEEDED = 1002;
+        private const int ERROR_INSUFFICIENT_CURRENCY = 1003;
+        private const int ERROR_PRODUCT_DISABLED = 1004;
+        private const int ERROR_SERVER = 9999;
 
         public ShopHandler(
             ServerValidator validator,
@@ -21,54 +31,115 @@ namespace Sc.LocalServer
             _validator = validator;
             _rewardService = rewardService;
             _timeService = timeService;
+            _limitValidator = new PurchaseLimitValidator(timeService);
+        }
+
+        /// <summary>
+        /// ShopProductDatabase 설정 (외부에서 주입)
+        /// </summary>
+        public void SetProductDatabase(ShopProductDatabase database)
+        {
+            _productDatabase = database;
         }
 
         public ShopPurchaseResponse Handle(ShopPurchaseRequest request, ref UserSaveData userData)
         {
-            // 상품 정보 조회 (실제로는 마스터 데이터에서)
-            // TODO: ShopProductDatabase 연동
-            if (request.ProductId == "gold_pack_small")
+            // 0. 데이터베이스 확인
+            if (_productDatabase == null)
             {
-                return HandleGoldPackPurchase(request, ref userData);
+                return ShopPurchaseResponse.Fail(ERROR_SERVER, "상품 데이터베이스가 초기화되지 않았습니다.");
             }
 
-            return ShopPurchaseResponse.Fail(1002, "존재하지 않는 상품입니다.");
+            // 1. 상품 조회
+            var product = _productDatabase.GetById(request.ProductId);
+            if (product == null)
+            {
+                return ShopPurchaseResponse.Fail(ERROR_PRODUCT_NOT_FOUND, "존재하지 않는 상품입니다.");
+            }
+
+            // 2. 상품 활성화 여부 확인
+            if (!product.IsEnabled)
+            {
+                return ShopPurchaseResponse.Fail(ERROR_PRODUCT_DISABLED, "판매 중지된 상품입니다.");
+            }
+
+            // 3. 구매 제한 검증
+            var existingRecord = userData.FindShopPurchaseRecord(product.Id);
+            if (!_limitValidator.CanPurchase(product, existingRecord, out var remainingCount))
+            {
+                return ShopPurchaseResponse.Fail(ERROR_LIMIT_EXCEEDED, $"구매 제한에 도달했습니다. (남은 횟수: {remainingCount})");
+            }
+
+            // 4. 재화 검증
+            if (!HasEnoughCurrency(ref userData, product))
+            {
+                return ShopPurchaseResponse.Fail(ERROR_INSUFFICIENT_CURRENCY, "재화가 부족합니다.");
+            }
+
+            // 5. 재화 차감
+            DeductCurrency(ref userData, product);
+
+            // 6. 보상 지급
+            var rewardList = product.Rewards.ToArray();
+            var delta = _rewardService.CreateRewardDelta(rewardList, ref userData);
+
+            // 7. 구매 기록 업데이트
+            var updatedRecord = _limitValidator.UpdatePurchaseRecord(product, existingRecord);
+            userData.UpdateShopPurchaseRecord(product.Id, updatedRecord);
+
+            // 8. 응답 생성
+            return ShopPurchaseResponse.Success(
+                product.Id,
+                rewardList.ToList(),
+                delta,
+                updatedRecord
+            );
         }
 
-        private ShopPurchaseResponse HandleGoldPackPurchase(
-            ShopPurchaseRequest request,
-            ref UserSaveData userData)
+        /// <summary>
+        /// 재화 충분 여부 확인
+        /// </summary>
+        private bool HasEnoughCurrency(ref UserSaveData userData, ShopProductData product)
         {
-            const int gemCost = 100;
-            const int goldReward = 10000;
+            var costType = product.CostType;
+            var amount = product.Price;
 
-            // 재화 확인
-            if (!_validator.HasEnoughGem(userData.Currency, gemCost))
+            return costType switch
             {
-                return ShopPurchaseResponse.Fail(1001, "보석이 부족합니다.");
-            }
-
-            // 재화 차감
-            _rewardService.DeductGem(ref userData.Currency, gemCost);
-
-            // 골드 지급
-            userData.Currency.Gold += goldReward;
-
-            // 보상 목록 생성
-            var rewards = new List<PurchaseRewardItem>
-            {
-                new PurchaseRewardItem
-                {
-                    RewardType = "Currency",
-                    RewardId = "Gold",
-                    Amount = goldReward
-                }
+                CostType.None => true,
+                CostType.Gold => _validator.HasEnoughGold(userData.Currency, amount),
+                CostType.Gem => _validator.HasEnoughGem(userData.Currency, amount),
+                CostType.Stamina => _validator.HasEnoughStamina(userData.Currency, amount),
+                CostType.EventCurrency => userData.EventCurrency.CanAffordCurrency(product.EventId, amount),
+                _ => false
             };
+        }
 
-            // Delta 생성
-            var delta = _rewardService.CreateCurrencyDelta(userData.Currency);
+        /// <summary>
+        /// 재화 차감
+        /// </summary>
+        private void DeductCurrency(ref UserSaveData userData, ShopProductData product)
+        {
+            var costType = product.CostType;
+            var amount = product.Price;
 
-            return ShopPurchaseResponse.Success(request.ProductId, rewards, delta);
+            switch (costType)
+            {
+                case CostType.None:
+                    break;
+                case CostType.Gold:
+                    _rewardService.DeductGold(ref userData.Currency, amount);
+                    break;
+                case CostType.Gem:
+                    _rewardService.DeductGem(ref userData.Currency, amount);
+                    break;
+                case CostType.Stamina:
+                    userData.Currency.Stamina -= amount;
+                    break;
+                case CostType.EventCurrency:
+                    userData.EventCurrency.DeductCurrency(product.EventId, amount);
+                    break;
+            }
         }
     }
 }

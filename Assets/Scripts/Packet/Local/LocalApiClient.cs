@@ -67,7 +67,8 @@ namespace Sc.Packet
                         // 마이그레이션 적용 (버전 업그레이드)
                         if (_userData.Version < UserSaveData.CurrentVersion)
                         {
-                            Debug.Log($"[LocalApiClient] 데이터 마이그레이션: v{_userData.Version} → v{UserSaveData.CurrentVersion}");
+                            Debug.Log(
+                                $"[LocalApiClient] 데이터 마이그레이션: v{_userData.Version} → v{UserSaveData.CurrentVersion}");
                             _userData = UserSaveData.Migrate(_userData);
                             SaveUserData();
                         }
@@ -129,6 +130,26 @@ namespace Sc.Packet
                 Debug.LogError($"[LocalApiClient] Request failed: {ex.Message}");
                 throw;
             }
+        }
+
+        #endregion
+
+        #region Database Injection
+
+        /// <summary>
+        /// ShopProductDatabase 설정 (외부에서 Database 주입)
+        /// </summary>
+        public void SetShopProductDatabase(ShopProductDatabase database)
+        {
+            _server?.SetShopProductDatabase(database);
+        }
+
+        /// <summary>
+        /// LiveEventDatabase 설정 (외부에서 Database 주입)
+        /// </summary>
+        public void SetEventDatabase(LiveEventDatabase database)
+        {
+            _server?.SetEventDatabase(database);
         }
 
         #endregion

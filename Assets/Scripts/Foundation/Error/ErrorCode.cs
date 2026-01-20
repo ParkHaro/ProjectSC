@@ -21,6 +21,8 @@ namespace Sc.Foundation
         // System (1000~)
         SystemInitFailed = 1001,
         ConfigLoadFailed = 1002,
+        InitializationFailed = 1003,
+        InitStepFailed = 1004,
 
         // Asset (1100~)
         AssetNotFound = 1100,

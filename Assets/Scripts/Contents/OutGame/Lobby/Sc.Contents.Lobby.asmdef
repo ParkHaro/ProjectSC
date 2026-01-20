@@ -9,6 +9,7 @@
         "Sc.Foundation",
         "Sc.Contents.Gacha",
         "Sc.Contents.Character",
+        "Sc.Contents.Shop",
         "UniTask",
         "Unity.TextMeshPro",
         "Sc.Contents.Event"

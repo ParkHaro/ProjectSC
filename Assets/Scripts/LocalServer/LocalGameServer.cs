@@ -75,6 +75,14 @@ namespace Sc.LocalServer
         }
 
         /// <summary>
+        /// ShopProductDatabase 설정 (외부에서 Database 주입)
+        /// </summary>
+        public void SetShopProductDatabase(ShopProductDatabase database)
+        {
+            _shopHandler?.SetProductDatabase(database);
+        }
+
+        /// <summary>
         /// 이벤트 관련 요청 처리 (EventHandler 미설정 시 에러 응답)
         /// </summary>
         private IResponse HandleEventRequest(GetActiveEventsRequest request, ref UserSaveData userData)
@@ -83,6 +91,7 @@ namespace Sc.LocalServer
             {
                 return GetActiveEventsResponse.Fail(9999, "EventHandler가 초기화되지 않았습니다.");
             }
+
             return _eventHandler.HandleGetActiveEvents(request, ref userData);
         }
 
@@ -92,6 +101,7 @@ namespace Sc.LocalServer
             {
                 return VisitEventResponse.Fail(9999, "EventHandler가 초기화되지 않았습니다.");
             }
+
             return _eventHandler.HandleVisitEvent(request, ref userData);
         }
 
@@ -101,6 +111,7 @@ namespace Sc.LocalServer
             {
                 return ClaimEventMissionResponse.Fail(9999, "EventHandler가 초기화되지 않았습니다.");
             }
+
             return _eventHandler.HandleClaimMission(request, ref userData);
         }
     }

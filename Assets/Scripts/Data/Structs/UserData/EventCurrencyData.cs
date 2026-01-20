@@ -40,6 +40,7 @@ namespace Sc.Data
                 if (item.EventId == eventId && item.CurrencyId == currencyId)
                     return item.Amount;
             }
+
             return 0;
         }
 
@@ -64,6 +65,7 @@ namespace Sc.Data
                 if (item.EventId == eventId)
                     result.Add(item);
             }
+
             return result;
         }
 
@@ -94,7 +96,78 @@ namespace Sc.Data
                 }
             }
         }
+
+        #region Simple Event Currency API (eventId = currencyId)
+
+        /// <summary>
+        /// 이벤트 재화 조회 (단일 재화 이벤트용)
+        /// </summary>
+        /// <param name="eventId">이벤트 ID (재화 ID로도 사용)</param>
+        public int GetCurrency(string eventId)
+        {
+            return GetAmount(eventId, eventId);
+        }
+
+        /// <summary>
+        /// 이벤트 재화 설정 (단일 재화 이벤트용)
+        /// </summary>
+        public void SetCurrency(string eventId, int amount)
+        {
+            Currencies ??= new List<EventCurrencyItem>();
+
+            for (int i = 0; i < Currencies.Count; i++)
+            {
+                if (Currencies[i].EventId == eventId && Currencies[i].CurrencyId == eventId)
+                {
+                    var item = Currencies[i];
+                    item.Amount = amount;
+                    Currencies[i] = item;
+                    return;
+                }
+            }
+
+            // 없으면 새로 추가
+            Currencies.Add(new EventCurrencyItem
+            {
+                EventId = eventId,
+                CurrencyId = eventId,
+                Amount = amount,
+                ExpiresAt = 0
+            });
+        }
+
+        /// <summary>
+        /// 이벤트 재화 추가 (단일 재화 이벤트용)
+        /// </summary>
+        public void AddCurrency(string eventId, int amount)
+        {
+            var current = GetCurrency(eventId);
+            SetCurrency(eventId, current + amount);
+        }
+
+        /// <summary>
+        /// 이벤트 재화 차감 가능 여부 (단일 재화 이벤트용)
+        /// </summary>
+        public bool CanAffordCurrency(string eventId, int amount)
+        {
+            return GetCurrency(eventId) >= amount;
+        }
+
+        /// <summary>
+        /// 이벤트 재화 차감 (단일 재화 이벤트용)
+        /// </summary>
+        public bool DeductCurrency(string eventId, int amount)
+        {
+            var current = GetCurrency(eventId);
+            if (current < amount) return false;
+
+            SetCurrency(eventId, current - amount);
+            return true;
+        }
+
+        #endregion
     }
+
 
     /// <summary>
     /// 개별 이벤트 재화

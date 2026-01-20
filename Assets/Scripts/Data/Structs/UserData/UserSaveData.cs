@@ -60,6 +60,11 @@ namespace Sc.Data
         public Dictionary<string, LiveEventProgress> EventProgresses;
 
         /// <summary>
+        /// 상점 구매 기록 (Key: ProductId)
+        /// </summary>
+        public Dictionary<string, ShopPurchaseRecord> ShopPurchaseRecords;
+
+        /// <summary>
         /// 마지막 동기화 시간 (Unix Timestamp)
         /// </summary>
         public long LastSyncAt;
@@ -67,7 +72,7 @@ namespace Sc.Data
         /// <summary>
         /// 현재 데이터 버전
         /// </summary>
-        public const int CurrentVersion = 3;
+        public const int CurrentVersion = 4;
 
         /// <summary>
         /// 신규 유저 데이터 생성
@@ -86,6 +91,7 @@ namespace Sc.Data
                 QuestProgress = QuestProgress.CreateDefault(),
                 EventCurrency = EventCurrencyData.CreateDefault(),
                 EventProgresses = new Dictionary<string, LiveEventProgress>(),
+                ShopPurchaseRecords = new Dictionary<string, ShopPurchaseRecord>(),
                 LastSyncAt = DateTimeOffset.UtcNow.ToUnixTimeSeconds()
             };
         }
@@ -103,6 +109,7 @@ namespace Sc.Data
                 {
                     data.EventCurrency = EventCurrencyData.CreateDefault();
                 }
+
                 data.Version = 2;
             }
 
@@ -113,7 +120,19 @@ namespace Sc.Data
                 {
                     data.EventProgresses = new Dictionary<string, LiveEventProgress>();
                 }
+
                 data.Version = 3;
+            }
+
+            // Version 3 → 4: ShopPurchaseRecords 필드 추가
+            if (data.Version < 4)
+            {
+                if (data.ShopPurchaseRecords == null)
+                {
+                    data.ShopPurchaseRecords = new Dictionary<string, ShopPurchaseRecord>();
+                }
+
+                data.Version = 4;
             }
 
             return data;
@@ -130,6 +149,7 @@ namespace Sc.Data
                 if (character.CharacterId == characterId)
                     return character;
             }
+
             return null;
         }
 
@@ -144,6 +164,7 @@ namespace Sc.Data
                 if (character.InstanceId == instanceId)
                     return character;
             }
+
             return null;
         }
 
@@ -158,6 +179,7 @@ namespace Sc.Data
                 if (item.ItemId == itemId && !item.IsEquipment)
                     return item;
             }
+
             return null;
         }
 
@@ -172,6 +194,7 @@ namespace Sc.Data
                 if (item.InstanceId == instanceId)
                     return item;
             }
+
             return null;
         }
 
@@ -223,6 +246,7 @@ namespace Sc.Data
                 progress = LiveEventProgress.CreateDefault(eventId);
                 EventProgresses[eventId] = progress;
             }
+
             return progress;
         }
 
@@ -247,6 +271,37 @@ namespace Sc.Data
         {
             var progress = FindEventProgress(eventId);
             return progress?.HasVisited ?? false;
+        }
+
+        #endregion
+
+        #region Shop Purchase Helpers
+
+        /// <summary>
+        /// 상품 구매 기록 조회
+        /// </summary>
+        public ShopPurchaseRecord? FindShopPurchaseRecord(string productId)
+        {
+            if (ShopPurchaseRecords == null) return null;
+            return ShopPurchaseRecords.TryGetValue(productId, out var record) ? record : null;
+        }
+
+        /// <summary>
+        /// 상품 구매 기록 업데이트
+        /// </summary>
+        public void UpdateShopPurchaseRecord(string productId, ShopPurchaseRecord record)
+        {
+            ShopPurchaseRecords ??= new Dictionary<string, ShopPurchaseRecord>();
+            ShopPurchaseRecords[productId] = record;
+        }
+
+        /// <summary>
+        /// 상품 구매 횟수 조회
+        /// </summary>
+        public int GetShopPurchaseCount(string productId)
+        {
+            var record = FindShopPurchaseRecord(productId);
+            return record?.PurchaseCount ?? 0;
         }
 
         #endregion

@@ -6,8 +6,10 @@
         "Sc.Core",
         "Sc.Data",
         "Sc.Packet",
-        "Sc.Contents.Inventory",
-        "UniTask"
+        "Sc.Foundation",
+        "Sc.Event",
+        "UniTask",
+        "Unity.TextMeshPro"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],

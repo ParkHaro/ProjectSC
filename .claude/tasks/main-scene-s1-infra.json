@@ -1,36 +1,36 @@
 {
   "id": "main-scene-s1-infra",
   "name": "Main Scene Setup - Session 1: 기반 인프라",
-  "status": "in_progress",
+  "status": "completed",
   "created": "2026-01-20",
   "plan_doc": "Docs/Specs/Editor/MainSceneSetup_PLAN.md",
   "tracks": {
     "A": {
       "name": "에디터 도구 리팩토링",
-      "status": "in_progress",
+      "status": "completed",
       "todos": [
-        { "task": "기존 에디터 도구 백업 및 분석", "status": "in_progress" },
-        { "task": "ProjectSetupWizard 기본 구조 생성", "status": "in_progress" },
-        { "task": "SetupTab 구현", "status": "in_progress" },
-        { "task": "DebugTab 구현 (NavigationDebugWindow 통합)", "status": "in_progress" },
-        { "task": "DataTab 구현 (MasterDataGenerator 통합)", "status": "in_progress" },
-        { "task": "SettingsTab 구현", "status": "in_progress" },
-        { "task": "EditorUIHelpers 리팩토링", "status": "in_progress" },
-        { "task": "기존 에디터 도구 파일 삭제", "status": "in_progress" }
+        { "task": "기존 에디터 도구 백업 및 분석", "status": "completed" },
+        { "task": "ProjectSetupWizard 기본 구조 생성", "status": "completed" },
+        { "task": "SetupTab 구현", "status": "completed" },
+        { "task": "DebugTab 구현 (NavigationDebugWindow 통합)", "status": "completed" },
+        { "task": "DataTab 구현 (MasterDataGenerator 통합)", "status": "completed" },
+        { "task": "SettingsTab 구현", "status": "completed" },
+        { "task": "EditorUIHelpers 리팩토링", "status": "completed" },
+        { "task": "기존 에디터 도구 파일 삭제", "status": "completed" }
       ]
     },
     "B": {
       "name": "Addressables 인프라",
-      "status": "in_progress",
+      "status": "completed",
       "todos": [
-        { "task": "Addressables Group 설계 문서 작성", "status": "in_progress" },
-        { "task": "UI_Screens Group 생성", "status": "in_progress" },
-        { "task": "UI_Popups Group 생성", "status": "in_progress" },
-        { "task": "UI_Widgets Group 생성", "status": "in_progress" },
-        { "task": "Address 명명 규칙 정의", "status": "in_progress" },
-        { "task": "AssetManager 확장 API 설계", "status": "in_progress" },
-        { "task": "AssetManager LoadScreen/LoadPopup 구현", "status": "in_progress" },
-        { "task": "빌드 스크립트 작성", "status": "in_progress" }
+        { "task": "Addressables Group 설계 문서 작성", "status": "completed" },
+        { "task": "UI_Screens Group 생성", "status": "completed" },
+        { "task": "UI_Popups Group 생성", "status": "completed" },
+        { "task": "UI_Widgets Group 생성", "status": "completed" },
+        { "task": "Address 명명 규칙 정의", "status": "completed" },
+        { "task": "AssetManager 확장 API 설계", "status": "completed" },
+        { "task": "AssetManager LoadScreen/LoadPopup 구현", "status": "completed" },
+        { "task": "빌드 스크립트 작성", "status": "completed" }
       ]
     }
   },

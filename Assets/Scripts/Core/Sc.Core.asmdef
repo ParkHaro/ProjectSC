@@ -6,6 +6,7 @@
         "Sc.Data",
         "Sc.Event",
         "Sc.Packet",
+        "Sc.Common",
         "UniTask",
         "Unity.Addressables",
         "Unity.ResourceManager",

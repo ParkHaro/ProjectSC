@@ -19,7 +19,7 @@
 | D | SystemPopup, RewardPopup | ✅ | Common/Popups/*.md |
 | E | LocalServer 분리 | ✅ | 마일스톤 내 |
 | F | **LiveEvent** | ✅ | LiveEvent.md |
-| F | Shop | ⬜ | Shop.md |
+| F | **Shop** | ✅ | Shop.md |
 | F | Stage | ⬜ | Stage.md |
 | F | GachaEnhancement | ⬜ | Gacha/Enhancement.md |
 | F | CharacterEnhancement | ⬜ | Character/Enhancement.md |
@@ -33,7 +33,7 @@
 
 ### 우선순위
 1. **로비 진입 후처리 시스템** - [Lobby.md 참조](Specs/Lobby.md#로비-진입-후처리-시스템)
-2. **Shop** 또는 **Stage** 시스템
+2. **Stage** 시스템
 
 ---
 
@@ -87,6 +87,7 @@
 
 ### 컨텐츠 (Phase F)
 - **LiveEvent**: ✅ 완료 (30개 파일, Phase A~G 전체)
+- **Shop**: ✅ 완료 (17개 파일, Phase A~F 전체)
 
 ### MVP 완료
 - Title, Lobby, Gacha, CharacterList, CharacterDetail Screen
@@ -101,6 +102,20 @@
 ## 작업 로그 (최근)
 
 ### 2026-01-20
+- [x] **Shop 시스템 구현 완료** (17개 파일)
+  - Phase A: ShopProductType, ShopProductData, ShopProductDatabase, ShopPurchaseRecord
+  - Phase B: ShopEvents (ProductPurchasedEvent, ProductPurchaseFailedEvent)
+  - Phase C: PurchaseLimitValidator, ShopHandler (구매 제한, 재화 검증)
+  - Phase D: IShopProvider, NormalShopProvider, EventShopProvider, ShopState, ShopScreen, ShopProductItem
+  - Phase E: LobbyScreen Shop 버튼, DataManager/NetworkManager Database 주입
+  - Phase F: PurchaseLimitValidatorTests, ShopHandlerTests
+  - UserSaveData v4 마이그레이션 (ShopPurchaseRecords 필드)
+- [x] **Main Scene 초기화 시스템 구현** (Session 2)
+  - IInitStep 인터페이스 + InitializationSequence 서비스
+  - 4개 초기화 스텝: AssetManager, NetworkManager, DataManager, Login
+  - GameBootstrap 리팩토링 (순차 초기화 + 재시도 로직)
+  - MainSceneSetup 에디터 도구 (SetupTab 통합)
+  - Canvas 계층: Screen(10), Popup(50), Header(80), Loading(100)
 - [x] **LiveEvent 테스트 추가** (115개)
   - Data 테스트: LiveEventData, Database, Progress, EventCurrency (84개)
   - LocalServer 테스트: EventHandler, EventCurrencyConverter (31개)

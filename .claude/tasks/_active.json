@@ -2,7 +2,12 @@
   "tasks": {
     "main-scene-s1-infra": {
       "name": "Main Scene Setup - Session 1: 기반 인프라",
-      "status": "in_progress",
+      "status": "completed",
+      "plan_doc": "Docs/Specs/Editor/MainSceneSetup_PLAN.md"
+    },
+    "main-scene-s2-structure": {
+      "name": "Main Scene Setup - Session 2: 씬 구조 및 초기화 시스템",
+      "status": "completed",
       "plan_doc": "Docs/Specs/Editor/MainSceneSetup_PLAN.md"
     }
   },

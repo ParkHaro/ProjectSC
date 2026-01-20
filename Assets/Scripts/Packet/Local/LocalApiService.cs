@@ -205,14 +205,9 @@ namespace Sc.Packet
 
                 await SaveUserDataAsync();
 
-                var rewards = new List<PurchaseRewardItem>
+                var rewards = new List<RewardInfo>
                 {
-                    new PurchaseRewardItem
-                    {
-                        RewardType = "Currency",
-                        RewardId = "Gold",
-                        Amount = goldReward
-                    }
+                    RewardInfo.Currency(CostType.Gold, goldReward)
                 };
 
                 var delta = UserDataDelta.WithCurrency(_userData.Currency);
