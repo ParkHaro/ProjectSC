@@ -21,7 +21,7 @@
 | F | **LiveEvent** | ✅ | LiveEvent.md |
 | F | **Shop** | ✅ | Shop.md |
 | F | **LobbyEntryTask** | ✅ | Lobby.md |
-| F | Stage | 🔨 | Stage.md (v3.1, Phase A~I 완료, 테스트 제외) |
+| F | Stage | ✅ | Stage.md (v3.1, Phase A~J 전체 완료) |
 | F | GachaEnhancement | ⬜ | Gacha/Enhancement.md |
 | F | CharacterEnhancement | ⬜ | Character/Enhancement.md |
 | F | NavigationEnhancement | ⬜ | Common/NavigationEnhancement.md |
@@ -54,8 +54,9 @@
 | 3.5차 | LocalServer | ✅ | 40개 |
 | 4~4.5차 | PlayMode 인프라, 에디터 도구 | ✅ | - |
 | 5차 | LiveEvent 테스트 | ✅ | 115개 |
+| 6차 | Stage 테스트 | ✅ | 47개 |
 
-**총 테스트**: 304개
+**총 테스트**: 351개
 
 ---
 
@@ -90,6 +91,11 @@
 ---
 
 ## 작업 로그 (최근)
+
+### 2026-01-21
+- [x] **Stage 시스템 Phase J 완료** (2개 파일)
+  - StageEntryValidatorTests.cs - 입장 제한 검증 테스트 (21개)
+  - StageHandlerTests.cs - 입장/클리어 핸들러 테스트 (26개)
 
 ### 2026-01-20
 - [x] **Stage 시스템 Phase H~I 완료** (4개 파일)

@@ -672,8 +672,8 @@ Phase I: Integration
 - [x] DataManager StageCategoryDatabase 추가
 
 Phase J: Testing
-- [ ] StageEntryValidatorTests.cs
-- [ ] StageHandlerTests.cs
+- [x] StageEntryValidatorTests.cs
+- [x] StageHandlerTests.cs
 - [x] StageContentModuleFactoryTests.cs
 - [x] StageDatabaseTests.cs
 - [x] StageCategoryDatabaseTests.cs
