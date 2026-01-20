@@ -43,13 +43,37 @@
 
 > **스펙 문서**: [Lobby.md](Specs/Lobby.md#로비-진입-후처리-시스템)
 
+**설계 결정:**
+- Continue on Failure (실패해도 다음 Task 계속)
+- 하이브리드 실행 (로그인 후 1회 + Background Refresh)
+- 팝업 큐잉 (순차적 표시)
+- 출석체크는 Stub만 (추후 별도 구현)
+
+#### Phase A: 인터페이스 및 Runner (Core)
 ```
-- [ ] ILobbyEntryTask.cs (Priority, CheckRequired, Execute)
+- [ ] ILobbyEntryTask.cs
+- [ ] LobbyTaskResult.cs
 - [ ] LobbyEntryTaskRunner.cs
-- [ ] AttendanceCheckTask.cs (Priority 10)
-- [ ] EventCurrencyConversionTask.cs (Priority 20)
-- [ ] NewEventNotificationTask.cs (Priority 30)
-- [ ] LobbyScreen.OnShow()에서 TaskRunner 호출
+- [ ] LobbyEvents.cs
+```
+
+#### Phase B: PopupQueueService (Common)
+```
+- [ ] PopupQueueService.cs
+- [ ] IPopupRequest.cs (내부)
+```
+
+#### Phase C: Task 구현
+```
+- [ ] AttendanceCheckTask.cs (Stub)
+- [ ] EventCurrencyConversionTask.cs (Full)
+- [ ] NewEventNotificationTask.cs (Stub)
+```
+
+#### Phase D: 통합
+```
+- [ ] LobbyScreen.OnShow() 수정
+- [ ] Task 등록 및 실행 연결
 ```
 
 ---
