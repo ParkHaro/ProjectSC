@@ -20,6 +20,11 @@ namespace Sc.Common.UI
         Type WidgetType { get; }
 
         /// <summary>
+        /// Widget 인스턴스 (런타임).
+        /// </summary>
+        Widget View { get; }
+
+        /// <summary>
         /// 리소스 로드.
         /// </summary>
         UniTask Load();

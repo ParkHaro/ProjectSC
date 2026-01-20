@@ -156,6 +156,101 @@ namespace Sc.Core
 
         #endregion
 
+        #region UI Loading
+
+        /// <summary>
+        /// Screen 프리팹 로드.
+        /// Address 규칙: UI/Screens/{ScreenTypeName}
+        /// </summary>
+        public async UniTask<Result<GameObject>> LoadScreenPrefabAsync<TScreen>(AssetScope scope = null)
+            where TScreen : UnityEngine.Component
+        {
+            var screenName = typeof(TScreen).Name;
+            var address = $"UI/Screens/{screenName}";
+            
+            var result = await LoadAsync<GameObject>(address, scope);
+            
+            if (!result.IsSuccess)
+            {
+                Log.Warning($"[AssetManager] Screen 로드 실패: {screenName}, 주소: {address}", LogCategory.UI);
+                return Result<GameObject>.Failure(result.Error);
+            }
+            
+            return Result<GameObject>.Success(result.Value.Asset);
+        }
+
+        /// <summary>
+        /// Popup 프리팹 로드.
+        /// Address 규칙: UI/Popups/{PopupTypeName}
+        /// </summary>
+        public async UniTask<Result<GameObject>> LoadPopupPrefabAsync<TPopup>(AssetScope scope = null)
+            where TPopup : UnityEngine.Component
+        {
+            var popupName = typeof(TPopup).Name;
+            var address = $"UI/Popups/{popupName}";
+            
+            var result = await LoadAsync<GameObject>(address, scope);
+            
+            if (!result.IsSuccess)
+            {
+                Log.Warning($"[AssetManager] Popup 로드 실패: {popupName}, 주소: {address}", LogCategory.UI);
+                return Result<GameObject>.Failure(result.Error);
+            }
+            
+            return Result<GameObject>.Success(result.Value.Asset);
+        }
+
+        /// <summary>
+        /// Widget 프리팹 로드.
+        /// Address 규칙: UI/Widgets/{WidgetTypeName}
+        /// </summary>
+        public async UniTask<Result<GameObject>> LoadWidgetPrefabAsync<TWidget>(AssetScope scope = null)
+            where TWidget : UnityEngine.Component
+        {
+            var widgetName = typeof(TWidget).Name;
+            var address = $"UI/Widgets/{widgetName}";
+            
+            var result = await LoadAsync<GameObject>(address, scope);
+            
+            if (!result.IsSuccess)
+            {
+                Log.Warning($"[AssetManager] Widget 로드 실패: {widgetName}, 주소: {address}", LogCategory.UI);
+                return Result<GameObject>.Failure(result.Error);
+            }
+            
+            return Result<GameObject>.Success(result.Value.Asset);
+        }
+
+        /// <summary>
+        /// UI 공통 에셋 프리로드 (ScreenHeader, LoadingWidget 등).
+        /// </summary>
+        public async UniTask PreloadUICommonAsync()
+        {
+            Log.Info("[AssetManager] UI 공통 에셋 프리로드 시작", LogCategory.UI);
+            
+            var scope = CreateScope("UICommon");
+            
+            var addresses = new[]
+            {
+                "UI/Widgets/ScreenHeader",
+                "UI/Widgets/CurrencyHUD",
+                "UI/Widgets/LoadingWidget"
+            };
+            
+            foreach (var address in addresses)
+            {
+                var result = await LoadAsync<GameObject>(address, scope);
+                if (result.IsSuccess)
+                {
+                    Log.Info($"[AssetManager] 프리로드 완료: {address}", LogCategory.UI);
+                }
+            }
+            
+            Log.Info("[AssetManager] UI 공통 에셋 프리로드 완료", LogCategory.UI);
+        }
+
+        #endregion
+
         #region Cache Management
 
         /// <summary>

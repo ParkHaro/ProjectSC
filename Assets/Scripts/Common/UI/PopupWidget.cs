@@ -25,6 +25,7 @@ namespace Sc.Common.UI
             // INavigationContext 구현
             public NavigationContextType ContextType => NavigationContextType.Popup;
             public Type WidgetType => PopupType;
+            Widget INavigationContext.View => View;
 
             public abstract UniTask Load();
             public abstract UniTask Enter();

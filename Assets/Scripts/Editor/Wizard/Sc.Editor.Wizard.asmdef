@@ -1,0 +1,25 @@
+{
+    "name": "Sc.Editor.Wizard",
+    "rootNamespace": "Sc.Editor.Wizard",
+    "references": [
+        "Sc.Editor.AI",
+        "Sc.Common",
+        "Sc.Core",
+        "Sc.Data",
+        "Sc.Foundation",
+        "Unity.Addressables",
+        "Unity.Addressables.Editor",
+        "Unity.TextMeshPro"
+    ],
+    "includePlatforms": [
+        "Editor"
+    ],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

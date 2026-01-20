@@ -20,6 +20,7 @@ namespace Sc.Common.UI
             // INavigationContext 구현
             public NavigationContextType ContextType => NavigationContextType.Screen;
             public Type WidgetType => ScreenType;
+            Widget INavigationContext.View => View;
 
             public abstract UniTask Load();
             public abstract UniTask Enter();

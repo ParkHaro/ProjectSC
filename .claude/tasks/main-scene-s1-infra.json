@@ -1,0 +1,58 @@
+{
+  "id": "main-scene-s1-infra",
+  "name": "Main Scene Setup - Session 1: 기반 인프라",
+  "status": "in_progress",
+  "created": "2026-01-20",
+  "plan_doc": "Docs/Specs/Editor/MainSceneSetup_PLAN.md",
+  "tracks": {
+    "A": {
+      "name": "에디터 도구 리팩토링",
+      "status": "in_progress",
+      "todos": [
+        { "task": "기존 에디터 도구 백업 및 분석", "status": "in_progress" },
+        { "task": "ProjectSetupWizard 기본 구조 생성", "status": "in_progress" },
+        { "task": "SetupTab 구현", "status": "in_progress" },
+        { "task": "DebugTab 구현 (NavigationDebugWindow 통합)", "status": "in_progress" },
+        { "task": "DataTab 구현 (MasterDataGenerator 통합)", "status": "in_progress" },
+        { "task": "SettingsTab 구현", "status": "in_progress" },
+        { "task": "EditorUIHelpers 리팩토링", "status": "in_progress" },
+        { "task": "기존 에디터 도구 파일 삭제", "status": "in_progress" }
+      ]
+    },
+    "B": {
+      "name": "Addressables 인프라",
+      "status": "in_progress",
+      "todos": [
+        { "task": "Addressables Group 설계 문서 작성", "status": "in_progress" },
+        { "task": "UI_Screens Group 생성", "status": "in_progress" },
+        { "task": "UI_Popups Group 생성", "status": "in_progress" },
+        { "task": "UI_Widgets Group 생성", "status": "in_progress" },
+        { "task": "Address 명명 규칙 정의", "status": "in_progress" },
+        { "task": "AssetManager 확장 API 설계", "status": "in_progress" },
+        { "task": "AssetManager LoadScreen/LoadPopup 구현", "status": "in_progress" },
+        { "task": "빌드 스크립트 작성", "status": "in_progress" }
+      ]
+    }
+  },
+  "integration_point": "Wizard에서 Addressables 설정을 제어할 수 있도록 연결",
+  "outputs": [
+    "Assets/Scripts/Editor/Wizard/ProjectSetupWizard.cs",
+    "Assets/Scripts/Editor/Wizard/Tabs/*.cs",
+    "Addressables Groups 설정",
+    "AssetManager 확장 API"
+  ],
+  "files_to_modify": [
+    "Assets/Scripts/Editor/AI/*.cs",
+    "Assets/Scripts/Core/Managers/AssetManager.cs"
+  ],
+  "files_to_delete": [
+    "Assets/Scripts/Editor/AI/MVPSceneSetup.cs",
+    "Assets/Scripts/Editor/AI/PlayModeTestSetup.cs",
+    "Assets/Scripts/Editor/AI/LoadingSetup.cs",
+    "Assets/Scripts/Editor/AI/SystemPopupSetup.cs",
+    "Assets/Scripts/Editor/AI/UITestSceneSetup.cs",
+    "Assets/Scripts/Editor/AI/DataFlowTestWindow.cs",
+    "Assets/Scripts/Editor/AI/NavigationDebugWindow.cs",
+    "Assets/Scripts/Editor/AI/ProjectEditorSettings.cs"
+  ]
+}
