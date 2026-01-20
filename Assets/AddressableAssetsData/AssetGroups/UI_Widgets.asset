@@ -1,0 +1,40 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bbb281ee3bf0b054c82ac2347e9e782c, type: 3}
+  m_Name: UI_Widgets
+  m_EditorClassIdentifier: 
+  m_GroupName: UI_Widgets
+  m_Data:
+    m_SerializedData: []
+  m_GUID: 5c2b6080389ef3c45bac630a1ffd55c4
+  m_SerializeEntries:
+  - m_GUID: 1e354c43c56bcb44d98d13bd8b655235
+    m_Address: UI/Widgets/LoadingWidget
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 34a2fb94e756eac40afe8fc7af42ab5a
+    m_Address: UI/Widgets/ScreenHeader
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 71c53c71d78e8024d805c010e8cab194
+    m_Address: UI/Widgets/CurrencyHUD
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  m_ReadOnly: 0
+  m_Settings: {fileID: 11400000, guid: a07cc9c31bf893141bff7fbbc6d761b9, type: 2}
+  m_SchemaSet:
+    m_Schemas:
+    - {fileID: 11400000, guid: b962a262e58a0e54d875455e12bdc5d3, type: 2}
+    - {fileID: 11400000, guid: 256f2f453723af34daf21bea8f91b915, type: 2}
