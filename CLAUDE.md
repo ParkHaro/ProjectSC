@@ -75,6 +75,59 @@ Add feature name       ← 영어 제목
 의사결정 시 `Docs/Portfolio/DECISIONS.md`에 기록:
 - 컨텍스트, 선택지, 결정 이유
 
+## 멀티 세션 작업 규칙
+
+여러 Claude Code 세션이 동시에 작업할 때의 규칙.
+
+### 작업 파일 구조
+
+```
+.claude/tasks/
+├── _active.json        # 전체 작업 현황 + 파일 락
+└── {task-id}.json      # 개별 작업 상태
+```
+
+### 작업 시작
+
+새 작업 지시 시 (예: "Shop 구현해줘"):
+1. `_active.json` 확인 → 충돌 파일 파악
+2. 작업 ID 생성: `{기능명}-impl` (예: `shop-impl`)
+3. 작업 파일 생성: `.claude/tasks/shop-impl.json`
+4. `_active.json`에 등록
+
+### 작업 재개
+
+기존 작업 이어서 (예: "Shop 작업 이어서"):
+1. `.claude/tasks/shop-impl.json` 로드
+2. todos 상태 확인 후 계속
+
+### 파일 충돌 처리
+
+```
+수정 전 _active.json의 locked_files 확인:
+- 다른 작업이 점유 중 → 내 pending_files에 추가, 다른 작업 먼저
+- 미점유 → locked_files에 등록 후 작업
+```
+
+### 작업 상태 저장 시점
+
+- 파일 커밋 후
+- 작업 단위 완료 시
+- 충돌로 작업 전환 시
+
+### 작업 완료
+
+모든 todos 완료 시:
+1. `_active.json`에서 제거
+2. 작업 파일은 보관 (status: "completed")
+
+### 공유 파일 목록 (충돌 주의)
+
+- `LocalGameServer.cs`
+- `LobbyScreen.cs`
+- `UserSaveData.cs`
+- `PROGRESS.md`
+
 ## 참조 문서
 
 | 문서 | 용도 |
