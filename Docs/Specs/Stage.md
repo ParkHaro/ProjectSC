@@ -3,174 +3,204 @@ type: spec
 assembly: Sc.Contents.Stage
 category: System
 status: draft
-version: "2.0"
+version: "3.0"
 dependencies: [Sc.Common, Sc.Packet, Sc.Data, Sc.Event, Sc.Contents.Character]
 created: 2026-01-17
-updated: 2026-01-18
+updated: 2026-01-20
 ---
 
 # Sc.Contents.Stage
 
 ## 목적
 
-스테이지 선택, 파티 편성, 전투 시작까지의 아웃게임 → 인게임 브릿지 시스템
+인게임 전투(Stage) 선택, 파티 편성, 전투 시작까지의 아웃게임 → 인게임 브릿지 시스템
+
+## 핵심 개념
+
+| 용어 | 정의 | 예시 |
+|------|------|------|
+| **Stage** | 인게임 전투 **한 판** | 1-1, 1-2, 보스전, 일일던전 1층 |
+| **InGameContent** | 전투 컨텐츠 **대분류** | 메인스토리, 골드던전, 경험치던전, 보스레이드 |
+| **Dungeon** | 컨텐츠 내 **세부 분류** | 불속성, 물속성, 1장, 2장 |
+
+---
 
 ## 의존성
 
 ### 참조
-- `Sc.Common` - UI 시스템, Navigation
+- `Sc.Common` - UI 시스템, Navigation, Widget
 - `Sc.Packet` - NetworkManager, Request/Response
 - `Sc.Data` - 마스터/유저 데이터
 - `Sc.Event` - 이벤트 발행
-- `Sc.Contents.Character` - 캐릭터 정보
+- `Sc.Contents.Character` - 캐릭터 정보, 파티 편성
 
 ### 참조됨
-- `Sc.Contents.Lobby` - 스테이지 대시보드 진입
-- `Sc.Contents.Battle` - 전투 시스템 (Phase 5+)
-- `Sc.Contents.Event` - 이벤트 스테이지 (StageListScreen 재사용)
+- `Sc.Contents.Lobby` - InGameContentDashboard 진입
+- `Sc.Contents.Battle` - 전투 시스템 (BattleReadyEvent 수신)
+- `Sc.Contents.Event` - 이벤트 스테이지 (EventStageContentModule 사용)
 
 ---
 
-## 화면 흐름
+## 화면 계층 구조
 
 ```
-로비
+Lobby
   │
-  ├─────────────────────────────────────────────────┐
-  │                                                 │
-  ▼                                                 ▼
-┌─────────────────────────┐         ┌─────────────────────────┐
-│  StageDashboardScreen   │         │   LiveEventScreen       │
-│  (상시 컨텐츠)           │         │   (기간 한정 컨텐츠)     │
-│                         │         │                         │
-│  ├─ 메인 스토리          │         │  ├─ 이벤트 미션         │
-│  ├─ 하드 모드            │         │  ├─ 이벤트 상점         │
-│  ├─ 일일 던전            │         │  ├─ 이벤트 스테이지 ────┼──┐
-│  ├─ 보스 레이드          │         │  └─ 미니게임            │  │
-│  └─ 무한의 탑            │         │                         │  │
-└───────────┬─────────────┘         └─────────────────────────┘  │
-            │                                                    │
-            │ 타입 선택                                          │
-            ▼                                                    │
-┌─────────────────────────┐                                      │
-│    StageListScreen      │ ◄────────────────────────────────────┘
-│    (재사용 컴포넌트)     │   재사용
-│                         │
-└───────────┬─────────────┘
-            │ 스테이지 선택
-            ▼
-┌─────────────────────────┐
-│    StageInfoPopup       │
-│    (스테이지 상세)       │
-└───────────┬─────────────┘
-            │ 출전하기
-            ▼
-┌─────────────────────────┐
-│   PartySelectScreen     │
-│   (재사용 컴포넌트)      │
-└───────────┬─────────────┘
-            │ 전투 시작
-            ▼
-        BattleReadyEvent
+  └─> InGameContentDashboard (컨텐츠 종류 선택)
+        │
+        │  ┌─────────────────────────────────────────────────────┐
+        │  │ 컨텐츠에 따라 StageDashboard 유무 결정               │
+        │  │ - 메인스토리: StageDashboard 스킵                   │
+        │  │ - 골드/경험치던전: StageDashboard 필요 (속성 선택)   │
+        │  └─────────────────────────────────────────────────────┘
+        │
+        ├─[메인스토리]────────────────────> StageSelectScreen
+        │                                   + MainStoryContentModule
+        │
+        ├─[골드던전]──> StageDashboard ──> StageSelectScreen
+        │               (속성 선택)         + ElementDungeonContentModule
+        │
+        ├─[경험치던전]─> StageDashboard ─> StageSelectScreen
+        │               (난이도 선택)       + ExpDungeonContentModule
+        │
+        ├─[보스레이드]─> StageDashboard ─> StageSelectScreen
+        │               (보스 선택)         + BossRaidContentModule
+        │
+        └─[무한의탑]────────────────────> StageSelectScreen
+                                          + TowerContentModule
 ```
+
+### 이벤트 스테이지 연동
+
+```
+LiveEventScreen
+  │
+  └─> EventDetailScreen
+        │
+        └─[스테이지 탭]─────────────────> StageSelectScreen
+                                          + EventStageContentModule
+```
+
+---
+
+## UI 아키텍처 (컴포지션 패턴)
+
+### StageSelectScreen 구조
+
+```
+┌─────────────────────────────────────────────────────────────────┐
+│                     StageSelectScreen                            │
+│  ┌─────────────────────────────────────────────────────────────┐│
+│  │                    Header (공통)                             ││
+│  │  [←] 스테이지 선택                       남은 입장: 3/5      ││
+│  └─────────────────────────────────────────────────────────────┘│
+│  ┌─────────────────────────────────────────────────────────────┐│
+│  │              Custom Content Area (확장 영역)                 ││
+│  │     ← IStageContentModule이 UI를 생성하는 영역 →            ││
+│  └─────────────────────────────────────────────────────────────┘│
+│  ┌─────────────────────────────────────────────────────────────┐│
+│  │                 StageListPanel (공통)                        ││
+│  │  ┌─────┐ ┌─────┐ ┌─────┐ ┌─────┐                           ││
+│  │  │ 1-1 │ │ 1-2 │ │ 1-3 │ │ 1-4 │  ...                      ││
+│  │  │ ★★★ │ │ ★★☆ │ │ ☆☆☆ │ │ 🔒  │                           ││
+│  │  └─────┘ └─────┘ └─────┘ └─────┘                           ││
+│  └─────────────────────────────────────────────────────────────┘│
+│  ┌─────────────────────────────────────────────────────────────┐│
+│  │                    Footer (공통)                             ││
+│  │  총 보상: 💰1000  💎10              [소탕] [입장]            ││
+│  └─────────────────────────────────────────────────────────────┘│
+└─────────────────────────────────────────────────────────────────┘
+```
+
+### 컨텐츠별 모듈 (IStageContentModule)
+
+| 모듈 | Custom Content Area 내용 |
+|------|--------------------------|
+| **MainStoryContentModule** | 챕터 탭 `[1장][2장][3장🔒]`, 스토리 진행도 |
+| **ElementDungeonContentModule** | 속성 아이콘 🔥, 권장 속성 안내 💧 |
+| **ExpDungeonContentModule** | 난이도 표시, 획득 경험치 미리보기 |
+| **BossRaidContentModule** | 보스 HP 게이지, 내 기여도, 랭킹 버튼 |
+| **TowerContentModule** | 현재 층, 최고 층, 보상 미리보기 |
+| **EventStageContentModule** | 이벤트 이름, 남은 기간, 이벤트 재화 |
 
 ---
 
 ## 클래스 역할 정의
 
-### 마스터 데이터
+### 화면 (Screen)
 
 | 클래스 | 역할 | 책임 | 비책임 |
 |--------|------|------|--------|
-| `StageType` | 스테이지 타입 열거형 | 스테이지 분류 | - |
-| `StageData` | 스테이지 SO (확장) | 스테이지 정보 저장 | 전투 로직 |
-| `StageUnlockCondition` | 해금 조건 구조체 | 해금 조건 정의 | 해금 검증 |
-| `StarCondition` | 별점 조건 구조체 | 별점 획득 조건 정의 | - |
+| `InGameContentDashboard` | 컨텐츠 종류 선택 화면 | 컨텐츠 목록 표시, 진입 처리 | 스테이지 표시 |
+| `StageDashboard` | 세부 분류 선택 화면 | 속성/난이도/보스 선택 | 스테이지 표시 |
+| `StageSelectScreen` | 스테이지 선택 화면 | 공통 UI + 모듈 조합, 스테이지 목록 | 컨텐츠별 특수 로직 |
+| `PartySelectScreen` | 파티 편성 화면 | 캐릭터 선택, 프리셋 관리, 전투 진입 | 전투 로직 |
 
-### 유저 데이터
+### 패널/위젯 (Panel/Widget)
 
-| 클래스 | 역할 | 책임 | 비책임 |
-|--------|------|------|--------|
-| `StageProgress` | 스테이지 진행 (기존) | 클리어/별점 상태 저장 | 전투 처리 |
-| `PartyPreset` | 파티 편성 프리셋 | 편성 저장 | 전투력 계산 |
+| 클래스 | 역할 | 책임 |
+|--------|------|------|
+| `StageListPanel` | 스테이지 목록 패널 | 스테이지 아이템 생성/관리, 스크롤 |
+| `StageItemWidget` | 개별 스테이지 위젯 | 스테이지 정보 표시, 클릭 이벤트 |
+| `ContentCategoryItem` | 컨텐츠 카테고리 아이템 | 컨텐츠 정보 표시 (Dashboard용) |
 
-### Request/Response
+### 모듈 (Module)
 
-| 클래스 | 역할 | 책임 | 비책임 |
-|--------|------|------|--------|
-| `StageBattleRequest` | 전투 시작 요청 | 스테이지, 파티 정보 전달 | 전투 로직 |
-| `StageBattleResponse` | 전투 초기 데이터 응답 | 전투 시작 정보 전달 | 전투 진행 |
+| 인터페이스 | 역할 |
+|------------|------|
+| `IStageContentModule` | 컨텐츠별 확장 UI 인터페이스 |
 
-### UI
+```csharp
+public interface IStageContentModule
+{
+    void Initialize(Transform container, StageSelectState state);
+    void Refresh(StageSelectState state);
+    void OnStageSelected(StageData stage);
+    void Release();
+}
+```
 
-| 클래스 | 역할 | 책임 | 비책임 |
-|--------|------|------|--------|
-| `StageDashboardScreen` | 스테이지 타입 선택 | 타입별 진입점, 상태 표시 | 스테이지 목록 |
-| `StageListScreen` | 스테이지 목록 화면 | 스테이지 선택 | 전투 시작 |
-| `StageItem` | 스테이지 아이템 위젯 | 개별 스테이지 표시 | 선택 처리 |
-| `StageInfoPopup` | 스테이지 정보 팝업 | 상세 정보 표시 | - |
-| `PartySelectScreen` | 파티 편성 화면 | 캐릭터 선택 | 전투 로직 |
-| `PartySlotWidget` | 파티 슬롯 위젯 | 슬롯 표시/선택 | - |
-| `SelectableCharacterItem` | 선택 가능 캐릭터 | 캐릭터 선택 UI | - |
+### 팝업 (Popup)
+
+| 클래스 | 역할 |
+|--------|------|
+| `StageInfoPopup` | 스테이지 상세 정보, Star 조건, 보상 표시 |
 
 ---
 
-## 상세 정의
+## 마스터 데이터
 
-### StageType
+### InGameContentType
+
+**위치**: `Assets/Scripts/Data/Enums/InGameContentType.cs`
+
+```csharp
+public enum InGameContentType
+{
+    MainStory,      // 메인 스토리
+    HardMode,       // 하드 모드
+    GoldDungeon,    // 골드 던전
+    ExpDungeon,     // 경험치 던전
+    SkillDungeon,   // 스킬 재화 던전
+    BossRaid,       // 보스 레이드
+    Tower,          // 무한의 탑
+    Event,          // 이벤트 스테이지
+}
+```
+
+### StageType (기존 확장)
 
 **위치**: `Assets/Scripts/Data/Enums/StageType.cs`
 
 ```csharp
 public enum StageType
 {
-    // === 상시 컨텐츠 (StageDashboard) ===
-    MainStory,      // 메인 스토리
-    HardMode,       // 하드 모드 (챕터별 노말 완료 시 해금)
-    DailyDungeon,   // 일일 던전 (요일별)
-    BossRaid,       // 보스 레이드
-    Tower,          // 무한의 탑
-
-    // === 기간 한정 (LiveEvent에서 사용) ===
-    Event,          // 이벤트 스테이지
+    Normal,         // 일반 스테이지
+    Boss,           // 보스 스테이지
+    Challenge,      // 챌린지 스테이지
+    Hidden,         // 히든 스테이지
 }
 ```
-
-### UnlockConditionType
-
-**위치**: `Assets/Scripts/Data/Enums/UnlockConditionType.cs`
-
-```csharp
-public enum UnlockConditionType
-{
-    None,           // 처음부터 해금
-    StageClear,     // 특정 스테이지 클리어
-    ChapterClear,   // 챕터 전체 클리어 (하드 해금용)
-    PlayerLevel,    // 플레이어 레벨
-}
-```
-
-### StageUnlockCondition
-
-**위치**: `Assets/Scripts/Data/Structs/MasterData/StageUnlockCondition.cs`
-
-```csharp
-[Serializable]
-public struct StageUnlockCondition
-{
-    public UnlockConditionType Type;
-    public string TargetId;     // 스테이지ID 또는 챕터ID
-    public int RequiredValue;   // 레벨 등
-}
-```
-
-**예시**:
-| 스테이지 | 조건 | 설정 |
-|----------|------|------|
-| 1-1 | 없음 | `{ None, "", 0 }` |
-| 1-2 | 1-1 클리어 | `{ StageClear, "stage_1_1", 0 }` |
-| 1-1 Hard | 1장 노말 클리어 | `{ ChapterClear, "chapter_1", 0 }` |
-| 일일던전 | Lv.15 이상 | `{ PlayerLevel, "", 15 }` |
 
 ### StarConditionType
 
@@ -179,30 +209,15 @@ public struct StageUnlockCondition
 ```csharp
 public enum StarConditionType
 {
-    Clear,          // 클리어
-    NoDeaths,       // 아군 전멸 없음
-    TurnLimit,      // N턴 내 클리어
-    FullHP,         // 아군 전원 HP 100%
-    NoBossSkill,    // 보스 스킬 발동 전 클리어
-    ElementParty,   // 특정 속성 파티로 클리어
+    Clear,              // 클리어
+    TurnLimit,          // N턴 이내 클리어
+    NoCharacterDeath,   // 사망자 없이 클리어
+    FullHP,             // 아군 전원 HP 100%
+    ElementAdvantage,   // 유리 속성으로 클리어
 }
 ```
 
-### StarCondition
-
-**위치**: `Assets/Scripts/Data/Structs/MasterData/StarCondition.cs`
-
-```csharp
-[Serializable]
-public struct StarCondition
-{
-    public StarConditionType Type;
-    public int Value;           // TurnLimit의 턴 수, ElementParty의 속성 등
-    public string DescriptionKey; // StringData 키 (UI 표시용)
-}
-```
-
-### StageData 확장
+### StageData
 
 **위치**: `Assets/Scripts/Data/ScriptableObjects/StageData.cs`
 
@@ -212,77 +227,100 @@ public class StageData : ScriptableObject
 {
     [Header("기본 정보")]
     public string Id;
-    public string ChapterId;
+    public InGameContentType ContentType;
     public StageType StageType;
-    public int StageNumber;         // 1-1, 1-2 등의 번호
-    public string NameKey;          // StringData 키
+    public string DungeonId;            // 속하는 던전 ID (속성/챕터 등)
+    public int StageNumber;             // 던전 내 순서
+    public string NameKey;
     public string DescriptionKey;
-
-    [Header("해금 조건")]
-    public StageUnlockCondition UnlockCondition;
-
-    [Header("전투 정보")]
-    public int RecommendedPower;    // 추천 전투력
-    public int StaminaCost;         // 스태미나 소모
-    public List<string> EnemyIds;   // 적 캐릭터 ID 목록
     public Difficulty Difficulty;
 
-    [Header("보상")]
-    public List<RewardInfo> ClearRewards;       // 클리어 보상
-    public List<RewardInfo> FirstClearRewards;  // 초회 클리어 보상
+    [Header("입장 조건")]
+    public CostType EntryCostType;      // 입장 재화 타입
+    public int EntryCost;               // 입장 비용
+    public LimitType LimitType;         // 입장 제한 타입
+    public int LimitCount;              // 제한 횟수
+    public DayOfWeek[] AvailableDays;   // 요일 제한 (일일 던전용)
 
-    [Header("파티 프리셋")]
-    public string PresetGroupId;        // 파티 프리셋 그룹 ("main", "daily_fire" 등)
+    [Header("해금 조건")]
+    public string UnlockConditionStageId;  // 선행 스테이지
+    public int UnlockConditionLevel;       // 필요 레벨
+
+    [Header("전투 정보")]
+    public int RecommendedPower;        // 추천 전투력
+    public List<string> EnemyIds;       // 적 캐릭터 ID 목록
+
+    [Header("보상")]
+    public List<RewardInfo> FirstClearRewards;
+    public List<RewardInfo> RepeatClearRewards;
 
     [Header("별점 조건")]
-    public StarCondition Star1Condition;  // 1별 (보통 Clear)
-    public StarCondition Star2Condition;  // 2별
-    public StarCondition Star3Condition;  // 3별
+    public StarCondition Star1Condition;
+    public StarCondition Star2Condition;
+    public StarCondition Star3Condition;
+
+    [Header("파티 프리셋")]
+    public string PresetGroupId;        // 파티 프리셋 그룹
+
+    [Header("이벤트 전용")]
+    public string EventId;              // 이벤트 ID (이벤트 스테이지만)
+
+    [Header("표시")]
+    public int DisplayOrder;
+    public bool IsEnabled;
 }
 ```
 
-### PresetGroupId
+### StageDatabase
 
-스테이지 타입 내에서도 세부 컨텐츠별로 별도 프리셋이 필요한 경우를 지원.
-
-**명명 규칙**: `{type}` 또는 `{type}_{subtype}`
-
-| 컨텐츠 | PresetGroupId | 설명 |
-|--------|---------------|------|
-| 메인 스토리 | `main` | 전체 공유 |
-| 하드 모드 | `hard` | 전체 공유 |
-| 일일던전 - 불 | `daily_fire` | 속성별 분리 |
-| 일일던전 - 물 | `daily_water` | 속성별 분리 |
-| 일일던전 - 풀 | `daily_grass` | 속성별 분리 |
-| 일일던전 - 번개 | `daily_thunder` | 속성별 분리 |
-| 일일던전 - 빛 | `daily_light` | 속성별 분리 |
-| 일일던전 - 어둠 | `daily_dark` | 속성별 분리 |
-| 보스레이드 - 드래곤 | `boss_dragon` | 보스별 분리 |
-| 보스레이드 - 거인 | `boss_giant` | 보스별 분리 |
-| 무한의 탑 | `tower` | 전체 공유 |
-| 이벤트 | `event_{eventId}` | 이벤트별 분리 |
-
-### PartyPreset
-
-**위치**: `Assets/Scripts/Data/Structs/UserData/PartyPreset.cs`
+**위치**: `Assets/Scripts/Data/ScriptableObjects/StageDatabase.cs`
 
 ```csharp
-[Serializable]
-public struct PartyPreset
+[CreateAssetMenu(fileName = "StageDatabase", menuName = "SC/Data/StageDatabase")]
+public class StageDatabase : ScriptableObject
 {
-    public string PresetGroupId;        // "main", "daily_fire", "boss_dragon" 등
-    public int SlotIndex;               // 0~4 (5개 슬롯)
-    public string Name;                 // 유저 지정 이름 (선택)
-    public List<string> CharacterInstanceIds;  // 최대 5인
+    [SerializeField] private List<StageData> _stages;
+
+    public StageData GetById(string id);
+    public IEnumerable<StageData> GetByContentType(InGameContentType type);
+    public IEnumerable<StageData> GetByDungeon(string dungeonId);
+    public IEnumerable<StageData> GetByEvent(string eventId);
 }
 ```
 
-**프리셋 관리 구조**:
-- PresetGroupId별 최대 5개 프리셋
-- 스테이지 진입 시 해당 스테이지의 PresetGroupId로 프리셋 조회
-- 새로운 컨텐츠 추가 시 새 PresetGroupId만 정의하면 자동 지원
+### DungeonData (NEW)
 
-### StageProgress 확장
+**위치**: `Assets/Scripts/Data/ScriptableObjects/DungeonData.cs`
+
+```csharp
+[CreateAssetMenu(fileName = "DungeonData", menuName = "SC/Data/DungeonData")]
+public class DungeonData : ScriptableObject
+{
+    public string Id;
+    public InGameContentType ContentType;
+    public string NameKey;
+    public string DescriptionKey;
+    public Sprite IconSprite;
+
+    // 속성 던전용
+    public ElementType Element;
+
+    // 난이도 던전용
+    public Difficulty Difficulty;
+
+    // 챕터용
+    public int ChapterNumber;
+
+    public int DisplayOrder;
+    public bool IsEnabled;
+}
+```
+
+---
+
+## 유저 데이터
+
+### StageClearInfo 확장
 
 **위치**: `Assets/Scripts/Data/Structs/UserData/StageProgress.cs`
 
@@ -292,242 +330,196 @@ public struct StageClearInfo
 {
     public string StageId;
     public bool IsCleared;
-    public int StarCount;       // 0~3
-    public bool[] StarAchieved; // [star1, star2, star3] 개별 달성 여부
-    public int ClearCount;      // 총 클리어 횟수
-    public DateTime FirstClearTime;
+    public int Stars;               // 0~3
+    public bool[] StarAchieved;     // [star1, star2, star3] 개별 달성 여부
+    public int BestTurnCount;
+    public int ClearCount;
+    public long FirstClearedAt;
+    public long LastClearedAt;
 }
+```
 
+### StageEntryRecord (NEW)
+
+**위치**: `Assets/Scripts/Data/Structs/UserData/StageEntryRecord.cs`
+
+```csharp
 [Serializable]
-public struct StageProgress
+public struct StageEntryRecord
 {
-    public Dictionary<string, StageClearInfo> ClearInfos;
+    public string StageId;
+    public int EntryCount;          // 입장 횟수
+    public long LastEntryTime;
+    public long ResetTime;          // 다음 리셋 시각
 
-    // 헬퍼 메서드
-    public bool IsCleared(string stageId);
-    public int GetStarCount(string stageId);
-    public bool IsStarAchieved(string stageId, int starIndex);
+    public bool NeedsReset(long currentTime) => currentTime >= ResetTime;
+}
+```
+
+### PartyPreset
+
+**위치**: `Assets/Scripts/Data/Structs/UserData/PartyPreset.cs`
+
+```csharp
+[Serializable]
+public struct PartyPreset
+{
+    public string PresetId;
+    public string PresetGroupId;        // "main_story", "gold_dungeon_fire" 등
+    public string Name;                 // 유저 지정 이름
+    public List<string> CharacterInstanceIds;  // 최대 4~5명
+    public long LastModifiedTime;
 }
 ```
 
 ### UserSaveData 확장
 
 ```csharp
-// UserSaveData에 추가
-public Dictionary<string, List<PartyPreset>> PartyPresets;  // Key: PresetGroupId
-public StageProgress StageProgress;
-```
+// UserSaveData v5
+public Dictionary<string, StageEntryRecord> StageEntryRecords;  // Key: StageId
+public List<PartyPreset> PartyPresets;
 
-**예시**:
-```csharp
-PartyPresets = {
-    ["main"] = [preset0, preset1, ...],       // 메인 스토리용 5개
-    ["daily_fire"] = [preset0, preset1, ...], // 일일던전 불속성용 5개
-    ["daily_water"] = [preset0, ...],         // 일일던전 물속성용 5개
-    ["boss_dragon"] = [preset0, ...]          // 드래곤 레이드용 5개
-}
+// Helper 메서드
+public StageEntryRecord? FindStageEntryRecord(string stageId);
+public void UpdateStageEntryRecord(string stageId, StageEntryRecord record);
+public List<PartyPreset> GetPresetsForGroup(string presetGroupId);
+public void UpdatePartyPreset(PartyPreset preset);
 ```
 
 ---
 
 ## Request/Response
 
-### StageBattleRequest
-
-**위치**: `Assets/Scripts/Packet/Requests/StageBattleRequest.cs`
+### EnterStageRequest
 
 ```csharp
 [Serializable]
-public struct StageBattleRequest : IRequest
+public struct EnterStageRequest : IRequest
 {
     public long Timestamp { get; set; }
     public string StageId;
-    public List<string> PartyCharacterIds;  // InstanceId 목록 (최대 5)
+    public List<string> PartyCharacterIds;
 }
 ```
 
-### StageBattleResponse
-
-**위치**: `Assets/Scripts/Packet/Responses/StageBattleResponse.cs`
+### EnterStageResponse
 
 ```csharp
 [Serializable]
-public struct StageBattleResponse : IGameActionResponse
+public struct EnterStageResponse : IGameActionResponse
 {
     public bool IsSuccess { get; set; }
     public ErrorCode ErrorCode { get; set; }
     public long ServerTime { get; set; }
-    public UserDataDelta Delta { get; set; }  // 스태미나 차감 등
+    public UserDataDelta Delta { get; set; }  // 입장료 차감
 
-    public string BattleId;                   // 전투 세션 ID
-    public BattleInitialData BattleData;      // 전투 초기 데이터
+    public string BattleSessionId;            // 전투 세션 ID
+    public StageEntryRecord EntryRecord;      // 갱신된 입장 기록
 }
+```
 
+### ClearStageRequest
+
+```csharp
 [Serializable]
-public struct BattleInitialData
+public struct ClearStageRequest : IRequest
 {
-    public string StageId;
-    public List<CharacterBattleData> PlayerParty;
-    public List<CharacterBattleData> EnemyParty;
-    public int TurnLimit;  // 3별 조건용 (없으면 0)
+    public long Timestamp { get; set; }
+    public string BattleSessionId;
+    public bool IsVictory;
+    public int TurnCount;
+    public bool NoCharacterDeath;
+    public bool AllFullHP;
 }
+```
 
+### ClearStageResponse
+
+```csharp
 [Serializable]
-public struct CharacterBattleData
+public struct ClearStageResponse : IGameActionResponse
 {
-    public string CharacterId;
-    public string InstanceId;   // 플레이어 캐릭터만
-    public int Level;
-    public int HP, MaxHP;
-    public int ATK, DEF, SPD;
-    public float CritRate, CritDamage;
-    public List<string> SkillIds;
+    public bool IsSuccess { get; set; }
+    public ErrorCode ErrorCode { get; set; }
+    public long ServerTime { get; set; }
+    public UserDataDelta Delta { get; set; }  // 보상 지급
+
+    public StageClearInfo ClearInfo;
+    public bool[] NewStarsAchieved;           // 새로 달성한 별
+    public List<RewardInfo> TotalRewards;
 }
 ```
 
 ---
 
-## UI 상세
+## Events
 
-### StageDashboardScreen
+### StageEvents.cs
 
-**역할**: 스테이지 타입 선택 대시보드
+```csharp
+// 입장 성공
+public readonly struct StageEnteredEvent
+{
+    public string StageId { get; init; }
+    public string BattleSessionId { get; init; }
+}
 
-**UI 형태**: 리스트형 (초기) → 자유형 (아트 확정 후)
+// 입장 실패
+public readonly struct StageEntryFailedEvent
+{
+    public string StageId { get; init; }
+    public ErrorCode ErrorCode { get; init; }
+    public string ErrorMessage { get; init; }
+}
 
-```
-┌─────────────────────────────────────────┐
-│            스테이지 선택                 │
-├─────────────────────────────────────────┤
-│ 🗡️ 메인 스토리                          │
-│    진행: 3장 5스테이지  ★★★ 42개        │
-├─────────────────────────────────────────┤
-│ ⚔️ 하드 모드                   🔒        │
-│    1장 클리어 시 해금                    │
-├─────────────────────────────────────────┤
-│ 📅 일일 던전                            │
-│    오늘 남은 횟수: 2/5                   │
-├─────────────────────────────────────────┤
-│ 👹 보스 레이드                          │
-│    주간 남은 횟수: 1/3                   │
-├─────────────────────────────────────────┤
-│ 🗼 무한의 탑                            │
-│    현재 층: 25F                         │
-└─────────────────────────────────────────┘
-```
+// 클리어 성공
+public readonly struct StageClearedEvent
+{
+    public string StageId { get; init; }
+    public bool IsVictory { get; init; }
+    public bool IsFirstClear { get; init; }
+    public bool[] NewStarsAchieved { get; init; }
+    public List<RewardInfo> Rewards { get; init; }
+}
 
-**표시 정보**:
-- 타입 이름, 아이콘
-- 진행 상황 (현재 스테이지, 별점 수)
-- 잠금 상태 및 해금 조건
-- 남은 횟수 (일일/주간 제한 있는 경우)
-- 알림 뱃지 (보상 수령 가능 등)
-
-### StageListScreen
-
-**역할**: 선택된 타입의 스테이지 목록
-
-**파라미터**: `StageType` (어떤 타입 스테이지를 표시할지)
-
-```
-┌─────────────────────────────────────────┐
-│  ← 메인 스토리                          │
-├─────────────────────────────────────────┤
-│  [1장] [2장] [3장🔒] ...                │
-├─────────────────────────────────────────┤
-│  ┌─────────┐ ┌─────────┐ ┌─────────┐   │
-│  │  1-1    │ │  1-2    │ │  1-3    │   │
-│  │  ★★★   │ │  ★★☆   │ │  ★☆☆   │   │
-│  └─────────┘ └─────────┘ └─────────┘   │
-│  ┌─────────┐ ┌─────────┐ ┌─────────┐   │
-│  │  1-4    │ │  1-5 🔒 │ │  1-6 🔒 │   │
-│  │   -     │ │         │ │         │   │
-│  └─────────┘ └─────────┘ └─────────┘   │
-└─────────────────────────────────────────┘
-```
-
-### PartySelectScreen
-
-**역할**: 파티 편성 (최대 5인)
-
-**파라미터**: `StageData` (PresetGroupId 포함)
-
-```
-┌─────────────────────────────────────────┐
-│  ← 파티 편성            [프리셋 ▼]      │
-├─────────────────────────────────────────┤
-│  파티 슬롯 (5칸)                         │
-│  ┌────┐ ┌────┐ ┌────┐ ┌────┐ ┌────┐    │
-│  │Char│ │Char│ │Char│ │ + │ │ + │    │
-│  └────┘ └────┘ └────┘ └────┘ └────┘    │
-├─────────────────────────────────────────┤
-│  보유 캐릭터                             │
-│  ┌────┐ ┌────┐ ┌────┐ ┌────┐ ...       │
-│  │    │ │ ✓ │ │    │ │ ✓ │           │
-│  └────┘ └────┘ └────┘ └────┘           │
-├─────────────────────────────────────────┤
-│  총 전투력: 15,200   추천: 12,000       │
-│                        [전투 시작]       │
-└─────────────────────────────────────────┘
-```
-
-**프리셋 로드 흐름**:
-```
-StageData.PresetGroupId ("daily_fire")
-           │
-           ▼
-UserSaveData.PartyPresets["daily_fire"]
-           │
-           ▼
-List<PartyPreset> (5개 슬롯)
+// 전투 준비 완료 (Battle 시스템으로 전달)
+public readonly struct BattleReadyEvent
+{
+    public string BattleSessionId { get; init; }
+    public StageData StageData { get; init; }
+    public List<string> PartyCharacterIds { get; init; }
+}
 ```
 
 ---
 
-## 설계 원칙
+## LocalServer
 
-1. **서버 중심 전투 시작**
-   - 전투 시작은 서버(LocalApiClient) 검증 후 처리
-   - 스태미나 차감, 해금 조건 검증
+### StageEntryValidator
 
-2. **분리된 화면 흐름**
-   - StageDashboardScreen: 타입 선택
-   - StageListScreen: 스테이지 선택
-   - PartySelectScreen: 파티 편성
-   - 단일 책임 원칙 준수
-
-3. **재사용 가능한 구조**
-   - StageListScreen, PartySelectScreen은 LiveEvent에서도 재사용
-   - StageType으로 구분
-
-4. **PresetGroupId 기반 프리셋 관리**
-   - 컨텐츠별 PresetGroupId로 프리셋 그룹 분리
-   - 스테이지 타입 내에서도 세부 분류 가능 (속성, 보스 등)
-   - 각 그룹당 최대 5개 프리셋
-   - 새 컨텐츠 추가 시 PresetGroupId만 정의하면 자동 지원
-
----
-
-## 전투력 계산
-
-### 캐릭터 전투력
-```
-캐릭터 전투력 = (HP/10) + (ATK*5) + (DEF*3) + (SPD*2)
-            + (CritRate*100) + (CritDamage*50)
+```csharp
+public class StageEntryValidator
+{
+    public bool CanEnter(StageData stage, StageEntryRecord? record, out int remainingCount);
+    public StageEntryRecord UpdateEntryRecord(StageData stage, StageEntryRecord? existing);
+    public long CalculateNextResetTime(LimitType limitType, long currentTime);
+    public bool IsAvailableToday(StageData stage, DayOfWeek today);
+}
 ```
 
-### 파티 전투력
-```
-파티 전투력 = Σ(캐릭터 전투력)   // 최대 5명
-```
+### StageHandler
 
-### UI 표시
-| 비율 | 표시 색상 | 메시지 |
-|------|-----------|--------|
-| ≥120% | 녹색 | "충분한 전투력" |
-| 100~119% | 흰색 | "적정 전투력" |
-| 80~99% | 노랑 | "주의 필요" |
-| <80% | 빨강 | "전투력 부족" |
+```csharp
+public class StageHandler :
+    IRequestHandler<EnterStageRequest, EnterStageResponse>,
+    IRequestHandler<ClearStageRequest, ClearStageResponse>
+{
+    public EnterStageResponse Handle(EnterStageRequest request, ref UserSaveData userData);
+    public ClearStageResponse Handle(ClearStageRequest request, ref UserSaveData userData);
+
+    private bool[] EvaluateStarConditions(StageData stage, ClearStageRequest request);
+}
+```
 
 ---
 
@@ -536,77 +528,117 @@ List<PartyPreset> (5개 슬롯)
 | ErrorCode | 값 | 설명 |
 |-----------|-----|------|
 | `StageNotFound` | 5101 | 스테이지 없음 |
-| `StageLocked` | 5102 | 스테이지 잠김 |
-| `StageInsufficientStamina` | 5103 | 스태미나 부족 |
-| `StageInvalidParty` | 5104 | 잘못된 파티 구성 |
-| `StageCharacterNotOwned` | 5105 | 미보유 캐릭터 |
-| `StagePartySizeInvalid` | 5106 | 파티 인원 부족 (최소 1명) |
-| `StageDailyLimitReached` | 5107 | 일일 도전 횟수 초과 |
+| `StageLocked` | 5102 | 스테이지 잠김 (해금 조건 미충족) |
+| `StageInsufficientCost` | 5103 | 입장 재화 부족 |
+| `StageEntryLimitExceeded` | 5104 | 입장 제한 초과 |
+| `StageInvalidParty` | 5105 | 잘못된 파티 구성 |
+| `StageNotAvailableToday` | 5106 | 오늘 이용 불가 (요일 제한) |
+| `StageInvalidBattleSession` | 5107 | 잘못된 전투 세션 |
 
 ---
 
-## 상태
+## 파일 구조
 
-| 분류 | 상태 |
-|------|------|
-| 마스터 데이터 확장 | ✅ 설계 완료 |
-| 유저 데이터 | ✅ 설계 완료 |
-| Request/Response | ✅ 설계 완료 |
-| UI | ✅ 설계 완료 |
-| 구현 | ⬜ 대기 |
+```
+Assets/Scripts/Contents/OutGame/Stage/
+├── Sc.Contents.Stage.asmdef
+│
+├── Screens/
+│   ├── InGameContentDashboard.cs
+│   ├── StageDashboard.cs
+│   ├── StageSelectScreen.cs
+│   └── PartySelectScreen.cs
+│
+├── Panels/
+│   ├── StageListPanel.cs
+│   └── StageItemWidget.cs
+│
+├── Modules/
+│   ├── IStageContentModule.cs
+│   ├── MainStoryContentModule.cs
+│   ├── ElementDungeonContentModule.cs
+│   ├── ExpDungeonContentModule.cs
+│   ├── BossRaidContentModule.cs
+│   ├── TowerContentModule.cs
+│   └── EventStageContentModule.cs
+│
+├── Popups/
+│   └── StageInfoPopup.cs
+│
+└── States/
+    ├── StageSelectState.cs
+    ├── StageDashboardState.cs
+    └── PartySelectState.cs
+```
 
 ---
 
 ## 구현 체크리스트
 
 ```
-Phase 3: 스테이지 진입 구현
-
-Enums:
-- [ ] StageType.cs
-- [ ] UnlockConditionType.cs
+Phase A: Data Foundation
+- [ ] InGameContentType.cs
+- [ ] StageType.cs (확장)
 - [ ] StarConditionType.cs
-
-마스터 데이터:
-- [ ] StageUnlockCondition.cs
 - [ ] StarCondition.cs
-- [ ] StageData.cs 확장 (PresetGroupId 필드 포함)
-- [ ] Stage.json 샘플 데이터 업데이트 (PresetGroupId 포함)
-
-유저 데이터:
+- [ ] StageData.cs
+- [ ] StageDatabase.cs
+- [ ] DungeonData.cs
+- [ ] DungeonDatabase.cs
+- [ ] StageClearInfo 확장 (StarAchieved[])
+- [ ] StageEntryRecord.cs
 - [ ] PartyPreset.cs
-- [ ] StageClearInfo.cs
-- [ ] StageProgress.cs 확장
-- [ ] UserSaveData 확장 (PartyPresets, StageProgress)
+- [ ] UserSaveData v5 마이그레이션
+- [ ] Stage.json 샘플 데이터
 
-Request/Response:
-- [ ] StageBattleRequest.cs
-- [ ] StageBattleResponse.cs
-- [ ] BattleInitialData.cs
-- [ ] CharacterBattleData.cs
+Phase B: Request/Response
+- [ ] EnterStageRequest.cs
+- [ ] EnterStageResponse.cs
+- [ ] ClearStageRequest.cs
+- [ ] ClearStageResponse.cs
 
-이벤트:
+Phase C: Events
 - [ ] StageEvents.cs
-  - [ ] StageSelectedEvent
-  - [ ] BattleStartRequestedEvent
-  - [ ] BattleReadyEvent
 
-API:
-- [ ] LocalApiClient.StartBattleAsync 구현
+Phase D: LocalServer
+- [ ] StageEntryValidator.cs
+- [ ] StageHandler.cs
+- [ ] LocalGameServer.cs 연동
 
-UI:
-- [ ] Sc.Contents.Stage Assembly 생성
-- [ ] StageDashboardScreen.cs
-- [ ] StageListScreen.cs
-- [ ] StageItem.cs
-- [ ] StageInfoPopup.cs
+Phase E: UI Screens
+- [ ] InGameContentDashboard.cs
+- [ ] StageDashboard.cs
+- [ ] StageSelectScreen.cs
 - [ ] PartySelectScreen.cs
-- [ ] PartySlotWidget.cs
-- [ ] SelectableCharacterItem.cs
 
-연동:
-- [ ] LobbyScreen에 [스테이지] 버튼 추가
-- [ ] NetworkManager 연동 테스트
+Phase F: UI Panels/Widgets
+- [ ] StageListPanel.cs
+- [ ] StageItemWidget.cs
+- [ ] ContentCategoryItem.cs
+
+Phase G: Content Modules
+- [ ] IStageContentModule.cs
+- [ ] MainStoryContentModule.cs
+- [ ] ElementDungeonContentModule.cs
+- [ ] ExpDungeonContentModule.cs
+- [ ] BossRaidContentModule.cs
+- [ ] TowerContentModule.cs
+- [ ] EventStageContentModule.cs
+
+Phase H: Popups/States
+- [ ] StageInfoPopup.cs
+- [ ] StageSelectState.cs
+- [ ] StageDashboardState.cs
+- [ ] PartySelectState.cs
+
+Phase I: Integration
+- [ ] LobbyScreen에 [던전] 버튼 추가
+- [ ] EventDetailScreen Stage 탭 연동
+- [ ] DataManager StageDatabase 로드
+
+Phase J: Testing
+- [ ] StageEntryValidatorTests.cs
+- [ ] StageHandlerTests.cs
 ```
 
 ---
@@ -616,6 +648,5 @@ UI:
 - [Data.md](Data.md) - 데이터 구조 개요
 - [Packet.md](Packet.md) - 네트워크 패턴
 - [Character.md](Character.md) - 캐릭터 시스템
-- [Navigation.md](Navigation.md) - 화면 전환
+- [LiveEvent.md](LiveEvent.md) - 이벤트 스테이지 연동
 - [Common/Reward.md](Common/Reward.md) - 보상 시스템
-- [LiveEvent.md](LiveEvent.md) - 이벤트 시스템 (StageListScreen 재사용)
