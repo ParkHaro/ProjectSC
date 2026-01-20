@@ -85,11 +85,6 @@ namespace Sc.Data
         public long LastSyncAt;
 
         /// <summary>
-        /// 가챠 히스토리 (Key: PoolId)
-        /// </summary>
-        public Dictionary<string, List<GachaHistoryRecord>> GachaHistory;
-
-        /// <summary>
         /// 현재 데이터 버전
         /// </summary>
         public const int CurrentVersion = 7;
@@ -115,7 +110,6 @@ namespace Sc.Data
                 StageEntryRecords = new Dictionary<string, StageEntryRecord>(),
                 BattleSessions = new Dictionary<string, BattleSessionData>(),
                 PartyPresets = new List<PartyPreset>(),
-                GachaHistory = new Dictionary<string, List<GachaHistoryRecord>>(),
                 LastSyncAt = DateTimeOffset.UtcNow.ToUnixTimeSeconds()
             };
         }
@@ -185,18 +179,7 @@ namespace Sc.Data
 
                 data.Version = 6;
             }
-
-            // Version 6 → 7: GachaHistory 필드 추가
-            if (data.Version < 7)
-            {
-                if (data.GachaHistory == null)
-                {
-                    data.GachaHistory = new Dictionary<string, List<GachaHistoryRecord>>();
-                }
-
-                data.Version = 7;
-            }
-
+            
             return data;
         }
 
@@ -527,84 +510,6 @@ namespace Sc.Data
             }
 
             return false;
-        }
-
-        #endregion
-
-        #region Gacha History Helpers
-
-        /// <summary>
-        /// 가챠 히스토리 추가
-        /// </summary>
-        public void AddGachaHistory(GachaHistoryRecord record)
-        {
-            GachaHistory ??= new Dictionary<string, List<GachaHistoryRecord>>();
-
-            if (!GachaHistory.ContainsKey(record.PoolId))
-            {
-                GachaHistory[record.PoolId] = new List<GachaHistoryRecord>();
-            }
-
-            // 최신순으로 추가
-            GachaHistory[record.PoolId].Insert(0, record);
-
-            // 풀당 최대 100개 유지
-            const int MaxHistoryPerPool = 100;
-            if (GachaHistory[record.PoolId].Count > MaxHistoryPerPool)
-            {
-                GachaHistory[record.PoolId].RemoveAt(GachaHistory[record.PoolId].Count - 1);
-            }
-        }
-
-        /// <summary>
-        /// 특정 풀의 가챠 히스토리 조회
-        /// </summary>
-        public List<GachaHistoryRecord> GetGachaHistory(string poolId, int limit = 50)
-        {
-            if (GachaHistory == null || !GachaHistory.ContainsKey(poolId))
-            {
-                return new List<GachaHistoryRecord>();
-            }
-
-            var result = new List<GachaHistoryRecord>();
-            var list = GachaHistory[poolId];
-            int count = System.Math.Min(limit, list.Count);
-
-            for (int i = 0; i < count; i++)
-            {
-                result.Add(list[i]);
-            }
-
-            return result;
-        }
-
-        /// <summary>
-        /// 전체 가챠 히스토리 조회 (최신순)
-        /// </summary>
-        public List<GachaHistoryRecord> GetAllGachaHistory(int limit = 100)
-        {
-            if (GachaHistory == null)
-            {
-                return new List<GachaHistoryRecord>();
-            }
-
-            var allRecords = new List<GachaHistoryRecord>();
-
-            foreach (var kvp in GachaHistory)
-            {
-                allRecords.AddRange(kvp.Value);
-            }
-
-            // 시간순 정렬 (최신 먼저)
-            allRecords.Sort((a, b) => b.Timestamp.CompareTo(a.Timestamp));
-
-            // limit 적용
-            if (allRecords.Count > limit)
-            {
-                allRecords.RemoveRange(limit, allRecords.Count - limit);
-            }
-
-            return allRecords;
         }
 
         #endregion
