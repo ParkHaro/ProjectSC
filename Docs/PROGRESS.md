@@ -21,7 +21,7 @@
 | F | **LiveEvent** | ✅ | LiveEvent.md |
 | F | **Shop** | ✅ | Shop.md |
 | F | **LobbyEntryTask** | ✅ | Lobby.md |
-| F | Stage | 🔨 | Stage.md (v3.1, Phase A~G 완료) |
+| F | Stage | 🔨 | Stage.md (v3.1, Phase A~I 완료, 테스트 제외) |
 | F | GachaEnhancement | ⬜ | Gacha/Enhancement.md |
 | F | CharacterEnhancement | ⬜ | Character/Enhancement.md |
 | F | NavigationEnhancement | ⬜ | Common/NavigationEnhancement.md |
@@ -92,6 +92,15 @@
 ## 작업 로그 (최근)
 
 ### 2026-01-20
+- [x] **Stage 시스템 Phase H~I 완료** (4개 파일)
+  - Phase H: StageInfoPopup
+    - StageInfoState.cs - 스테이지 정보 팝업 상태
+    - StageInfoPopup.cs - 스테이지 상세 정보 팝업 (별 조건, 보상, 입장 제한)
+  - Phase I: EventDetailScreen 연동
+    - EventStageTab.cs 수정 - StageSelectScreen 네비게이션 추가
+    - Sc.Contents.Event.asmdef - Sc.Contents.Stage 참조 추가
+  - Phase A: Stage.json v2.0
+    - ContentType, CategoryId, StarConditions, FirstClearRewards, RepeatClearRewards 추가
 - [x] **Stage 시스템 Phase G 완료** (6개 파일)
   - Content Modules 추가:
     - ExpDungeonContentModule.cs - 난이도 표시, 경험치 미리보기
