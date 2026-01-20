@@ -48,7 +48,10 @@ namespace Sc.Editor.Wizard
             // 3. UI Canvas 계층 생성
             CreateUIHierarchy();
 
-            // 4. 씬 저장
+            // 4. NavigationManager에 Canvas 참조 할당
+            AssignCanvasToNavigationManager();
+
+            // 5. 씬 저장
             EditorUIHelpers.EnsureFolder("Assets/Scenes");
             EditorSceneManager.SaveScene(scene, ScenePath);
 
@@ -330,6 +333,35 @@ namespace Sc.Editor.Wizard
             go.AddComponent<LoadingWidget>();
 
             Debug.Log("[MainSceneSetup] 기본 LoadingWidget 생성됨 (프리팹 없음)");
+        }
+
+        private static void AssignCanvasToNavigationManager()
+        {
+            var navManager = Object.FindObjectOfType<NavigationManager>();
+            if (navManager == null)
+            {
+                Debug.LogWarning("[MainSceneSetup] NavigationManager를 찾을 수 없습니다.");
+                return;
+            }
+
+            var screenContainer = GameObject.Find("ScreenContainer");
+            var popupContainer = GameObject.Find("PopupContainer");
+
+            if (screenContainer == null || popupContainer == null)
+            {
+                Debug.LogWarning("[MainSceneSetup] ScreenContainer 또는 PopupContainer를 찾을 수 없습니다.");
+                return;
+            }
+
+            var screenCanvas = screenContainer.GetComponent<Canvas>();
+            var popupCanvas = popupContainer.GetComponent<Canvas>();
+
+            var so = new SerializedObject(navManager);
+            so.FindProperty("_screenCanvas").objectReferenceValue = screenCanvas;
+            so.FindProperty("_popupCanvas").objectReferenceValue = popupCanvas;
+            so.ApplyModifiedPropertiesWithoutUndo();
+
+            Debug.Log("[MainSceneSetup] NavigationManager Canvas 참조 할당 완료");
         }
 
         #endregion
