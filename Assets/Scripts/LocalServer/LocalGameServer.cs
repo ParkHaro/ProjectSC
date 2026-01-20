@@ -13,6 +13,7 @@ namespace Sc.LocalServer
         private readonly LoginHandler _loginHandler;
         private readonly GachaHandler _gachaHandler;
         private readonly ShopHandler _shopHandler;
+        private readonly StageHandler _stageHandler;
         private readonly EventHandler _eventHandler;
         private readonly ServerTimeService _timeService;
 
@@ -26,6 +27,7 @@ namespace Sc.LocalServer
             _loginHandler = new LoginHandler();
             _gachaHandler = new GachaHandler(validator, gachaService, rewardService, _timeService);
             _shopHandler = new ShopHandler(validator, rewardService, _timeService);
+            _stageHandler = new StageHandler(validator, rewardService, _timeService);
 
             // EventHandler는 LiveEventDatabase가 필요하므로 외부에서 주입받거나 null 허용
             // 실제 사용 시에는 DataManager에서 Database를 제공해야 함
@@ -44,6 +46,10 @@ namespace Sc.LocalServer
                     LoginRequest loginRequest => _loginHandler.Handle(loginRequest, ref userData),
                     GachaRequest gachaRequest => _gachaHandler.Handle(gachaRequest, ref userData),
                     ShopPurchaseRequest shopRequest => _shopHandler.Handle(shopRequest, ref userData),
+                    EnterStageRequest enterStageRequest => _stageHandler.HandleEnterStage(enterStageRequest,
+                        ref userData),
+                    ClearStageRequest clearStageRequest => _stageHandler.HandleClearStage(clearStageRequest,
+                        ref userData),
                     GetActiveEventsRequest eventRequest => HandleEventRequest(eventRequest, ref userData),
                     VisitEventRequest visitRequest => HandleEventRequest(visitRequest, ref userData),
                     ClaimEventMissionRequest claimRequest => HandleEventRequest(claimRequest, ref userData),
@@ -80,6 +86,14 @@ namespace Sc.LocalServer
         public void SetShopProductDatabase(ShopProductDatabase database)
         {
             _shopHandler?.SetProductDatabase(database);
+        }
+
+        /// <summary>
+        /// StageDataProvider 설정 (외부에서 조회 함수 주입)
+        /// </summary>
+        public void SetStageDataProvider(Func<string, StageDataInfo> provider)
+        {
+            _stageHandler?.SetStageDataProvider(provider);
         }
 
         /// <summary>

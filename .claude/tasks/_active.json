@@ -1,19 +1,11 @@
 {
   "tasks": {
-    "main-scene-s1-infra": {
-      "name": "Main Scene Setup - Session 1: 기반 인프라",
+    "stage-impl": {
+      "name": "Stage 시스템 구현 - Phase A~D",
       "status": "completed",
-      "plan_doc": "Docs/Specs/Editor/MainSceneSetup_PLAN.md"
-    },
-    "main-scene-s2-structure": {
-      "name": "Main Scene Setup - Session 2: 씬 구조 및 초기화 시스템",
-      "status": "completed",
-      "plan_doc": "Docs/Specs/Editor/MainSceneSetup_PLAN.md"
-    },
-    "main-scene-s3-prefab": {
-      "name": "Main Scene Setup - Session 3: 프리팹 자동화",
-      "status": "completed",
-      "plan_doc": "Docs/Specs/Editor/MainSceneSetup_PLAN.md"
+      "plan_doc": "Docs/Specs/Stage.md",
+      "completed": "Phase A~D",
+      "next": null
     }
   },
   "locked_files": {}

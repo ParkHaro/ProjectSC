@@ -1,0 +1,29 @@
+{
+  "id": "stage-impl",
+  "name": "Stage 시스템 구현 - Phase A~D",
+  "status": "completed",
+  "plan_doc": "Docs/Specs/Stage.md",
+  "completed_phases": ["A", "B", "C", "D"],
+  "pending_phases": [],
+  "created_files": [
+    "Assets/Scripts/Data/Enums/InGameContentType.cs",
+    "Assets/Scripts/Data/Enums/StageType.cs",
+    "Assets/Scripts/Data/Enums/StarConditionType.cs",
+    "Assets/Scripts/Data/Structs/MasterData/StarCondition.cs",
+    "Assets/Scripts/Data/Structs/UserData/StageEntryRecord.cs",
+    "Assets/Scripts/Data/Structs/UserData/BattleSessionData.cs",
+    "Assets/Scripts/Data/Requests/EnterStageRequest.cs",
+    "Assets/Scripts/Data/Requests/ClearStageRequest.cs",
+    "Assets/Scripts/Data/Responses/EnterStageResponse.cs",
+    "Assets/Scripts/Data/Responses/ClearStageResponse.cs",
+    "Assets/Scripts/Event/OutGame/StageEvents.cs",
+    "Assets/Scripts/LocalServer/Services/StageEntryValidator.cs",
+    "Assets/Scripts/LocalServer/Handlers/StageHandler.cs"
+  ],
+  "modified_files": [
+    "Assets/Scripts/Data/Structs/UserData/StageProgress.cs",
+    "Assets/Scripts/Data/Structs/UserData/UserSaveData.cs",
+    "Assets/Scripts/LocalServer/LocalGameServer.cs"
+  ],
+  "next_tasks": []
+}
