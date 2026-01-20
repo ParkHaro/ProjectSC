@@ -55,6 +55,11 @@ namespace Sc.Data
         public EventCurrencyData EventCurrency;
 
         /// <summary>
+        /// 라이브 이벤트 진행 데이터 (Key: EventId)
+        /// </summary>
+        public Dictionary<string, LiveEventProgress> EventProgresses;
+
+        /// <summary>
         /// 마지막 동기화 시간 (Unix Timestamp)
         /// </summary>
         public long LastSyncAt;
@@ -62,7 +67,7 @@ namespace Sc.Data
         /// <summary>
         /// 현재 데이터 버전
         /// </summary>
-        public const int CurrentVersion = 2;
+        public const int CurrentVersion = 3;
 
         /// <summary>
         /// 신규 유저 데이터 생성
@@ -80,6 +85,7 @@ namespace Sc.Data
                 GachaPity = GachaPityData.CreateDefault(),
                 QuestProgress = QuestProgress.CreateDefault(),
                 EventCurrency = EventCurrencyData.CreateDefault(),
+                EventProgresses = new Dictionary<string, LiveEventProgress>(),
                 LastSyncAt = DateTimeOffset.UtcNow.ToUnixTimeSeconds()
             };
         }
@@ -98,6 +104,16 @@ namespace Sc.Data
                     data.EventCurrency = EventCurrencyData.CreateDefault();
                 }
                 data.Version = 2;
+            }
+
+            // Version 2 → 3: EventProgresses 필드 추가
+            if (data.Version < 3)
+            {
+                if (data.EventProgresses == null)
+                {
+                    data.EventProgresses = new Dictionary<string, LiveEventProgress>();
+                }
+                data.Version = 3;
             }
 
             return data;
@@ -175,5 +191,64 @@ namespace Sc.Data
             var item = FindItemById(itemId);
             return item?.Count ?? 0;
         }
+
+        #region Event Progress Helpers
+
+        /// <summary>
+        /// 이벤트 진행 상태 조회
+        /// </summary>
+        public LiveEventProgress? FindEventProgress(string eventId)
+        {
+            if (EventProgresses == null) return null;
+            return EventProgresses.TryGetValue(eventId, out var progress) ? progress : null;
+        }
+
+        /// <summary>
+        /// 이벤트 진행 상태 업데이트 또는 생성
+        /// </summary>
+        public void UpdateEventProgress(string eventId, LiveEventProgress progress)
+        {
+            EventProgresses ??= new Dictionary<string, LiveEventProgress>();
+            EventProgresses[eventId] = progress;
+        }
+
+        /// <summary>
+        /// 이벤트 진행 상태 생성 (없으면)
+        /// </summary>
+        public LiveEventProgress GetOrCreateEventProgress(string eventId)
+        {
+            EventProgresses ??= new Dictionary<string, LiveEventProgress>();
+            if (!EventProgresses.TryGetValue(eventId, out var progress))
+            {
+                progress = LiveEventProgress.CreateDefault(eventId);
+                EventProgresses[eventId] = progress;
+            }
+            return progress;
+        }
+
+        /// <summary>
+        /// 이벤트 방문 처리
+        /// </summary>
+        public void VisitEvent(string eventId, long serverTime)
+        {
+            var progress = GetOrCreateEventProgress(eventId);
+            if (!progress.HasVisited)
+            {
+                progress.HasVisited = true;
+                progress.FirstVisitTime = serverTime;
+                EventProgresses[eventId] = progress;
+            }
+        }
+
+        /// <summary>
+        /// 이벤트 방문 여부 확인
+        /// </summary>
+        public bool HasVisitedEvent(string eventId)
+        {
+            var progress = FindEventProgress(eventId);
+            return progress?.HasVisited ?? false;
+        }
+
+        #endregion
     }
 }

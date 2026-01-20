@@ -63,9 +63,9 @@
 | 1~3차 | Foundation, Core, Common, Reward | ✅ | 149개 |
 | 3.5차 | LocalServer | ✅ | 40개 |
 | 4~4.5차 | PlayMode 인프라, 에디터 도구 | ✅ | - |
-| 5차 | 시스템 확장 | ⬜ | - |
+| 5차 | LiveEvent 테스트 | ✅ | 115개 |
 
-**총 테스트**: 189개
+**총 테스트**: 304개
 
 ---
 
@@ -86,7 +86,7 @@
 - **LocalServer**: Sc.LocalServer Assembly 분리, Handler 패턴
 
 ### 컨텐츠 (Phase F)
-- **LiveEvent**: 배너/상세/미션탭, TabWidget, 마스터데이터 SO
+- **LiveEvent**: ✅ 완료 (30개 파일, Phase A~G 전체)
 
 ### MVP 완료
 - Title, Lobby, Gacha, CharacterList, CharacterDetail Screen
@@ -101,11 +101,26 @@
 ## 작업 로그 (최근)
 
 ### 2026-01-20
-- [x] LiveEvent 시스템 구현 완료
-  - Enums, Data 구조체, UserSaveData v3 마이그레이션
-  - Request/Response, LocalServer 핸들러
-  - UI (LiveEventScreen, EventDetailScreen, TabWidget)
-  - 마스터 데이터 SO, ResponseHandler, 이벤트
+- [x] **LiveEvent 테스트 추가** (115개)
+  - Data 테스트: LiveEventData, Database, Progress, EventCurrency (84개)
+  - LocalServer 테스트: EventHandler, EventCurrencyConverter (31개)
+  - Mock 클래스: TestServerTimeService, MockLiveEventDatabase, MockServerTimeService
+- [x] EventType → LiveEventType 리팩토링
+  - UnityEventType 충돌 방지
+  - Limited, Collab 이넘 값 추가
+- [x] **LiveEvent 시스템 구현 완료** (30개 파일)
+  - Phase A: Enums + 구조체 (5개)
+  - Phase B: SO + UserData + Migration v3 (7개)
+  - Phase C: Request/Response (6개)
+  - Phase D: Events + Handler (3개)
+  - Phase E: UI Assembly + Screen (4개)
+  - Phase F: EventDetailScreen + Tabs (4개)
+  - Phase G: 재화 전환 + 통합 (3개)
+  - 추가: TabWidget 범용 클래스 (2개)
+- [x] LiveEvent 구현 계획 수립
+  - 구현 범위 확정 (Mission 구조만, Stage/Shop Tab UI만, 재화 전환 전체)
+  - 7개 Phase로 작업 단위 분리
+  - [IMPLEMENTATION_PLAN.md](Specs/LiveEvent/IMPLEMENTATION_PLAN.md) 작성
 - [x] LocalServer 단위 테스트 (40개)
 - [x] Request/Response 타입 Sc.Data로 이동
 

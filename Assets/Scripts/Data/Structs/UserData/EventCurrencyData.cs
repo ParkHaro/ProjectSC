@@ -77,6 +77,23 @@ namespace Sc.Data
             Currencies.RemoveAll(item =>
                 item.ExpiresAt > 0 && item.ExpiresAt < currentTimestamp);
         }
+
+        /// <summary>
+        /// 이벤트 재화 제거
+        /// </summary>
+        public void RemoveCurrency(string eventId, string currencyId)
+        {
+            if (Currencies == null) return;
+
+            for (int i = Currencies.Count - 1; i >= 0; i--)
+            {
+                if (Currencies[i].EventId == eventId && Currencies[i].CurrencyId == currencyId)
+                {
+                    Currencies.RemoveAt(i);
+                    break;
+                }
+            }
+        }
     }
 
     /// <summary>

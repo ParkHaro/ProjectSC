@@ -1,17 +1,15 @@
 {
-    "name": "Sc.Contents.Lobby",
-    "rootNamespace": "Sc.Contents.Lobby",
+    "name": "Sc.Contents.Event",
+    "rootNamespace": "Sc.Contents.Event",
     "references": [
         "Sc.Common",
         "Sc.Core",
         "Sc.Data",
         "Sc.Packet",
         "Sc.Foundation",
-        "Sc.Contents.Gacha",
-        "Sc.Contents.Character",
+        "Sc.Event",
         "UniTask",
-        "Unity.TextMeshPro",
-        "Sc.Contents.Event"
+        "Unity.TextMeshPro"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],
