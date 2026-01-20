@@ -263,9 +263,7 @@ namespace Sc.Contents.Stage
 
         private string GetStarConditionText(StarCondition condition)
         {
-            if (condition == null) return "클리어";
-
-            return condition.Type switch
+            return condition.ConditionType switch
             {
                 StarConditionType.Clear => "클리어",
                 StarConditionType.TurnLimit => $"{condition.Value}턴 이내 클리어",
@@ -282,7 +280,7 @@ namespace Sc.Contents.Stage
             {
                 CostType.Stamina => "스태미나",
                 CostType.Gold => "골드",
-                CostType.Diamond => "다이아",
+                CostType.Gem => "보석",
                 CostType.EventCurrency => "이벤트 재화",
                 _ => costType.ToString()
             };
@@ -295,21 +293,21 @@ namespace Sc.Contents.Stage
             var parts = new List<string>();
             foreach (var reward in rewards)
             {
-                string name = GetRewardTypeName(reward.Type, reward.Id);
-                parts.Add($"{name} {reward.Amount:N0}");
+                string rewardName = GetRewardTypeName(reward.Type, reward.ItemId);
+                parts.Add($"{rewardName} {reward.Amount:N0}");
             }
             return string.Join(", ", parts);
         }
 
-        private string GetRewardTypeName(RewardType type, string id)
+        private string GetRewardTypeName(RewardType type, string itemId)
         {
             return type switch
             {
-                RewardType.Currency when id == "gold" => "골드",
-                RewardType.Currency when id == "diamond" => "다이아",
-                RewardType.Currency => id,
-                RewardType.Exp => "경험치",
-                RewardType.Item => id,
+                RewardType.Currency when itemId == "Gold" => "골드",
+                RewardType.Currency when itemId == "Gem" => "보석",
+                RewardType.Currency => itemId,
+                RewardType.PlayerExp => "경험치",
+                RewardType.Item => itemId,
                 RewardType.Character => "캐릭터",
                 _ => type.ToString()
             };
