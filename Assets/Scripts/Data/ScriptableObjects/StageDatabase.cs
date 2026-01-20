@@ -75,7 +75,66 @@ namespace Sc.Data
                 if (stage.Chapter == chapter && stage.StageNumber == stageNumber)
                     return stage;
             }
+
             return null;
+        }
+
+        /// <summary>
+        /// 컨텐츠 타입별 스테이지 조회
+        /// </summary>
+        public IEnumerable<StageData> GetByContentType(InGameContentType contentType)
+        {
+            foreach (var stage in _stages)
+            {
+                if (stage != null && stage.ContentType == contentType && stage.IsEnabled)
+                    yield return stage;
+            }
+        }
+
+        /// <summary>
+        /// 컨텐츠 타입 및 카테고리별 스테이지 조회
+        /// </summary>
+        public IEnumerable<StageData> GetByContentTypeAndCategory(InGameContentType contentType, string categoryId)
+        {
+            foreach (var stage in _stages)
+            {
+                if (stage != null &&
+                    stage.ContentType == contentType &&
+                    stage.CategoryId == categoryId &&
+                    stage.IsEnabled)
+                {
+                    yield return stage;
+                }
+            }
+        }
+
+        /// <summary>
+        /// 카테고리별 스테이지 조회
+        /// </summary>
+        public IEnumerable<StageData> GetByCategory(string categoryId)
+        {
+            foreach (var stage in _stages)
+            {
+                if (stage != null && stage.CategoryId == categoryId && stage.IsEnabled)
+                    yield return stage;
+            }
+        }
+
+        /// <summary>
+        /// 이벤트 ID별 스테이지 조회 (이벤트 스테이지용)
+        /// </summary>
+        public IEnumerable<StageData> GetByEvent(string eventId)
+        {
+            foreach (var stage in _stages)
+            {
+                if (stage != null &&
+                    stage.ContentType == InGameContentType.Event &&
+                    stage.CategoryId == eventId &&
+                    stage.IsEnabled)
+                {
+                    yield return stage;
+                }
+            }
         }
 
         private void EnsureLookup()

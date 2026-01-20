@@ -1,7 +1,9 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Sc.Common.UI;
 using Sc.Common.UI.Widgets;
+using Sc.Core;
 using Sc.Data;
 using Sc.Event.UI;
 using Sc.Foundation;
@@ -28,9 +30,9 @@ namespace Sc.Contents.Stage
             public InGameContentType ContentType { get; set; }
 
             /// <summary>
-            /// 초기 선택 던전 ID
+            /// 초기 선택 카테고리 ID
             /// </summary>
-            public string InitialDungeonId { get; set; }
+            public string InitialCategoryId { get; set; }
         }
 
         [Header("Header")]
@@ -113,9 +115,9 @@ namespace Sc.Contents.Stage
             }
         }
 
-        private void CreateCategoryItem(DungeonCategoryInfo category)
+        private void CreateCategoryItem(StageCategoryData category)
         {
-            if (_categoryItemPrefab == null || _categoryContainer == null) return;
+            if (_categoryItemPrefab == null || _categoryContainer == null || category == null) return;
 
             var itemGo = Instantiate(_categoryItemPrefab, _categoryContainer);
             var item = itemGo.GetComponent<ContentCategoryItem>();
@@ -124,17 +126,37 @@ namespace Sc.Contents.Stage
             {
                 item.Initialize();
 
-                // ContentCategoryItem을 재사용하므로 InGameContentType으로 캐스팅
-                // 실제로는 DungeonId를 사용해야 하지만, 현재 구조상 임시 처리
+                // 잠금 여부 확인 (유저 진행도 기반)
+                bool isLocked = IsCategoryLocked(category);
+
                 item.Setup(
                     _currentState.ContentType,
-                    category.IsLocked,
+                    isLocked,
                     false,
                     _ => OnCategoryClicked(category)
                 );
 
                 _categoryItems.Add(item);
             }
+        }
+
+        private bool IsCategoryLocked(StageCategoryData category)
+        {
+            if (category == null) return true;
+
+            // UnlockCondition 체크 (TODO: 유저 진행도 기반 구현)
+            // 현재는 ChapterNumber 기반 간단 체크
+            if (DataManager.Instance == null) return false;
+
+            var progress = DataManager.Instance.StageProgress;
+
+            // MainStory: 이전 챕터 클리어 필요
+            if (category.ContentType == InGameContentType.MainStory)
+            {
+                return category.ChapterNumber > progress.CurrentChapter + 1;
+            }
+
+            return false;
         }
 
         private void ClearCategoryItems()
@@ -149,50 +171,31 @@ namespace Sc.Contents.Stage
             _categoryItems.Clear();
         }
 
-        private List<DungeonCategoryInfo> GetCategoriesForContent(InGameContentType contentType)
+        private List<StageCategoryData> GetCategoriesForContent(InGameContentType contentType)
         {
-            // TODO: 실제 DungeonDatabase에서 조회
-            // 현재는 하드코딩된 목록 반환
-
-            return contentType switch
+            // StageCategoryDatabase에서 조회
+            var database = DataManager.Instance?.GetDatabase<StageCategoryDatabase>();
+            if (database == null)
             {
-                InGameContentType.GoldDungeon => new List<DungeonCategoryInfo>
-                {
-                    new() { Id = "gold_fire", Name = "불 속성", Description = "불 속성 몬스터 출현", IsLocked = false },
-                    new() { Id = "gold_water", Name = "물 속성", Description = "물 속성 몬스터 출현", IsLocked = false },
-                    new() { Id = "gold_earth", Name = "땅 속성", Description = "땅 속성 몬스터 출현", IsLocked = true },
-                    new() { Id = "gold_wind", Name = "바람 속성", Description = "바람 속성 몬스터 출현", IsLocked = true },
-                },
-                InGameContentType.ExpDungeon => new List<DungeonCategoryInfo>
-                {
-                    new() { Id = "exp_easy", Name = "초급", Description = "쉬운 난이도", IsLocked = false },
-                    new() { Id = "exp_normal", Name = "중급", Description = "보통 난이도", IsLocked = false },
-                    new() { Id = "exp_hard", Name = "고급", Description = "어려운 난이도", IsLocked = true },
-                },
-                InGameContentType.SkillDungeon => new List<DungeonCategoryInfo>
-                {
-                    new() { Id = "skill_attack", Name = "공격", Description = "공격 스킬 재료", IsLocked = false },
-                    new() { Id = "skill_defense", Name = "방어", Description = "방어 스킬 재료", IsLocked = true },
-                    new() { Id = "skill_support", Name = "지원", Description = "지원 스킬 재료", IsLocked = true },
-                },
-                InGameContentType.BossRaid => new List<DungeonCategoryInfo>
-                {
-                    new() { Id = "boss_dragon", Name = "드래곤", Description = "드래곤 보스", IsLocked = false },
-                    new() { Id = "boss_demon", Name = "악마", Description = "악마 보스", IsLocked = true },
-                },
-                _ => new List<DungeonCategoryInfo>()
-            };
+                Debug.LogWarning("[StageDashboard] StageCategoryDatabase not found");
+                return new List<StageCategoryData>();
+            }
+
+            return database.GetSortedByContentType(contentType);
         }
 
         #endregion
 
         #region Category Selection
 
-        private void OnCategoryClicked(DungeonCategoryInfo category)
+        private void OnCategoryClicked(StageCategoryData category)
         {
-            if (category.IsLocked)
+            if (category == null) return;
+
+            if (IsCategoryLocked(category))
             {
                 Debug.Log($"[StageDashboard] Category locked: {category.Id}");
+                // TODO: 잠금 안내 팝업 표시
                 return;
             }
 
@@ -202,7 +205,7 @@ namespace Sc.Contents.Stage
             StageSelectScreen.Open(new StageSelectScreen.StageSelectState
             {
                 ContentType = _currentState.ContentType,
-                DungeonId = category.Id
+                CategoryId = category.Id
             });
         }
 
@@ -250,15 +253,4 @@ namespace Sc.Contents.Stage
         }
     }
 
-    /// <summary>
-    /// 던전 카테고리 정보 (임시 구조체).
-    /// DungeonData 구현 전까지 사용합니다.
-    /// </summary>
-    internal struct DungeonCategoryInfo
-    {
-        public string Id;
-        public string Name;
-        public string Description;
-        public bool IsLocked;
-    }
 }

@@ -3,10 +3,13 @@ type: spec
 assembly: Sc.Contents.Stage
 category: System
 status: draft
-version: "3.0"
+version: "3.1"
 dependencies: [Sc.Common, Sc.Packet, Sc.Data, Sc.Event, Sc.Contents.Character]
 created: 2026-01-17
 updated: 2026-01-20
+changelog:
+  - "3.1: Dungeon → StageCategory 용어 변경, Content Module 구현 완료"
+  - "3.0: 컨텐츠 모듈 패턴 설계"
 ---
 
 # Sc.Contents.Stage
@@ -21,7 +24,7 @@ updated: 2026-01-20
 |------|------|------|
 | **Stage** | 인게임 전투 **한 판** | 1-1, 1-2, 보스전, 일일던전 1층 |
 | **InGameContent** | 전투 컨텐츠 **대분류** | 메인스토리, 골드던전, 경험치던전, 보스레이드 |
-| **Dungeon** | 컨텐츠 내 **세부 분류** | 불속성, 물속성, 1장, 2장 |
+| **StageCategory** | 컨텐츠 내 **세부 분류** | 불속성, 물속성, 1장, 2장 |
 
 ---
 
@@ -51,20 +54,20 @@ Lobby
         │  ┌─────────────────────────────────────────────────────┐
         │  │ 컨텐츠에 따라 StageDashboard 유무 결정               │
         │  │ - 메인스토리: StageDashboard 스킵                   │
-        │  │ - 골드/경험치던전: StageDashboard 필요 (속성 선택)   │
+        │  │ - 골드/경험치던전: StageDashboard 필요 (카테고리 선택)│
         │  └─────────────────────────────────────────────────────┘
         │
         ├─[메인스토리]────────────────────> StageSelectScreen
         │                                   + MainStoryContentModule
         │
         ├─[골드던전]──> StageDashboard ──> StageSelectScreen
-        │               (속성 선택)         + ElementDungeonContentModule
+        │               (카테고리 선택)      + ElementDungeonContentModule
         │
         ├─[경험치던전]─> StageDashboard ─> StageSelectScreen
-        │               (난이도 선택)       + ExpDungeonContentModule
+        │               (카테고리 선택)      + ExpDungeonContentModule
         │
         ├─[보스레이드]─> StageDashboard ─> StageSelectScreen
-        │               (보스 선택)         + BossRaidContentModule
+        │               (카테고리 선택)      + BossRaidContentModule
         │
         └─[무한의탑]────────────────────> StageSelectScreen
                                           + TowerContentModule
@@ -149,13 +152,17 @@ LiveEventScreen
 | 인터페이스 | 역할 |
 |------------|------|
 | `IStageContentModule` | 컨텐츠별 확장 UI 인터페이스 |
+| `BaseStageContentModule` | 모듈 공통 로직 (Template Method Pattern) |
+| `StageContentModuleFactory` | 컨텐츠 타입별 모듈 생성 팩토리 |
 
 ```csharp
 public interface IStageContentModule
 {
-    void Initialize(Transform container, StageSelectState state);
-    void Refresh(StageSelectState state);
-    void OnStageSelected(StageData stage);
+    event Action<string> OnCategoryChanged;  // 카테고리 변경 이벤트
+    void Initialize(Transform container, InGameContentType contentType);
+    void SetCategoryId(string categoryId);   // 외부에서 카테고리 설정
+    void Refresh(string selectedStageId);
+    void OnStageSelected(StageData stageData);
     void Release();
 }
 ```
@@ -222,17 +229,16 @@ public enum StarConditionType
 **위치**: `Assets/Scripts/Data/ScriptableObjects/StageData.cs`
 
 ```csharp
-[CreateAssetMenu(fileName = "StageData", menuName = "SC/Data/StageData")]
+[CreateAssetMenu(fileName = "StageData", menuName = "SC/Data/Stage")]
 public class StageData : ScriptableObject
 {
     [Header("기본 정보")]
     public string Id;
     public InGameContentType ContentType;
+    public string CategoryId;           // 속하는 카테고리 ID (속성/챕터 등)
     public StageType StageType;
-    public string DungeonId;            // 속하는 던전 ID (속성/챕터 등)
-    public int StageNumber;             // 던전 내 순서
-    public string NameKey;
-    public string DescriptionKey;
+    public int Chapter;
+    public int StageNumber;
     public Difficulty Difficulty;
 
     [Header("입장 조건")]
@@ -248,9 +254,13 @@ public class StageData : ScriptableObject
 
     [Header("전투 정보")]
     public int RecommendedPower;        // 추천 전투력
-    public List<string> EnemyIds;       // 적 캐릭터 ID 목록
+    public string[] EnemyIds;           // 적 캐릭터 ID 목록
 
-    [Header("보상")]
+    [Header("보상 (레거시)")]
+    public int RewardGold;
+    public int RewardExp;
+
+    [Header("보상 (신규)")]
     public List<RewardInfo> FirstClearRewards;
     public List<RewardInfo> RepeatClearRewards;
 
@@ -258,12 +268,6 @@ public class StageData : ScriptableObject
     public StarCondition Star1Condition;
     public StarCondition Star2Condition;
     public StarCondition Star3Condition;
-
-    [Header("파티 프리셋")]
-    public string PresetGroupId;        // 파티 프리셋 그룹
-
-    [Header("이벤트 전용")]
-    public string EventId;              // 이벤트 ID (이벤트 스테이지만)
 
     [Header("표시")]
     public int DisplayOrder;
@@ -276,43 +280,60 @@ public class StageData : ScriptableObject
 **위치**: `Assets/Scripts/Data/ScriptableObjects/StageDatabase.cs`
 
 ```csharp
-[CreateAssetMenu(fileName = "StageDatabase", menuName = "SC/Data/StageDatabase")]
+[CreateAssetMenu(fileName = "StageDatabase", menuName = "SC/Database/Stage")]
 public class StageDatabase : ScriptableObject
 {
     [SerializeField] private List<StageData> _stages;
 
     public StageData GetById(string id);
-    public IEnumerable<StageData> GetByContentType(InGameContentType type);
-    public IEnumerable<StageData> GetByDungeon(string dungeonId);
+    public IEnumerable<StageData> GetByContentType(InGameContentType contentType);
+    public IEnumerable<StageData> GetByContentTypeAndCategory(InGameContentType contentType, string categoryId);
+    public IEnumerable<StageData> GetByCategory(string categoryId);
     public IEnumerable<StageData> GetByEvent(string eventId);
 }
 ```
 
-### DungeonData (NEW)
+### StageCategoryData
 
-**위치**: `Assets/Scripts/Data/ScriptableObjects/DungeonData.cs`
+**위치**: `Assets/Scripts/Data/ScriptableObjects/StageCategoryData.cs`
 
 ```csharp
-[CreateAssetMenu(fileName = "DungeonData", menuName = "SC/Data/DungeonData")]
-public class DungeonData : ScriptableObject
+[CreateAssetMenu(fileName = "StageCategoryData", menuName = "SC/Data/StageCategory")]
+public class StageCategoryData : ScriptableObject
 {
+    [Header("기본 정보")]
     public string Id;
     public InGameContentType ContentType;
     public string NameKey;
     public string DescriptionKey;
     public Sprite IconSprite;
 
-    // 속성 던전용
-    public ElementType Element;
+    [Header("컨텐츠별 특화 필드")]
+    public Element Element;         // 속성 던전용
+    public Difficulty Difficulty;   // 난이도 던전용
+    public int ChapterNumber;       // 메인스토리 챕터용
 
-    // 난이도 던전용
-    public Difficulty Difficulty;
-
-    // 챕터용
-    public int ChapterNumber;
-
+    [Header("표시")]
     public int DisplayOrder;
     public bool IsEnabled;
+}
+```
+
+### StageCategoryDatabase
+
+**위치**: `Assets/Scripts/Data/ScriptableObjects/StageCategoryDatabase.cs`
+
+```csharp
+[CreateAssetMenu(fileName = "StageCategoryDatabase", menuName = "SC/Database/StageCategory")]
+public class StageCategoryDatabase : ScriptableObject
+{
+    [SerializeField] private List<StageCategoryData> _categories;
+
+    public StageCategoryData GetById(string id);
+    public IEnumerable<StageCategoryData> GetByContentType(InGameContentType contentType);
+    public List<StageCategoryData> GetSortedByContentType(InGameContentType contentType);
+    public StageCategoryData GetByElement(InGameContentType contentType, Element element);
+    public StageCategoryData GetByChapter(int chapterNumber);
 }
 ```
 
@@ -545,8 +566,8 @@ Assets/Scripts/Contents/OutGame/Stage/
 │
 ├── Screens/
 │   ├── InGameContentDashboard.cs
-│   ├── StageDashboard.cs
-│   ├── StageSelectScreen.cs
+│   ├── StageDashboard.cs        (StageCategoryDatabase 사용)
+│   ├── StageSelectScreen.cs     (StageContentModuleFactory 사용)
 │   └── PartySelectScreen.cs
 │
 ├── Panels/
@@ -555,20 +576,30 @@ Assets/Scripts/Contents/OutGame/Stage/
 │
 ├── Modules/
 │   ├── IStageContentModule.cs
-│   ├── MainStoryContentModule.cs
-│   ├── ElementDungeonContentModule.cs
-│   ├── ExpDungeonContentModule.cs
-│   ├── BossRaidContentModule.cs
-│   ├── TowerContentModule.cs
-│   └── EventStageContentModule.cs
+│   ├── BaseStageContentModule.cs     (추상 베이스, Template Method)
+│   ├── StageContentModuleFactory.cs  (팩토리, 모듈 생성)
+│   ├── MainStoryContentModule.cs     (챕터 탭, 진행도)
+│   ├── ElementDungeonContentModule.cs (속성 아이콘, 권장 속성)
+│   ├── ExpDungeonContentModule.cs    (TODO)
+│   ├── BossRaidContentModule.cs      (TODO)
+│   ├── TowerContentModule.cs         (TODO)
+│   └── EventStageContentModule.cs    (TODO)
 │
 ├── Popups/
-│   └── StageInfoPopup.cs
+│   └── StageInfoPopup.cs             (TODO)
 │
-└── States/
-    ├── StageSelectState.cs
-    ├── StageDashboardState.cs
-    └── PartySelectState.cs
+└── (States - Screen 내부 클래스)
+
+Assets/Scripts/Data/ScriptableObjects/
+├── StageData.cs                      (ContentType, CategoryId 확장)
+├── StageDatabase.cs                  (GetByContentType, GetByCategory 확장)
+├── StageCategoryData.cs              (카테고리 마스터 데이터)
+└── StageCategoryDatabase.cs          (카테고리 데이터베이스)
+
+Assets/Scripts/Editor/Tests/Stage/
+├── StageContentModuleFactoryTests.cs
+├── StageDatabaseTests.cs
+└── StageCategoryDatabaseTests.cs
 ```
 
 ---
@@ -578,13 +609,13 @@ Assets/Scripts/Contents/OutGame/Stage/
 ```
 Phase A: Data Foundation
 - [x] InGameContentType.cs
-- [ ] StageType.cs (확장)
+- [x] StageType.cs
 - [x] StarConditionType.cs
 - [x] StarCondition.cs
-- [x] StageData.cs (기존, 확장 필요)
-- [x] StageDatabase.cs (기존, 확장 필요)
-- [ ] DungeonData.cs
-- [ ] DungeonDatabase.cs
+- [x] StageData.cs (ContentType, CategoryId, StarConditions 확장)
+- [x] StageDatabase.cs (GetByContentType, GetByCategory 등 확장)
+- [x] StageCategoryData.cs
+- [x] StageCategoryDatabase.cs
 - [x] StageClearInfo 확장 (StarAchieved[])
 - [x] StageEntryRecord.cs
 - [ ] PartyPreset.cs
@@ -607,8 +638,8 @@ Phase D: LocalServer
 
 Phase E: UI Screens
 - [x] InGameContentDashboard.cs
-- [x] StageDashboard.cs
-- [x] StageSelectScreen.cs
+- [x] StageDashboard.cs (StageCategoryDatabase 연동)
+- [x] StageSelectScreen.cs (StageContentModuleFactory 연동)
 - [x] PartySelectScreen.cs (플레이스홀더)
 
 Phase F: UI Panels/Widgets
@@ -617,9 +648,11 @@ Phase F: UI Panels/Widgets
 - [x] ContentCategoryItem.cs
 
 Phase G: Content Modules
-- [x] IStageContentModule.cs (인터페이스만)
-- [ ] MainStoryContentModule.cs
-- [ ] ElementDungeonContentModule.cs
+- [x] IStageContentModule.cs (OnCategoryChanged, SetCategoryId 추가)
+- [x] BaseStageContentModule.cs (Template Method Pattern)
+- [x] StageContentModuleFactory.cs (Factory Pattern)
+- [x] MainStoryContentModule.cs (챕터 탭, 진행도)
+- [x] ElementDungeonContentModule.cs (속성 아이콘, 권장 속성)
 - [ ] ExpDungeonContentModule.cs
 - [ ] BossRaidContentModule.cs
 - [ ] TowerContentModule.cs
@@ -627,9 +660,9 @@ Phase G: Content Modules
 
 Phase H: Popups/States
 - [ ] StageInfoPopup.cs
-- [x] StageSelectState.cs (Screen 내부 클래스)
-- [x] StageDashboardState.cs (Screen 내부 클래스)
-- [x] PartySelectState.cs (Screen 내부 클래스)
+- [x] StageSelectState.cs (CategoryId 포함)
+- [x] StageDashboardState.cs (InitialCategoryId 포함)
+- [x] PartySelectState.cs
 
 Phase I: Integration
 - [x] LobbyScreen에 [던전] 버튼 추가
@@ -639,6 +672,9 @@ Phase I: Integration
 Phase J: Testing
 - [ ] StageEntryValidatorTests.cs
 - [ ] StageHandlerTests.cs
+- [x] StageContentModuleFactoryTests.cs
+- [x] StageDatabaseTests.cs
+- [x] StageCategoryDatabaseTests.cs
 ```
 
 ---

@@ -30,9 +30,9 @@ namespace Sc.Contents.Stage
             public InGameContentType ContentType { get; set; }
 
             /// <summary>
-            /// 던전 ID (StageDashboard에서 선택한 경우)
+            /// 카테고리 ID (StageDashboard에서 선택한 경우, 챕터/속성 등)
             /// </summary>
-            public string DungeonId { get; set; }
+            public string CategoryId { get; set; }
 
             /// <summary>
             /// 초기 선택 스테이지 ID
@@ -71,6 +71,7 @@ namespace Sc.Contents.Stage
         private StageSelectState _currentState;
         private StageData _selectedStage;
         private IStageContentModule _contentModule;
+        private string _currentCategoryId;
         private bool _isEntering;
 
         protected override void OnInitialize()
@@ -102,8 +103,9 @@ namespace Sc.Contents.Stage
         protected override void OnBind(StageSelectState state)
         {
             _currentState = state ?? new StageSelectState();
+            _currentCategoryId = _currentState.CategoryId;
 
-            Debug.Log($"[StageSelectScreen] OnBind - ContentType: {_currentState.ContentType}, DungeonId: {_currentState.DungeonId}");
+            Debug.Log($"[StageSelectScreen] OnBind - ContentType: {_currentState.ContentType}, CategoryId: {_currentState.CategoryId}");
 
             // Header 설정
             ScreenHeader.Instance?.Configure("stage_select");
@@ -114,7 +116,7 @@ namespace Sc.Contents.Stage
                 _titleText.text = GetContentTitle(_currentState.ContentType);
             }
 
-            // 컨텐츠 모듈 초기화 (플레이스홀더)
+            // 컨텐츠 모듈 초기화
             InitializeContentModule();
 
             // 스테이지 목록 로드
@@ -164,6 +166,7 @@ namespace Sc.Contents.Stage
 
         public override StageSelectState GetState()
         {
+            _currentState.CategoryId = _currentCategoryId;
             _currentState.SelectedStageId = _selectedStage?.Id;
             return _currentState;
         }
@@ -172,14 +175,44 @@ namespace Sc.Contents.Stage
 
         private void InitializeContentModule()
         {
-            // TODO: ContentType에 따라 적절한 모듈 생성
-            // 현재는 플레이스홀더로 null
-            _contentModule = null;
+            // 기존 모듈 해제
+            if (_contentModule != null)
+            {
+                _contentModule.OnCategoryChanged -= OnContentCategoryChanged;
+                _contentModule.Release();
+                _contentModule = null;
+            }
+
+            // Factory를 통해 컨텐츠 타입에 맞는 모듈 생성
+            _contentModule = StageContentModuleFactory.Create(_currentState.ContentType);
 
             if (_contentModule != null && _moduleContainer != null)
             {
+                // 카테고리 변경 이벤트 구독
+                _contentModule.OnCategoryChanged += OnContentCategoryChanged;
+
+                // 초기 카테고리 ID 설정
+                if (!string.IsNullOrEmpty(_currentCategoryId))
+                {
+                    _contentModule.SetCategoryId(_currentCategoryId);
+                }
+
+                // 모듈 초기화
                 _contentModule.Initialize(_moduleContainer, _currentState.ContentType);
             }
+        }
+
+        private void OnContentCategoryChanged(string categoryId)
+        {
+            Debug.Log($"[StageSelectScreen] Category changed: {categoryId}");
+
+            _currentCategoryId = categoryId;
+
+            // 스테이지 목록 다시 로드
+            LoadStageList();
+
+            // 모듈에 갱신 알림
+            _contentModule?.Refresh(_selectedStage?.Id);
         }
 
         #endregion
@@ -188,7 +221,7 @@ namespace Sc.Contents.Stage
 
         private void LoadStageList()
         {
-            var stages = GetStagesForContent(_currentState.ContentType, _currentState.DungeonId);
+            var stages = GetStagesForContent(_currentState.ContentType, _currentCategoryId);
 
             if (_stageListPanel != null)
             {
@@ -202,7 +235,7 @@ namespace Sc.Contents.Stage
             }
         }
 
-        private List<StageData> GetStagesForContent(InGameContentType contentType, string dungeonId)
+        private List<StageData> GetStagesForContent(InGameContentType contentType, string categoryId)
         {
             // StageDatabase에서 조회
             var database = DataManager.Instance?.GetDatabase<StageDatabase>();
@@ -212,9 +245,14 @@ namespace Sc.Contents.Stage
                 return new List<StageData>();
             }
 
-            // TODO: ContentType, DungeonId로 필터링
-            // 현재 StageData에 ContentType 필드가 없으므로 전체 반환
-            return database.Stages.ToList();
+            // ContentType + CategoryId로 필터링
+            if (!string.IsNullOrEmpty(categoryId))
+            {
+                return database.GetByContentTypeAndCategory(contentType, categoryId).ToList();
+            }
+
+            // CategoryId가 없으면 ContentType만으로 필터링
+            return database.GetByContentType(contentType).ToList();
         }
 
         private void OnStageSelected(StageData stage)
@@ -529,8 +567,15 @@ namespace Sc.Contents.Stage
                 _stageListPanel.OnStageSelected -= OnStageSelected;
             }
 
-            _contentModule?.Release();
-            _contentModule = null;
+            // 컨텐츠 모듈 해제
+            if (_contentModule != null)
+            {
+                _contentModule.OnCategoryChanged -= OnContentCategoryChanged;
+                _contentModule.Release();
+                _contentModule = null;
+            }
+
+            _currentCategoryId = null;
         }
     }
 }
