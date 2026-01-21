@@ -6,7 +6,7 @@ status: draft
 version: "1.0"
 dependencies: [Sc.Common, Sc.Packet, Phase1.CostConfirmPopup, Phase3.PowerFormula]
 created: 2026-01-18
-updated: 2026-01-18
+updated: 2026-01-21
 ---
 
 # 캐릭터 강화 (Phase 5.2)
@@ -618,55 +618,64 @@ public static class PowerCalculator
 
 ---
 
+## 상태
+
+| 분류 | 상태 | 비고 |
+|------|------|------|
+| 마스터 데이터 | ✅ 완료 | CharacterLevelDatabase, CharacterAscensionDatabase |
+| 유저 데이터 | ✅ 완료 | OwnedCharacter.CurrentExp 확장 |
+| Core | ✅ 완료 | PowerCalculator, CharacterStats |
+| Request/Response | ✅ 완료 | LevelUp/Ascension Request/Response |
+| 이벤트 | ✅ 완료 | CharacterEvents.cs |
+| Handler | ✅ 완료 | CharacterLevelUpHandler, CharacterAscensionHandler |
+| UI | ✅ 완료 | LevelUpPopup, AscensionPopup |
+| 통합 | ✅ 완료 | CharacterDetailScreen 연동 |
+| 테스트 | ✅ 완료 | 26개 (LevelUp 13, Ascension 13) |
+
+---
+
 ## 구현 체크리스트
 
 ```
 캐릭터 강화 (Phase 5.2):
 
-마스터 데이터:
-- [ ] CharacterLevelData.cs 생성
-- [ ] CharacterAscensionData.cs 생성
-- [ ] ExpMaterialData.cs 생성
-- [ ] CharacterLevel.json 샘플 데이터
-- [ ] CharacterAscension.json 샘플 데이터
-- [ ] ExpMaterial.json 샘플 데이터
-- [ ] MasterDataImporter에 추가
+Phase A: 마스터 데이터
+- [x] CharacterStats.cs (Data/Structs/)
+- [x] LevelRequirement.cs, AscensionRequirement.cs (Data/Structs/)
+- [x] CharacterLevelDatabase.cs (Data/ScriptableObjects/)
+- [x] CharacterAscensionDatabase.cs (Data/ScriptableObjects/)
+- [x] PowerCalculator.cs (Data/Utility/)
+- [x] CharacterLevel.json 샘플 데이터
+- [x] CharacterAscension.json 샘플 데이터
+- [x] ItemData.cs 확장 (ExpValue, GoldCostPerUse)
 
-유저 데이터:
-- [ ] OwnedCharacter.cs 확장 (CurrentExp)
+Phase B: 서버 레이어
+- [x] CharacterLevelUpRequest.cs
+- [x] CharacterLevelUpResponse.cs
+- [x] CharacterAscensionRequest.cs
+- [x] CharacterAscensionResponse.cs
+- [x] CharacterEvents.cs (LevelUp/Ascension 이벤트)
+- [x] CharacterLevelUpHandler.cs (LocalServer/Handlers/)
+- [x] CharacterAscensionHandler.cs (LocalServer/Handlers/)
 
-Core:
-- [ ] PowerCalculator.cs 생성
+Phase C~D: UI
+- [x] CharacterLevelUpPopup.cs - 재료 선택, 스탯 미리보기, 자동 선택
+- [x] CharacterAscensionPopup.cs - 요구사항 확인, 스탯 보너스 미리보기
 
-Request/Response:
-- [ ] CharacterLevelUpRequest.cs
-- [ ] CharacterLevelUpResponse.cs
-- [ ] CharacterAscensionRequest.cs
-- [ ] CharacterAscensionResponse.cs
+Phase E: 통합
+- [x] CharacterDetailScreen.cs 수정 - 레벨업/돌파 버튼, 전투력 표시
+- [x] DataManager.cs 수정 - LevelDatabase, AscensionDatabase 참조
 
-이벤트:
-- [ ] CharacterEvents.cs
+Phase F: 테스트
+- [x] CharacterLevelUpHandlerTests.cs (13개)
+- [x] CharacterAscensionHandlerTests.cs (13개)
 
-API:
-- [ ] LocalApiClient.LevelUpCharacterAsync 구현
-- [ ] LocalApiClient.AscendCharacterAsync 구현
-
-UI:
+미구현 (Phase 2):
 - [ ] CharacterListScreen 리팩토링 (필터/정렬)
-- [ ] CharacterDetailScreen 리팩토링 (탭, 액션, 전투력)
-- [ ] CharacterLevelUpPopup.cs 생성
-- [ ] CharacterAscensionPopup.cs 생성
-- [ ] CharacterFilterPopup.cs 생성
-- [ ] CharacterCard.cs 생성
-- [ ] MaterialSlot.cs 생성
-- [ ] ExpMaterialItem.cs 생성
-
-연동:
-- [ ] 전투력 → PowerCalculator (Phase 3 공식)
-- [ ] 레벨업/돌파 → CostConfirmPopup 연동
-- [ ] 결과 → RewardPopup 연동 (스탯 변화)
-- [ ] 에러 → AlertPopup + ErrorCode 연동
-- [ ] 로딩 → LoadingIndicator 적용
+- [ ] CharacterFilterPopup.cs
+- [ ] CharacterCard.cs
+- [ ] MaterialSlot.cs 위젯
+- [ ] ExpMaterialItem.cs 위젯
 ```
 
 ---

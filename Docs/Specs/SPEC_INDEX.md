@@ -25,7 +25,7 @@
 
 | Assembly | 설명 | 패턴 | 대분류 | 상태 |
 |----------|------|------|--------|------|
-| Sc.Contents.Character | 캐릭터 시스템 | Factory, Flyweight | [Character.md](Character.md) | ⬜ |
+| Sc.Contents.Character | 캐릭터 시스템 | Factory, Flyweight | [Character.md](Character.md) | 🔨 (Enhancement ✅) |
 | Sc.Contents.Inventory | 인벤토리 시스템 | - | [Inventory.md](Inventory.md) | ⬜ |
 
 ---
@@ -166,9 +166,12 @@ Docs/Specs/
 
 ### 플레이스홀더 상태
 
-| 항목 | 시스템 |
-|------|--------|
-| EventMissionTab | LiveEvent |
-| EventShopTab | LiveEvent/Shop |
-| PartySelectScreen | Stage |
-| AttendanceCheckTask | Lobby |
+| 항목 | 시스템 | 현재 상태 |
+|------|--------|----------|
+| EventMissionTab | LiveEvent | UI만 존재, 기능 미구현 |
+| EventShopTab | LiveEvent/Shop | UI만 존재, Provider 연동 안됨 |
+| PartySelectScreen | Stage | 플레이스홀더 상태 |
+| ShopState | Shop | 비어있는 플레이스홀더 |
+| AttendanceCheckTask | Lobby | Stub 구현 |
+| NewEventNotificationTask | Lobby | Stub 구현 |
+| ClaimEventMission API | LiveEvent | 에러코드 6099 반환 |

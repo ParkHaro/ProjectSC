@@ -46,3 +46,9 @@ Contents/Shared/Character/
 |--------|------|------|
 | CharacterListView | 캐릭터 목록 화면 | ⬜ |
 | CharacterDetailView | 캐릭터 상세 화면 | ⬜ |
+
+---
+
+## 상세 문서
+
+- [Enhancement.md](Character/Enhancement.md) - 캐릭터 강화 시스템 (레벨업, 돌파) ✅
