@@ -16,6 +16,7 @@
 | **Testing** | [Decisions/Testing.md](Decisions/Testing.md) | 테스트 아키텍처, ISaveStorage, PlayMode, IItemSpawner |
 | **Systems** | [Decisions/Systems.md](Decisions/Systems.md) | RewardType, TimeService, Foundation, RewardPopup |
 | **Content** | [Decisions/Content.md](Decisions/Content.md) | LiveEvent, 이벤트 재화, PresetGroupId, 시즌패스 |
+| **ClaudeCode** | [Decisions/ClaudeCode.md](Decisions/ClaudeCode.md) | 서브에이전트 위임, Skills, Hooks, 컨텍스트 관리 |
 
 ---
 
@@ -45,6 +46,11 @@
 ---
 
 ## 최근 의사결정 (최신 5개)
+
+### Claude Code 토큰 최적화 아키텍처
+**일자**: 2026-01-21 | [상세](Decisions/ClaudeCode.md)
+
+서브에이전트 위임 + Skills 온디맨드 로딩 + Hooks 자동화. CLAUDE.md 139줄→76줄(45%↓), 초기 컨텍스트 50%↓ 예상.
 
 ### AssetManager RewardIconCache 대체
 **일자**: 2026-01-19 | [상세](Decisions/Architecture.md#assetmanager-rewardIconCache-대체)
