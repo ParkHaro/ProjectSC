@@ -9,6 +9,7 @@
         "Sc.Foundation",
         "Sc.DebugTools",
         "Sc.Contents.Lobby",
+        "Sc.Contents.Title",
         "Unity.Addressables",
         "Unity.Addressables.Editor",
         "Unity.TextMeshPro"

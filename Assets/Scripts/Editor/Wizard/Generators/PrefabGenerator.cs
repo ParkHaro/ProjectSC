@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using Sc.Common.UI;
+using Sc.Contents.Lobby;
+using Sc.Contents.Title;
 using UnityEditor;
 using UnityEditor.AddressableAssets;
 using UnityEditor.AddressableAssets.Settings;
@@ -143,6 +145,19 @@ namespace Sc.Editor.Wizard.Generators
 
         private static GameObject CreateScreenGameObject(Type screenType)
         {
+            // LobbyScreen 전용 빌더 사용
+            if (screenType == typeof(LobbyScreen))
+            {
+                return LobbyScreenPrefabBuilder.Build();
+            }
+
+            // TitleScreen 전용 빌더 사용
+            if (screenType == typeof(TitleScreen))
+            {
+                return TitleScreenPrefabBuilder.Build();
+            }
+
+            // 기본 Screen 생성
             var go = new GameObject(screenType.Name);
 
             // RectTransform 설정 (전체 화면)
