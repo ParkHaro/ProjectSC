@@ -1,19 +1,22 @@
 using UnityEngine;
 using UnityEditor;
 using Sc.Editor.AI;
+using Sc.Editor.Wizard.Generators;
 
 namespace Sc.Editor.Wizard
 {
     /// <summary>
     /// Setup 탭: 씬/프리팹 설정 통합.
-    /// MVPSceneSetup, LoadingSetup, SystemPopupSetup, PlayModeTestSetup 기능 통합.
+    /// MVPSceneSetup, LoadingSetup, SystemPopupSetup, PlayModeTestSetup, PrefabGenerator, LobbyScreenSetup 기능 통합.
     /// </summary>
     public class SetupTab
     {
         private bool _showMainSection = true;
-        private bool _showMVPSection = true;
-        private bool _showTestSection = true;
-        private bool _showDialogSection = true;
+        private bool _showUIPrefabsSection = true;
+        private bool _showLobbySection = true;
+        private bool _showMVPSection = false; // 기본 접힘 (레거시)
+        private bool _showTestSection = false; // 기본 접힘
+        private bool _showDialogSection = false; // 기본 접힘
         private bool _showAddressablesSection = true;
 
         public void Draw()
@@ -23,28 +26,146 @@ namespace Sc.Editor.Wizard
 
             EditorGUILayout.Space(10);
 
-            // MVP Scene Section
-            DrawMVPSection();
-            
+            // UI Prefabs Section (Production) - NEW
+            DrawUIPrefabsSection();
+
             EditorGUILayout.Space(10);
-            
-            // Test Scenes Section
-            DrawTestSection();
-            
+
+            // Lobby Setup Section - NEW
+            DrawLobbySection();
+
             EditorGUILayout.Space(10);
-            
-            // Dialog Prefabs Section
-            DrawDialogSection();
-            
-            EditorGUILayout.Space(10);
-            
+
             // Addressables Section
             DrawAddressablesSection();
+
+            EditorGUILayout.Space(10);
+
+            // MVP Scene Section (Legacy)
+            DrawMVPSection();
+
+            EditorGUILayout.Space(10);
+
+            // Test Scenes Section
+            DrawTestSection();
+
+            EditorGUILayout.Space(10);
+
+            // Dialog Prefabs Section
+            DrawDialogSection();
+        }
+
+        private void DrawUIPrefabsSection()
+        {
+            _showUIPrefabsSection = EditorGUILayout.BeginFoldoutHeaderGroup(_showUIPrefabsSection, "UI Prefabs (Production)");
+
+            if (_showUIPrefabsSection)
+            {
+                EditorGUILayout.BeginVertical("box");
+
+                EditorGUILayout.HelpBox(
+                    "모든 Screen/Popup 클래스를 스캔하여 프리팹을 자동 생성합니다.\n" +
+                    "생성된 프리팹은 Addressables에 자동 등록됩니다.\n" +
+                    "경로: Assets/Prefabs/UI/Screens/, Assets/Prefabs/UI/Popups/",
+                    MessageType.Info);
+
+                EditorGUILayout.Space(5);
+
+                // 전체 생성 버튼
+                GUI.backgroundColor = new Color(0.6f, 0.9f, 0.6f);
+                if (GUILayout.Button("Generate All UI Prefabs", GUILayout.Height(35)))
+                {
+                    var screenCount = PrefabGenerator.GenerateAllScreenPrefabs();
+                    var popupCount = PrefabGenerator.GenerateAllPopupPrefabs();
+                    EditorUtility.DisplayDialog("완료",
+                        $"Screen 프리팹 {screenCount}개, Popup 프리팹 {popupCount}개 생성됨", "확인");
+                }
+                GUI.backgroundColor = Color.white;
+
+                EditorGUILayout.Space(5);
+
+                // 개별 생성 버튼
+                EditorGUILayout.BeginHorizontal();
+
+                if (GUILayout.Button("Screens Only", GUILayout.Height(25)))
+                {
+                    var count = PrefabGenerator.GenerateAllScreenPrefabs();
+                    EditorUtility.DisplayDialog("완료", $"Screen 프리팹 {count}개 생성됨", "확인");
+                }
+
+                if (GUILayout.Button("Popups Only", GUILayout.Height(25)))
+                {
+                    var count = PrefabGenerator.GenerateAllPopupPrefabs();
+                    EditorUtility.DisplayDialog("완료", $"Popup 프리팹 {count}개 생성됨", "확인");
+                }
+
+                EditorGUILayout.EndHorizontal();
+
+                EditorGUILayout.Space(5);
+
+                // 폴더 열기
+                EditorGUILayout.BeginHorizontal();
+
+                if (GUILayout.Button("Open Screens Folder", GUILayout.Height(20)))
+                {
+                    var path = "Assets/Prefabs/UI/Screens";
+                    if (!System.IO.Directory.Exists(path))
+                        System.IO.Directory.CreateDirectory(path);
+                    EditorUtility.RevealInFinder(path);
+                }
+
+                if (GUILayout.Button("Open Popups Folder", GUILayout.Height(20)))
+                {
+                    var path = "Assets/Prefabs/UI/Popups";
+                    if (!System.IO.Directory.Exists(path))
+                        System.IO.Directory.CreateDirectory(path);
+                    EditorUtility.RevealInFinder(path);
+                }
+
+                EditorGUILayout.EndHorizontal();
+
+                EditorGUILayout.EndVertical();
+            }
+
+            EditorGUILayout.EndFoldoutHeaderGroup();
+        }
+
+        private void DrawLobbySection()
+        {
+            _showLobbySection = EditorGUILayout.BeginFoldoutHeaderGroup(_showLobbySection, "Lobby Setup");
+
+            if (_showLobbySection)
+            {
+                EditorGUILayout.BeginVertical("box");
+
+                EditorGUILayout.HelpBox(
+                    "LobbyScreen의 탭 시스템을 설정합니다.\n" +
+                    "TabButton 프리팹과 탭 컨텐츠를 자동으로 구성합니다.",
+                    MessageType.Info);
+
+                EditorGUILayout.BeginHorizontal();
+
+                if (GUILayout.Button("Setup Tab System", GUILayout.Height(30)))
+                {
+                    LobbyScreenSetup.SetupTabSystemMenu();
+                }
+
+                if (GUILayout.Button("Create TabButton Prefab", GUILayout.Height(30)))
+                {
+                    LobbyScreenSetup.CreateTabButtonPrefab();
+                }
+
+                EditorGUILayout.EndHorizontal();
+
+                EditorGUILayout.EndVertical();
+            }
+
+            EditorGUILayout.EndFoldoutHeaderGroup();
         }
 
         private void DrawMVPSection()
         {
-            _showMVPSection = EditorGUILayout.BeginFoldoutHeaderGroup(_showMVPSection, "MVP Scene Setup");
+            _showMVPSection = EditorGUILayout.BeginFoldoutHeaderGroup(_showMVPSection, "MVP Scene Setup (Legacy)");
             
             if (_showMVPSection)
             {
