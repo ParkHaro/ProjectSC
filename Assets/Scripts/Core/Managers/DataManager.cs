@@ -21,6 +21,8 @@ namespace Sc.Core
         [SerializeField] private GachaPoolDatabase _gachaPoolDatabase;
         [SerializeField] private ShopProductDatabase _shopProductDatabase;
         [SerializeField] private LiveEventDatabase _liveEventDatabase;
+        [SerializeField] private CharacterLevelDatabase _levelDatabase;
+        [SerializeField] private CharacterAscensionDatabase _ascensionDatabase;
 
         private UserSaveData _userData;
         private bool _isInitialized;
@@ -78,6 +80,16 @@ namespace Sc.Core
         public LiveEventDatabase LiveEvents => _liveEventDatabase;
 
         /// <summary>
+        /// 캐릭터 레벨 데이터베이스
+        /// </summary>
+        public CharacterLevelDatabase LevelDatabase => _levelDatabase;
+
+        /// <summary>
+        /// 캐릭터 돌파 데이터베이스
+        /// </summary>
+        public CharacterAscensionDatabase AscensionDatabase => _ascensionDatabase;
+
+        /// <summary>
         /// 타입으로 데이터베이스 조회
         /// </summary>
         public T GetDatabase<T>() where T : ScriptableObject
@@ -90,6 +102,8 @@ namespace Sc.Core
             if (typeof(T) == typeof(GachaPoolDatabase)) return _gachaPoolDatabase as T;
             if (typeof(T) == typeof(ShopProductDatabase)) return _shopProductDatabase as T;
             if (typeof(T) == typeof(LiveEventDatabase)) return _liveEventDatabase as T;
+            if (typeof(T) == typeof(CharacterLevelDatabase)) return _levelDatabase as T;
+            if (typeof(T) == typeof(CharacterAscensionDatabase)) return _ascensionDatabase as T;
             return null;
         }
 

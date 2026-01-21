@@ -28,6 +28,12 @@ namespace Sc.Data
         [SerializeField] private int _consumeCount = 1;
         [SerializeField] private float _cooldown = 0f;
 
+        [Header("경험치 재료")]
+        [Tooltip("캐릭터 경험치 제공량 (경험치 재료 아이템용)")]
+        [SerializeField] private int _expValue = 0;
+        [Tooltip("사용 시 골드 비용")]
+        [SerializeField] private int _goldCostPerUse = 0;
+
         [Header("설명")]
         [TextArea(2, 4)]
         [SerializeField] private string _description;
@@ -52,9 +58,14 @@ namespace Sc.Data
         public int DefBonus => _defBonus;
         public int HpBonus => _hpBonus;
 
+        // 경험치 재료
+        public int ExpValue => _expValue;
+        public int GoldCostPerUse => _goldCostPerUse;
+
         // 헬퍼 프로퍼티
         public bool IsStackable => _maxStackCount != 0;
         public bool IsConsumable => _type == ItemType.Consumable;
+        public bool IsExpMaterial => _expValue > 0;
 
 #if UNITY_EDITOR
         /// <summary>
@@ -62,7 +73,8 @@ namespace Sc.Data
         /// </summary>
         public void Initialize(string id, string name, string nameEn, ItemType type,
             Rarity rarity, int atkBonus, int defBonus, int hpBonus, string description,
-            int maxStackCount = 0, int consumeCount = 1, float cooldown = 0f)
+            int maxStackCount = 0, int consumeCount = 1, float cooldown = 0f,
+            int expValue = 0, int goldCostPerUse = 0)
         {
             _id = id;
             _name = name;
@@ -76,6 +88,8 @@ namespace Sc.Data
             _maxStackCount = maxStackCount;
             _consumeCount = consumeCount;
             _cooldown = cooldown;
+            _expValue = expValue;
+            _goldCostPerUse = goldCostPerUse;
         }
 #endif
     }

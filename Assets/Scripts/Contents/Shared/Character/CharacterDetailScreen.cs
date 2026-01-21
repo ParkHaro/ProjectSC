@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Linq;
 using Sc.Common.UI;
 using Sc.Common.UI.Widgets;
@@ -55,6 +56,13 @@ namespace Sc.Contents.Character
         [Header("추가 정보")]
         [SerializeField] private TMP_Text _descriptionText;
         [SerializeField] private TMP_Text _ascensionText;
+        [SerializeField] private TMP_Text _powerText;
+
+        [Header("강화 버튼")]
+        [SerializeField] private Button _levelUpButton;
+        [SerializeField] private Button _ascensionButton;
+        [SerializeField] private TMP_Text _levelUpButtonText;
+        [SerializeField] private TMP_Text _ascensionButtonText;
 
         private CharacterDetailState _currentState;
         private OwnedCharacter? _ownedCharacter;
@@ -67,6 +75,16 @@ namespace Sc.Contents.Character
             if (_backButton != null)
             {
                 _backButton.onClick.AddListener(OnBackClicked);
+            }
+
+            if (_levelUpButton != null)
+            {
+                _levelUpButton.onClick.AddListener(OnLevelUpClicked);
+            }
+
+            if (_ascensionButton != null)
+            {
+                _ascensionButton.onClick.AddListener(OnAscensionClicked);
             }
         }
 
@@ -204,36 +222,70 @@ namespace Sc.Contents.Character
                 _ascensionText.text = $"돌파 {ascension}단계";
             }
 
+            // 실제 스탯 계산 (레벨 보정 + 돌파 보너스 적용)
+            CharacterStats stats;
+            int power = 0;
+            if (_ownedCharacter.HasValue && DataManager.Instance?.AscensionDatabase != null)
+            {
+                stats = PowerCalculator.CalculateStats(
+                    _ownedCharacter.Value,
+                    _masterData,
+                    DataManager.Instance.AscensionDatabase
+                );
+                power = PowerCalculator.Calculate(stats);
+            }
+            else
+            {
+                stats = new CharacterStats(
+                    _masterData.BaseHp,
+                    _masterData.BaseAtk,
+                    _masterData.BaseDef,
+                    _masterData.BaseSpd,
+                    _masterData.CritRate,
+                    _masterData.CritDamage
+                );
+                power = PowerCalculator.Calculate(stats);
+            }
+
             // 스탯 정보
             if (_hpText != null)
             {
-                _hpText.text = $"HP: {_masterData.BaseHp}";
+                _hpText.text = $"HP: {stats.HP:N0}";
             }
 
             if (_atkText != null)
             {
-                _atkText.text = $"ATK: {_masterData.BaseAtk}";
+                _atkText.text = $"ATK: {stats.ATK:N0}";
             }
 
             if (_defText != null)
             {
-                _defText.text = $"DEF: {_masterData.BaseDef}";
+                _defText.text = $"DEF: {stats.DEF:N0}";
             }
 
             if (_spdText != null)
             {
-                _spdText.text = $"SPD: {_masterData.BaseSpd}";
+                _spdText.text = $"SPD: {stats.SPD:N0}";
             }
 
             if (_critRateText != null)
             {
-                _critRateText.text = $"치명률: {_masterData.CritRate:P1}";
+                _critRateText.text = $"치명률: {stats.CritRate:P1}";
             }
 
             if (_critDamageText != null)
             {
-                _critDamageText.text = $"치명피해: {_masterData.CritDamage:P0}";
+                _critDamageText.text = $"치명피해: {stats.CritDamage:P0}";
             }
+
+            // 전투력
+            if (_powerText != null)
+            {
+                _powerText.text = $"전투력: {power:N0}";
+            }
+
+            // 강화 버튼 상태 업데이트
+            UpdateEnhancementButtons();
 
             // 설명
             if (_descriptionText != null)
@@ -354,6 +406,143 @@ namespace Sc.Contents.Character
         private void OnHeaderBackClicked(HeaderBackClickedEvent evt)
         {
             OnBackClicked();
+        }
+
+        private void OnLevelUpClicked()
+        {
+            if (!_ownedCharacter.HasValue || _masterData == null) return;
+
+            var dm = DataManager.Instance;
+            if (dm == null) return;
+
+            // 경험치 재료 필터링
+            var expMaterials = new List<OwnedItem>();
+            foreach (var item in dm.OwnedItems)
+            {
+                var itemData = dm.Items?.GetById(item.ItemId);
+                if (itemData != null && itemData.ExpValue > 0)
+                {
+                    expMaterials.Add(item);
+                }
+            }
+
+            var state = new CharacterLevelUpState
+            {
+                Character = _ownedCharacter.Value,
+                CharacterData = _masterData,
+                LevelDb = dm.LevelDatabase,
+                AscensionDb = dm.AscensionDatabase,
+                ItemDb = dm.Items,
+                AvailableMaterials = expMaterials,
+                Currency = dm.Currency,
+                OnConfirm = OnLevelUpConfirmed,
+                OnCancel = () => { }
+            };
+
+            CharacterLevelUpPopup.Open(state);
+        }
+
+        private void OnLevelUpConfirmed(Dictionary<string, int> materials)
+        {
+            if (!_ownedCharacter.HasValue) return;
+
+            // TODO: NetworkManager를 통해 서버 요청
+            Debug.Log($"[CharacterDetailScreen] LevelUp requested with {materials.Count} materials");
+
+            // 로컬 테스트용 - 직접 처리
+            // 실제로는 NetworkManager.Instance.Send(request) 사용
+        }
+
+        private void OnAscensionClicked()
+        {
+            if (!_ownedCharacter.HasValue || _masterData == null) return;
+
+            var dm = DataManager.Instance;
+            if (dm == null) return;
+
+            var state = new CharacterAscensionState
+            {
+                Character = _ownedCharacter.Value,
+                CharacterData = _masterData,
+                LevelDb = dm.LevelDatabase,
+                AscensionDb = dm.AscensionDatabase,
+                ItemDb = dm.Items,
+                OwnedItems = dm.OwnedItems.ToList(),
+                Currency = dm.Currency,
+                OnConfirm = OnAscensionConfirmed,
+                OnCancel = () => { }
+            };
+
+            CharacterAscensionPopup.Open(state);
+        }
+
+        private void OnAscensionConfirmed()
+        {
+            if (!_ownedCharacter.HasValue) return;
+
+            // TODO: NetworkManager를 통해 서버 요청
+            Debug.Log($"[CharacterDetailScreen] Ascension requested");
+
+            // 로컬 테스트용 - 직접 처리
+        }
+
+        private void UpdateEnhancementButtons()
+        {
+            if (!_ownedCharacter.HasValue)
+            {
+                if (_levelUpButton != null) _levelUpButton.gameObject.SetActive(false);
+                if (_ascensionButton != null) _ascensionButton.gameObject.SetActive(false);
+                return;
+            }
+
+            var dm = DataManager.Instance;
+            if (dm?.LevelDatabase == null || dm.AscensionDatabase == null)
+            {
+                if (_levelUpButton != null) _levelUpButton.gameObject.SetActive(false);
+                if (_ascensionButton != null) _ascensionButton.gameObject.SetActive(false);
+                return;
+            }
+
+            var character = _ownedCharacter.Value;
+            int levelCap = dm.AscensionDatabase.GetLevelCap(
+                _masterData.Rarity,
+                character.Ascension,
+                dm.LevelDatabase.BaseLevelCap
+            );
+            int maxLevel = dm.LevelDatabase.GetMaxLevel(_masterData.Rarity);
+            int maxAscension = dm.AscensionDatabase.GetMaxAscension(_masterData.Rarity);
+
+            // 레벨업 버튼
+            if (_levelUpButton != null)
+            {
+                _levelUpButton.gameObject.SetActive(true);
+                bool canLevelUp = character.Level < levelCap && character.Level < maxLevel;
+                _levelUpButton.interactable = canLevelUp;
+
+                if (_levelUpButtonText != null)
+                {
+                    _levelUpButtonText.text = canLevelUp ? "레벨업" : (character.Level >= levelCap ? "돌파 필요" : "MAX");
+                }
+            }
+
+            // 돌파 버튼
+            if (_ascensionButton != null)
+            {
+                _ascensionButton.gameObject.SetActive(true);
+                bool isMaxAscension = character.Ascension >= maxAscension;
+                bool canAscend = !isMaxAscension && character.Level >= levelCap;
+                _ascensionButton.interactable = !isMaxAscension;
+
+                if (_ascensionButtonText != null)
+                {
+                    if (isMaxAscension)
+                        _ascensionButtonText.text = "MAX";
+                    else if (!canAscend)
+                        _ascensionButtonText.text = $"Lv.{levelCap} 필요";
+                    else
+                        _ascensionButtonText.text = "돌파";
+                }
+            }
         }
 
         #endregion
