@@ -1,12 +1,24 @@
 {
-  "tasks": {
-    "stage-impl": {
-      "name": "Stage 시스템 구현 - Phase A~D",
-      "status": "completed",
-      "plan_doc": "Docs/Specs/Stage.md",
-      "completed": "Phase A~D",
-      "next": null
+  "sessions": {},
+  "file_owners": {},
+  "completed": [
+    {
+      "area": "Stage",
+      "session": "stage-impl",
+      "completed_at": "2026-01-21",
+      "spec_doc": "Docs/Specs/Stage.md"
+    },
+    {
+      "area": "LiveEvent",
+      "session": "liveevent-impl", 
+      "completed_at": "2026-01-20",
+      "spec_doc": "Docs/Specs/LiveEvent.md"
+    },
+    {
+      "area": "Shop",
+      "session": "shop-impl",
+      "completed_at": "2026-01-20",
+      "spec_doc": "Docs/Specs/Shop.md"
     }
-  },
-  "locked_files": {}
+  ]
 }
