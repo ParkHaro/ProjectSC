@@ -55,7 +55,9 @@ Assets/Scripts/LocalServer/
 │   ├── GachaHandler.cs
 │   ├── ShopHandler.cs
 │   ├── StageHandler.cs
-│   └── EventHandler.cs
+│   ├── EventHandler.cs
+│   ├── CharacterLevelUpHandler.cs    # 캐릭터 레벨업
+│   └── CharacterAscensionHandler.cs  # 캐릭터 돌파
 │
 ├── Services/
 │   ├── ServerTimeService.cs     # 서버 시간 관리
@@ -220,6 +222,64 @@ public class StageDataInfo
 | `HandleClaimMission(request, userData)` | 미션 보상 수령 (플레이스홀더) |
 | `CreateLiveEventInfo()` | 이벤트 정보 DTO 생성 |
 
+### CharacterLevelUpHandler
+
+캐릭터 레벨업 요청 처리. 재료 소모, 경험치 적용, 레벨 계산.
+
+| 필드 | 타입 | 설명 |
+|------|------|------|
+| `_characterDb` | CharacterDatabase | 캐릭터 데이터 |
+| `_levelDb` | CharacterLevelDatabase | 레벨 테이블 |
+| `_ascensionDb` | CharacterAscensionDatabase | 돌파 테이블 (레벨캡 계산용) |
+| `_itemDb` | ItemDatabase | 아이템 데이터 |
+| `_rewardService` | RewardService | 재화 차감 |
+| `_validator` | ServerValidator | 검증 |
+
+| 메서드 | 설명 |
+|--------|------|
+| `Handle(CharacterLevelUpRequest, ref UserSaveData)` | 레벨업 처리 |
+| `SetDatabases(...)` | 데이터베이스 주입 |
+| `DeductItem(ref userData, itemId, count)` | 재료 차감 |
+| `UpdateCharacter(ref userData, character)` | 캐릭터 정보 갱신 |
+
+**처리 흐름:**
+1. 캐릭터 조회 및 레벨캡 확인
+2. 재료 검증 및 경험치/골드 비용 계산
+3. 골드 검증
+4. 재료/골드 차감
+5. 경험치 적용 및 레벨 계산
+6. 스탯/전투력 재계산
+7. Delta 반환
+
+### CharacterAscensionHandler
+
+캐릭터 돌파(한계돌파) 요청 처리. 레벨캡 상향.
+
+| 필드 | 타입 | 설명 |
+|------|------|------|
+| `_characterDb` | CharacterDatabase | 캐릭터 데이터 |
+| `_levelDb` | CharacterLevelDatabase | 레벨 테이블 |
+| `_ascensionDb` | CharacterAscensionDatabase | 돌파 요구사항 |
+| `_itemDb` | ItemDatabase | 아이템 데이터 |
+| `_rewardService` | RewardService | 재화 차감 |
+| `_validator` | ServerValidator | 검증 |
+
+| 메서드 | 설명 |
+|--------|------|
+| `Handle(CharacterAscensionRequest, ref UserSaveData)` | 돌파 처리 |
+| `SetDatabases(...)` | 데이터베이스 주입 |
+| `DeductItem(ref userData, itemId, count)` | 재료 차감 |
+| `UpdateCharacter(ref userData, character)` | 캐릭터 정보 갱신 |
+
+**처리 흐름:**
+1. 캐릭터 조회 및 최대 돌파 확인
+2. 돌파 요구사항 조회
+3. 레벨/재료/골드 검증
+4. 재료/골드 차감
+5. 돌파 단계 증가
+6. 스탯/전투력 재계산
+7. Delta 반환
+
 ---
 
 ## Services
@@ -379,6 +439,13 @@ Sc.LocalServer
 | 6001 | EVENT_NOT_FOUND | 이벤트 없음 |
 | 6002 | EVENT_NOT_ACTIVE | 이벤트 비활성 |
 | 6099 | EVENT_CLAIM_NOT_IMPLEMENTED | 미구현 (플레이스홀더) |
+| 7001 | CHARACTER_NOT_FOUND | 캐릭터 없음 |
+| 7002 | CHARACTER_MAX_LEVEL | 최대 레벨 도달 |
+| 7003 | CHARACTER_INSUFFICIENT_MATERIAL | 재료 부족 |
+| 7004 | CHARACTER_INSUFFICIENT_GOLD | 골드 부족 |
+| 7005 | CHARACTER_LEVEL_REQUIREMENT_NOT_MET | 돌파 레벨 요구사항 미충족 |
+| 7006 | CHARACTER_MAX_ASCENSION | 최대 돌파 도달 |
+| 7007 | CHARACTER_LEVEL_CAP_REACHED | 레벨캡 도달 (돌파 필요) |
 | 9999 | UNKNOWN_ERROR | 알 수 없는 오류 |
 
 ---
@@ -391,8 +458,10 @@ Sc.LocalServer
 | PurchaseLimitValidatorTests.cs | 16개 | 구매 제한 검증 |
 | StageEntryValidatorTests.cs | 21개 | 스테이지 입장 검증 |
 | StageHandlerTests.cs | 26개 | 스테이지 입장/클리어 |
+| CharacterLevelUpHandlerTests.cs | 14개 | 캐릭터 레벨업 |
+| CharacterAscensionHandlerTests.cs | 17개 | 캐릭터 돌파 |
 
-**총 테스트: 87개**
+**총 테스트: 118개**
 
 ---
 

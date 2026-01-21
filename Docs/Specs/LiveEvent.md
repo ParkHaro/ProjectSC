@@ -693,15 +693,17 @@ public struct VisitEventResponse : IResponse
 
 ## 상태
 
-| 분류 | 상태 |
-|------|------|
-| 마스터 데이터 | ✅ 설계 완료 |
-| 유저 데이터 | ✅ 설계 완료 |
-| Request/Response | ✅ 설계 완료 |
-| 이벤트 | ✅ 설계 완료 |
-| LocalApiClient | ⬜ 구현 대기 |
-| UI | ✅ 설계 완료 |
-| 테스트 | ⬜ 대기 |
+| 분류 | 상태 | 비고 |
+|------|------|------|
+| 마스터 데이터 | ✅ 완료 | LiveEventData, EventMissionData 등 |
+| 유저 데이터 | ✅ 완료 | LiveEventProgress, EventMissionProgress |
+| Request/Response | ✅ 완료 | GetActiveEvents, ClaimEventMission, VisitEvent |
+| 이벤트 | ✅ 완료 | LiveEventEvents.cs |
+| LocalServer Handler | ✅ 완료 | EventHandler.cs |
+| UI 기본 | ✅ 완료 | LiveEventScreen, EventDetailScreen, EventStageTab |
+| UI 미션탭 | 🔨 플레이스홀더 | EventMissionTab (기능 미구현) |
+| UI 상점탭 | 🔨 플레이스홀더 | EventShopTab (기능 미구현) |
+| 테스트 | ⬜ 대기 | |
 
 ---
 
@@ -766,18 +768,14 @@ API:
 - [ ] 미션 진행도 업데이트 로직
 
 UI:
-- [ ] Sc.Contents.Event Assembly 생성
-- [ ] LiveEventScreen.cs
-- [ ] EventBannerItem.cs
-- [ ] EventDetailScreen.cs
-- [ ] EventMissionTab.cs
+- [x] Sc.Contents.Event Assembly 생성
+- [x] LiveEventScreen.cs
+- [x] EventBannerItem.cs
+- [x] EventDetailScreen.cs
+- [x] EventMissionTab.cs (⚠️ 플레이스홀더 - 미션 목록 미구현)
 - [ ] EventMissionItem.cs
-- [ ] EventStageTab.cs (StageListScreen 재사용)
-- [ ] EventShopTab.cs (ShopScreen 재사용)
-- [ ] EventDashboardScreen.cs
-- [ ] EventBannerItem.cs
-- [ ] EventDetailScreen.cs
-- [ ] EventMissionItem.cs
+- [x] EventStageTab.cs (StageListScreen 재사용)
+- [x] EventShopTab.cs (⚠️ 플레이스홀더 - 상점 연동 미구현)
 - [ ] MVPSceneSetup에 Event 프리팹 추가
 
 연동:

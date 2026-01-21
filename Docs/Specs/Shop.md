@@ -212,17 +212,19 @@ updated: 2026-01-20
 
 ## 상태
 
-| 분류 | 상태 |
-|------|------|
-| 아키텍처 설계 | ✅ 완료 |
-| 마스터 데이터 | ⬜ 대기 |
-| 유저 데이터 | ⬜ 대기 |
-| Request/Response | ⬜ 대기 |
-| 이벤트 | ⬜ 대기 |
-| ShopHandler | ⬜ 대기 |
-| Provider | ⬜ 대기 |
-| UI | ⬜ 대기 |
-| 테스트 | ⬜ 대기 |
+| 분류 | 상태 | 비고 |
+|------|------|------|
+| 아키텍처 설계 | ✅ 완료 | |
+| 마스터 데이터 | ✅ 완료 | ShopProductType, ShopProductData, ShopProductDatabase |
+| 유저 데이터 | ✅ 완료 | ShopPurchaseRecord |
+| Request/Response | ✅ 완료 | ShopPurchaseRequest/Response |
+| 이벤트 | ✅ 완료 | ShopEvents.cs |
+| ShopHandler | ✅ 완료 | LocalServer/Handlers/ |
+| PurchaseLimitValidator | ✅ 완료 | LocalServer/Services/ |
+| Provider | ✅ 완료 | IShopProvider, Normal/EventShopProvider |
+| UI | 🔨 진행 중 | ShopState.cs 플레이스홀더 |
+| 테스트 (Server) | ✅ 완료 | ShopHandlerTests, PurchaseLimitValidatorTests |
+| 테스트 (Provider) | ⬜ 대기 | |
 
 ---
 
@@ -230,45 +232,45 @@ updated: 2026-01-20
 
 ```
 Phase A: Data Foundation
-- [ ] ShopProductType.cs (Data/Enums/)
-- [ ] ShopProductData.cs (Data/ScriptableObjects/)
-- [ ] ShopProductDatabase.cs (Data/ScriptableObjects/)
-- [ ] ShopPurchaseRecord.cs (Data/Structs/UserData/)
-- [ ] UserSaveData.cs v4 마이그레이션 (ShopPurchaseHistory 필드)
+- [x] ShopProductType.cs (Data/Enums/)
+- [x] ShopProductData.cs (Data/ScriptableObjects/)
+- [x] ShopProductDatabase.cs (Data/ScriptableObjects/)
+- [x] ShopPurchaseRecord.cs (Data/Structs/UserData/)
+- [x] UserSaveData.cs v4 마이그레이션 (ShopPurchaseHistory 필드)
 
 Phase B: Events
-- [ ] ShopEvents.cs (Event/OutGame/)
-  - [ ] ProductPurchasedEvent
-  - [ ] ProductPurchaseFailedEvent
+- [x] ShopEvents.cs (Event/OutGame/)
+  - [x] ProductPurchasedEvent
+  - [x] ProductPurchaseFailedEvent
 
 Phase C: Server Logic
-- [ ] PurchaseLimitValidator.cs (LocalServer/Services/)
-- [ ] ShopHandler.cs 확장 (LocalServer/Handlers/)
-  - [ ] 상품 조회
-  - [ ] 재화 검증
-  - [ ] 구매 제한 검증
-  - [ ] 재화 차감
-  - [ ] 보상 지급 (RewardService)
-  - [ ] 구매 기록 저장
-  - [ ] Delta 생성
-- [ ] LocalGameServer.cs에 ShopProductDatabase 주입
+- [x] PurchaseLimitValidator.cs (LocalServer/Services/)
+- [x] ShopHandler.cs 확장 (LocalServer/Handlers/)
+  - [x] 상품 조회
+  - [x] 재화 검증
+  - [x] 구매 제한 검증
+  - [x] 재화 차감
+  - [x] 보상 지급 (RewardService)
+  - [x] 구매 기록 저장
+  - [x] Delta 생성
+- [x] LocalGameServer.cs에 ShopProductDatabase 주입
 
 Phase D: UI Assembly (Sc.Contents.Shop)
-- [ ] Sc.Contents.Shop.asmdef
-- [ ] IShopProvider.cs (인터페이스)
-- [ ] NormalShopProvider.cs
-- [ ] EventShopProvider.cs
-- [ ] ShopState.cs
-- [ ] ShopScreen.cs
-- [ ] ShopProductItem.cs
+- [x] Sc.Contents.Shop.asmdef
+- [x] IShopProvider.cs (인터페이스)
+- [x] NormalShopProvider.cs
+- [x] EventShopProvider.cs
+- [ ] ShopState.cs (플레이스홀더)
+- [x] ShopScreen.cs
+- [x] ShopProductItem.cs
 
 Phase E: Integration
 - [ ] LobbyScreen.cs에 [상점] 버튼 추가
 - [ ] EventShopTab.cs 실제 구현 (Provider 연동)
 
 Phase F: Testing
-- [ ] ShopHandlerTests.cs
-- [ ] PurchaseLimitValidatorTests.cs
+- [x] ShopHandlerTests.cs (24개)
+- [x] PurchaseLimitValidatorTests.cs (16개)
 - [ ] NormalShopProviderTests.cs
 - [ ] EventShopProviderTests.cs
 ```
