@@ -64,11 +64,50 @@
 
 ---
 
+## ✅ 완료: EDITOR-CLEANUP
+
+> **완료일**: 2026-01-22
+> **목표**: Editor 도구 정리 및 단순화
+> **상세 문서**: [Specs/EditorToolsCleanup.md](Specs/EditorToolsCleanup.md)
+
+### 완료 내용
+
+| Phase | 작업 | 상태 |
+|-------|------|------|
+| 1 | 레거시 파일 삭제 (8개) | ✅ |
+| 2 | 폴더 구조 정리 | ✅ |
+| 3 | SetupTab 4버튼 단순화 | ✅ |
+| 4 | PrefabGenerator 통합 확인 | ✅ |
+
+### 삭제된 파일 (8개)
+
+- MVPSceneSetup.cs, UITestSceneSetup.cs, LoadingSetup.cs
+- PlayModeTestSetup.cs, SystemPopupSetup.cs
+- NavigationDebugWindow.cs, DataFlowTestWindow.cs
+- LobbyScreenSetup.cs
+
+### 최종 Editor 구조
+
+```
+Editor/Wizard/
+├── ProjectSetupWizard.cs    # 메인 윈도우
+├── SetupTab.cs              # 4단계 설정 (Prefabs→Addressables→Scene→Debug)
+├── DebugTab.cs              # 런타임 Navigation 디버그
+├── DataTab.cs               # 마스터 데이터 관리
+├── SettingsTab.cs           # 에디터 설정
+├── AddressableSetupTool.cs  # Addressables 그룹 설정
+├── MainSceneSetup.cs        # Main 씬 생성
+├── Generators/PrefabGenerator.cs  # Screen/Popup 프리팹 생성
+└── Setup/DebugPanelSetup.cs       # 디버그 패널 추가
+```
+
+---
+
 ## 🚀 다음 단계
 
-마일스톤 완료. 다음 마일스톤 설계 필요.
+**현재**: 대기 중
 
-**가능한 방향**:
+**이후 가능한 방향**:
 1. 인게임 전투 시스템 (BATTLE-V1)
 2. 기술 부채 해소 (Utility, AudioManager)
 3. 플레이스홀더 완성 (PartySelect, EventMission)
