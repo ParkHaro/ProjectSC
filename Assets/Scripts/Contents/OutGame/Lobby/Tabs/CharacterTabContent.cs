@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.UI;
 using Sc.Contents.Character;
 using Sc.Core;
 
@@ -9,8 +10,26 @@ namespace Sc.Contents.Lobby
     /// </summary>
     public class CharacterTabContent : LobbyTabContent
     {
-        [Header("UI References")]
-        [SerializeField] private Transform _characterListContainer;
+        [Header("UI References")] [SerializeField]
+        private Transform _characterListContainer;
+
+        [SerializeField] private Button _navigateButton;
+
+        private void Awake()
+        {
+            if (_navigateButton != null)
+            {
+                _navigateButton.onClick.AddListener(NavigateToCharacterList);
+            }
+        }
+
+        private void OnDestroy()
+        {
+            if (_navigateButton != null)
+            {
+                _navigateButton.onClick.RemoveListener(NavigateToCharacterList);
+            }
+        }
 
         public override void OnTabSelected()
         {
@@ -20,7 +39,6 @@ namespace Sc.Contents.Lobby
         public override void Refresh()
         {
             // 캐릭터 목록 미리보기 표시 (추후 확장)
-            // 현재는 탭 선택 시 CharacterListScreen으로 이동
         }
 
         /// <summary>

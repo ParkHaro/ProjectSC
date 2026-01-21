@@ -57,6 +57,7 @@ namespace Sc.Contents.Stage
         [SerializeField] private TMP_Text _stageDescriptionText;
         [SerializeField] private TMP_Text _recommendedPowerText;
         [SerializeField] private TMP_Text _rewardPreviewText;
+        [SerializeField] private Button _stageInfoButton;
 
         [Header("Footer")]
         [SerializeField] private TMP_Text _staminaCostText;
@@ -97,6 +98,11 @@ namespace Sc.Contents.Stage
             {
                 _stageListPanel.Initialize();
                 _stageListPanel.OnStageSelected += OnStageSelected;
+            }
+
+            if (_stageInfoButton != null)
+            {
+                _stageInfoButton.onClick.AddListener(OnStageInfoClicked);
             }
         }
 
@@ -512,6 +518,17 @@ namespace Sc.Contents.Stage
             OnBackClicked();
         }
 
+        private void OnStageInfoClicked()
+        {
+            if (_selectedStage == null) return;
+
+            Debug.Log($"[StageSelectScreen] StageInfo clicked: {_selectedStage.Id}");
+            StageInfoPopup.Open(new StageInfoState
+            {
+                StageData = _selectedStage
+            });
+        }
+
         #endregion
 
         #region Helpers
@@ -565,6 +582,11 @@ namespace Sc.Contents.Stage
             if (_stageListPanel != null)
             {
                 _stageListPanel.OnStageSelected -= OnStageSelected;
+            }
+
+            if (_stageInfoButton != null)
+            {
+                _stageInfoButton.onClick.RemoveListener(OnStageInfoClicked);
             }
 
             // 컨텐츠 모듈 해제

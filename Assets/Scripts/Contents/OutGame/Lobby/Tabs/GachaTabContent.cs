@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.UI;
 using Sc.Contents.Gacha;
 using Sc.Core;
 
@@ -9,8 +10,26 @@ namespace Sc.Contents.Lobby
     /// </summary>
     public class GachaTabContent : LobbyTabContent
     {
-        [Header("UI References")]
-        [SerializeField] private Transform _gachaPoolContainer;
+        [Header("UI References")] [SerializeField]
+        private Transform _gachaPoolContainer;
+
+        [SerializeField] private Button _navigateButton;
+
+        private void Awake()
+        {
+            if (_navigateButton != null)
+            {
+                _navigateButton.onClick.AddListener(NavigateToGacha);
+            }
+        }
+
+        private void OnDestroy()
+        {
+            if (_navigateButton != null)
+            {
+                _navigateButton.onClick.RemoveListener(NavigateToGacha);
+            }
+        }
 
         public override void OnTabSelected()
         {
@@ -20,7 +39,6 @@ namespace Sc.Contents.Lobby
         public override void Refresh()
         {
             // 가챠 풀 미리보기 표시 (추후 확장)
-            // 현재는 탭 선택 시 GachaScreen으로 이동
         }
 
         /// <summary>
