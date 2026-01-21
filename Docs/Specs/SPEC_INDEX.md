@@ -11,11 +11,13 @@
 
 | Assembly | 설명 | 대분류 | 세부 문서 | 상태 |
 |----------|------|--------|-----------|------|
+| Sc.Foundation | 로깅, 에러처리, 서비스 | [Foundation.md](Foundation.md) | [Logging](Foundation/Logging.md), [Error](Foundation/Error.md) | ✅ |
 | Sc.Data | 순수 데이터 정의 | [Data.md](Data.md) | [Enums](Data/Enums.md), [Structs](Data/Structs.md), [SO](Data/ScriptableObjects.md) | ⬜ |
 | Sc.Event | 클라이언트 내부 이벤트 | [Event.md](Event.md) | [Common](Event/CommonEvents.md), [InGame](Event/InGameEvents.md), [OutGame](Event/OutGameEvents.md) | ⬜ |
 | Sc.Packet | 서버 통신 인터페이스 | [Packet.md](Packet.md) | [IPacketService](Packet/IPacketService.md), [Requests](Packet/Requests.md), [Responses](Packet/Responses.md) | ⬜ |
-| Sc.Core | 핵심 시스템 | [Core.md](Core.md) | [Singleton](Core/Singleton.md), [EventManager](Core/EventManager.md), [ResourceManager](Core/ResourceManager.md), [SceneLoader](Core/SceneLoader.md), [AudioManager](Core/AudioManager.md), [SaveManager](Core/SaveManager.md), [StateMachine](Core/StateMachine.md) | ⬜ |
-| Sc.Common | 공통 모듈 | [Common.md](Common.md) | [UISystem](Common/UISystem.md), [UIComponents](Common/UIComponents.md), [Pool](Common/Pool.md), [Utility](Common/Utility.md) | ⬜ |
+| Sc.Core | 핵심 시스템 | [Core.md](Core.md) | [SaveManager](Core/SaveManager.md), [TimeService](Core/TimeService.md), [AssetManager](Core/AssetManager.md) | 🔨 |
+| Sc.Common | 공통 모듈 | [Common.md](Common.md) | [UISystem](Common/UISystem.md), [UIComponents](Common/UIComponents.md), [Reward](Common/Reward.md) | 🔨 |
+| Sc.LocalServer | 로컬 서버 시뮬레이션 | [LocalServer.md](LocalServer.md) | - | ✅ |
 
 ---
 
@@ -41,9 +43,11 @@
 
 | Assembly | 설명 | 패턴 | 대분류 | 상태 |
 |----------|------|------|--------|------|
-| Sc.Contents.Lobby | 로비 시스템 | - | [Lobby.md](Lobby.md) | ⬜ |
+| Sc.Contents.Lobby | 로비 시스템 | - | [Lobby.md](Lobby.md) | ✅ |
 | Sc.Contents.Gacha | 가챠 시스템 | Strategy | [Gacha.md](Gacha.md) | ⬜ |
-| Sc.Contents.Shop | 상점 시스템 | - | [Shop.md](Shop.md) | ⬜ |
+| Sc.Contents.Shop | 상점 시스템 | Provider | [Shop.md](Shop.md) | 🔨 |
+| Sc.Contents.LiveEvent | 라이브 이벤트 | - | [LiveEvent.md](LiveEvent.md) | ✅ |
+| Sc.Contents.Stage | 스테이지 시스템 | Composition | [Stage.md](Stage.md) | ✅ |
 | Sc.Contents.Quest | 퀘스트 시스템 | Composite | [Quest.md](Quest.md) | ⬜ |
 
 ---
@@ -63,50 +67,66 @@ Docs/Specs/
 ├── SPEC_INDEX.md          # 이 파일
 ├── DOC_RULES.md           # 문서 작성 규칙
 │
-├── Data.md                # 대분류
+├── Foundation.md          # ✅ 완료
+├── Foundation/
+│   ├── Logging.md
+│   └── Error.md
+│
+├── Data.md
 ├── Data/
 │   ├── Enums.md
 │   ├── Structs.md
 │   └── ScriptableObjects.md
 │
-├── Event.md               # 대분류 (NEW)
+├── Event.md
 ├── Event/
 │   ├── CommonEvents.md
 │   ├── InGameEvents.md
 │   └── OutGameEvents.md
 │
-├── Packet.md              # 대분류 (재설계)
+├── Packet.md
 ├── Packet/
 │   ├── IPacketService.md
 │   ├── Requests.md
 │   ├── Responses.md
 │   └── LocalPacketService.md
 │
-├── Core.md
+├── Core.md                # 🔨 진행 중
 ├── Core/
-│   ├── Singleton.md
-│   ├── EventManager.md
-│   ├── ResourceManager.md
-│   ├── SceneLoader.md
-│   ├── AudioManager.md
 │   ├── SaveManager.md
-│   └── StateMachine.md
+│   ├── TimeService.md
+│   └── AssetManager.md
 │
-├── Common.md
+├── Common.md              # 🔨 진행 중
 ├── Common/
 │   ├── UISystem.md
 │   ├── UIComponents.md
-│   ├── Pool.md
-│   └── Utility.md
+│   ├── Reward.md
+│   ├── Pool.md            # ⬜ 미구현
+│   └── Utility.md         # ⬜ 미구현
+│
+├── LocalServer.md         # ✅ 완료
+│
+├── LiveEvent.md           # ✅ 완료
+├── LiveEvent/
+│   └── IMPLEMENTATION_PLAN.md
+│
+├── Shop.md                # 🔨 진행 중
+│
+├── Stage.md               # ✅ 완료
+│
+├── Lobby.md               # ✅ 완료
 │
 ├── Editor/
-│   └── AITools.md             # AI 도구 모음
+│   └── AITools.md
 │
-└── Contents (추후 작성)
+└── (미구현 스펙)
     ├── Character.md
     ├── Inventory.md
     ├── Battle.md
-    └── ...
+    ├── Skill.md
+    ├── Gacha.md
+    └── Quest.md
 ```
 
 ---
@@ -124,3 +144,31 @@ Docs/Specs/
 ## 상태 범례
 
 - ⬜ 대기 | 🔨 진행 중 | ✅ 완료
+
+---
+
+## 문서-구현 간극 요약 (2026-01-21)
+
+### 긴급 조치 필요
+
+| 항목 | 상태 |
+|------|------|
+| Pool 시스템 구현 | 문서만 존재 |
+| Utility 구현 | 문서만 존재 |
+
+### 미문서화 구현
+
+| 시스템 | 미문서화 항목 |
+|--------|-------------|
+| Foundation | Services.cs, ISaveStorage, FileSaveStorage |
+| Core | NetworkManager, GameBootstrap, InitializationSequence 등 12개 |
+| Common | PopupQueueService, UIEventBridge |
+
+### 플레이스홀더 상태
+
+| 항목 | 시스템 |
+|------|--------|
+| EventMissionTab | LiveEvent |
+| EventShopTab | LiveEvent/Shop |
+| PartySelectScreen | Stage |
+| AttendanceCheckTask | Lobby |
