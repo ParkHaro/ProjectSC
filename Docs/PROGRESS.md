@@ -23,7 +23,7 @@
 | F | **LobbyEntryTask** | ✅ | Lobby.md |
 | F | Stage | ✅ | Stage.md (v3.1, Phase A~J 전체 완료) |
 | F | GachaEnhancement | ⬜ | Gacha/Enhancement.md |
-| F | CharacterEnhancement | ⬜ | Character/Enhancement.md |
+| F | CharacterEnhancement | 🔨 | Character/Enhancement.md (Phase A~E 완료, F 대기) |
 | F | NavigationEnhancement | ⬜ | Common/NavigationEnhancement.md |
 
 ---
@@ -33,14 +33,19 @@
 **지시**: "[시스템명] 구현하자" (예: "Shop 구현하자", "Stage 구현하자")
 
 ### 우선순위
-1. **Stage** 시스템 구현 (설계 완료, [Stage.md v3.0](Specs/Stage.md))
-2. GachaEnhancement / CharacterEnhancement
+1. **CharacterEnhancement** 테스트 (Phase F)
+2. GachaEnhancement
+3. NavigationEnhancement
 
 ---
 
 ## 🔨 진행 중인 작업
 
-(현재 진행 중인 작업 없음)
+**CharacterEnhancement** (Phase A~E 완료, F 대기)
+- 데이터: CharacterStats, LevelRequirement, AscensionRequirement, PowerCalculator
+- Handler: CharacterLevelUpHandler, CharacterAscensionHandler
+- UI: CharacterLevelUpPopup, CharacterAscensionPopup
+- 통합: CharacterDetailScreen 레벨업/돌파 버튼 추가
 
 ---
 
@@ -57,6 +62,42 @@
 | 6차 | Stage 테스트 | ✅ | 47개 |
 
 **총 테스트**: 351개
+
+---
+
+## ⚠️ 기술 부채 (문서-구현 간극)
+
+> **상세**: [SPEC_INDEX.md 간극 요약](Specs/SPEC_INDEX.md#문서-구현-간극-요약-2026-01-21)
+
+### 미구현 (문서만 존재)
+
+| 항목 | 스펙 문서 | 우선순위 |
+|------|----------|---------|
+| Pool 시스템 | Common/Pool.md | HIGH |
+| Utility (CollectionExtensions, MathHelper) | Common/Utility.md | HIGH |
+| AudioManager | Core/AudioManager.md | MEDIUM |
+| SceneLoader | Core/SceneLoader.md | LOW |
+| DeepLink 시스템 | Common/NavigationEnhancement.md | LOW |
+| Badge 시스템 | Common/NavigationEnhancement.md | LOW |
+
+### 플레이스홀더 (부분 구현)
+
+| 항목 | 시스템 | 현재 상태 |
+|------|--------|----------|
+| EventMissionTab | LiveEvent | UI만 존재, 기능 미구현 |
+| EventShopTab | LiveEvent/Shop | UI만 존재, Provider 연동 안됨 |
+| PartySelectScreen | Stage | 플레이스홀더 상태 |
+| AttendanceCheckTask | Lobby | Stub 구현 |
+| NewEventNotificationTask | Lobby | Stub 구현 |
+| ClaimEventMission API | LiveEvent | 에러코드 6099 반환 |
+
+### 미문서화 (구현됨, 문서 없음)
+
+| 시스템 | 항목 |
+|--------|------|
+| Foundation | Services.cs, ISaveStorage, FileSaveStorage |
+| Core | NetworkManager, GameBootstrap, InitializationSequence 등 12개 |
+| Common | PopupQueueService, UIEventBridge |
 
 ---
 
@@ -93,6 +134,25 @@
 ## 작업 로그 (최근)
 
 ### 2026-01-21
+- [x] **CharacterEnhancement 시스템 Phase A~E 완료** (19개 파일 생성, 3개 수정)
+  - Phase A: 데이터 레이어 (8개 파일)
+    - CharacterStats.cs - 스탯 구조체 (+ 연산자)
+    - LevelRequirement.cs, AscensionRequirement.cs - 요구사항 구조체
+    - CharacterLevelDatabase.cs, CharacterAscensionDatabase.cs - 마스터 DB
+    - PowerCalculator.cs - 전투력 계산 (HP/10 + ATK*5 + DEF*3 + SPD*2 + CritRate*100 + CritDamage*50)
+    - CharacterLevel.json, CharacterAscension.json - 샘플 데이터
+  - Phase B: 서버 레이어 (7개 파일)
+    - CharacterLevelUpRequest/Response, CharacterAscensionRequest/Response
+    - CharacterEvents.cs - LevelUp/Ascension 이벤트
+    - CharacterLevelUpHandler.cs, CharacterAscensionHandler.cs
+  - Phase C~D: UI (2개 파일)
+    - CharacterLevelUpPopup.cs - 재료 선택, 스탯 미리보기, 자동 선택
+    - CharacterAscensionPopup.cs - 요구사항 확인, 스탯 보너스 미리보기
+  - Phase E: 통합 (3개 파일 수정)
+    - ItemData.cs - ExpValue, GoldCostPerUse 필드 추가
+    - CharacterDetailScreen.cs - 레벨업/돌파 버튼, 전투력 표시 추가
+    - DataManager.cs - LevelDatabase, AscensionDatabase 참조 추가
+  - Phase F: 테스트 (대기)
 - [x] **Stage 시스템 Phase J 완료** (2개 파일)
   - StageEntryValidatorTests.cs - 입장 제한 검증 테스트 (21개)
   - StageHandlerTests.cs - 입장/클리어 핸들러 테스트 (26개)
