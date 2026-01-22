@@ -129,6 +129,32 @@ Editor/Wizard/
 **작업 가이드**: [Design/UI_DOCUMENTATION_GUIDE.md](Design/UI_DOCUMENTATION_GUIDE.md)
 **작업 정의서**: [Design/UI_DOCUMENTATION_TASKS.md](Design/UI_DOCUMENTATION_TASKS.md)
 
+### ✅ LobbyScreen 프리팹 자동화 완료
+
+> **완료일**: 2026-01-22
+
+기존 Tab 기반 구조를 Lobby.md 스펙 기반 Navigation Button 구조로 재구현
+
+| 작업 | 상태 |
+|------|------|
+| Widget 클래스 생성 (6개) | ✅ |
+| LobbyScreen.cs 스펙 기반 재작성 | ✅ |
+| LobbyScreenPrefabBuilder.cs 재구현 | ✅ |
+| Tab 관련 파일 삭제 | ✅ |
+| 빌드 테스트 | ✅ |
+
+**생성된 Widget (Lobby/Widgets/)**:
+- EventBannerCarousel.cs - 배너 슬라이드
+- StageProgressWidget.cs - 스테이지 진행
+- QuickMenuButton.cs - 퀵메뉴 (2x4 그리드)
+- PassButton.cs - 패스 버튼 (4개)
+- ContentNavButton.cs - 하단 네비게이션 (7개)
+- CharacterDisplayWidget.cs - 캐릭터 디스플레이
+
+**삭제된 파일 (Lobby/Tabs/)**:
+- LobbyTabContent.cs, HomeTabContent.cs, CharacterTabContent.cs
+- GachaTabContent.cs, SettingsTabContent.cs
+
 ### Phase 2: PrefabGenerator 확장 (대기)
 
 | 작업 | 파일 | 상태 |

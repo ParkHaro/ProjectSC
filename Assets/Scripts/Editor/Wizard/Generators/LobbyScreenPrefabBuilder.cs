@@ -1,5 +1,5 @@
-using Sc.Common.UI.Widgets;
 using Sc.Contents.Lobby;
+using Sc.Contents.Lobby.Widgets;
 using TMPro;
 using UnityEditor;
 using UnityEngine;
@@ -9,7 +9,7 @@ namespace Sc.Editor.Wizard.Generators
 {
     /// <summary>
     /// LobbyScreen 전용 프리팹 빌더.
-    /// 서브컬쳐 수집형 RPG 스타일 로비 UI 생성.
+    /// 스펙: Docs/Specs/Lobby.md
     /// </summary>
     public static class LobbyScreenPrefabBuilder
     {
@@ -25,17 +25,24 @@ namespace Sc.Editor.Wizard.Generators
         private static readonly Color TextPrimary = Color.white;
         private static readonly Color TextSecondary = new Color(1f, 1f, 1f, 0.7f);
         private static readonly Color TextMuted = new Color(1f, 1f, 1f, 0.4f);
-        private static readonly Color GlassBorder = new Color(1f, 1f, 1f, 0.1f);
 
         #endregion
 
         #region Constants
 
         private const float HEADER_HEIGHT = 80f;
-        private const float BOTTOM_NAV_HEIGHT = 80f;
-        private const float TAB_BUTTON_WIDTH = 120f;
-        private const float TAB_BUTTON_HEIGHT = 60f;
-        private const float QUICK_BUTTON_SIZE = 100f;
+        private const float BOTTOM_NAV_HEIGHT = 100f;
+        private const float LEFT_TOP_WIDTH = 400f;
+        private const float LEFT_TOP_HEIGHT = 300f;
+        private const float RIGHT_TOP_WIDTH = 350f;
+        private const float RIGHT_TOP_HEIGHT = 250f;
+        private const float RIGHT_BOTTOM_WIDTH = 200f;
+        private const float RIGHT_BOTTOM_HEIGHT = 180f;
+        private const float PASS_BUTTON_WIDTH = 90f;
+        private const float PASS_BUTTON_HEIGHT = 100f;
+        private const float QUICK_BUTTON_SIZE = 80f;
+        private const float CONTENT_NAV_WIDTH = 100f;
+        private const float CONTENT_NAV_HEIGHT = 80f;
 
         #endregion
 
@@ -49,29 +56,54 @@ namespace Sc.Editor.Wizard.Generators
             // 1. Background
             CreateBackground(root);
 
-            // 2. Main Content Area (Header 영역 제외)
-            var mainContent = CreateMainContent(root);
+            // 2. SafeArea
+            var safeArea = CreateSafeArea(root);
 
-            // 3. Character Display (Left)
-            CreateCharacterDisplay(mainContent);
+            // 3. Header Area (ScreenHeader는 별도 프리팹이므로 플레이스홀더만)
+            CreateHeaderArea(safeArea);
 
-            // 4. Tab Content Area (Right)
-            var tabContentArea = CreateTabContentArea(mainContent);
+            // 4. Content Area
+            var content = CreateContentArea(safeArea);
 
-            // 5. Tab Contents
-            var homeTab = CreateHomeTabContent(tabContentArea);
-            var characterTab = CreateCharacterTabContent(tabContentArea);
-            var gachaTab = CreateGachaTabContent(tabContentArea);
-            var settingsTab = CreateSettingsTabContent(tabContentArea);
+            // 5. LeftTopArea
+            var leftTop = CreateLeftTopArea(content);
+            var bannerCarousel = CreateEventBannerCarousel(leftTop);
+            var passButtons = CreatePassButtonGroup(leftTop);
 
-            // 6. Bottom Navigation
-            var bottomNav = CreateBottomNav(root);
+            // 6. RightTopArea
+            var rightTop = CreateRightTopArea(content);
+            var stageProgress = CreateStageProgressWidget(rightTop);
+            var quickMenuButtons = CreateQuickMenuGrid(rightTop);
 
-            // 7. Connect SerializedFields
-            ConnectSerializedFields(root, bottomNav, new[]
-            {
-                homeTab, characterTab, gachaTab, settingsTab
-            });
+            // 7. CenterArea (Character Display)
+            var centerArea = CreateCenterArea(content);
+            var characterDisplay = CreateCharacterDisplay(centerArea);
+
+            // 8. RightBottomArea (InGameContentDashboard)
+            var rightBottom = CreateRightBottomArea(content);
+            var (stageShortcut, stageShortcutLabel, adventureBtn) = CreateInGameDashboard(rightBottom);
+
+            // 9. BottomNav
+            var bottomNav = CreateBottomNav(safeArea);
+            var contentNavButtons = CreateContentNavButtons(bottomNav);
+
+            // 10. OverlayLayer
+            CreateOverlayLayer(root);
+
+            // 11. Connect SerializedFields
+            ConnectSerializedFields(
+                root,
+                bannerCarousel,
+                passButtons,
+                stageProgress,
+                quickMenuButtons,
+                characterDisplay,
+                stageShortcut,
+                stageShortcutLabel,
+                adventureBtn,
+                contentNavButtons,
+                bottomNav.GetComponentInChildren<ScrollRect>()
+            );
 
             return root;
         }
@@ -104,33 +136,420 @@ namespace Sc.Editor.Wizard.Generators
             image.raycastTarget = true;
         }
 
-        #endregion
-
-        #region Main Content
-
-        private static GameObject CreateMainContent(GameObject parent)
+        private static GameObject CreateSafeArea(GameObject parent)
         {
-            var content = CreateChild(parent, "MainContent");
-            var rect = SetStretch(content);
+            var safeArea = CreateChild(parent, "SafeArea");
+            SetStretch(safeArea);
+            return safeArea;
+        }
 
-            // ScreenHeader 영역 확보 (상단 80px)
-            rect.offsetMax = new Vector2(0, -HEADER_HEIGHT);
-            // BottomNav 영역 확보 (하단 80px)
+        private static void CreateHeaderArea(GameObject parent)
+        {
+            var header = CreateChild(parent, "Header");
+            var rect = header.AddComponent<RectTransform>();
+
+            // Top anchored, full width, 80px height
+            rect.anchorMin = new Vector2(0, 1);
+            rect.anchorMax = new Vector2(1, 1);
+            rect.pivot = new Vector2(0.5f, 1);
+            rect.sizeDelta = new Vector2(0, HEADER_HEIGHT);
+            rect.anchoredPosition = Vector2.zero;
+
+            // Placeholder for ScreenHeader
+            var placeholder = CreateChild(header, "ScreenHeaderPlaceholder");
+            SetStretch(placeholder);
+            var img = placeholder.AddComponent<Image>();
+            img.color = new Color(0, 0, 0, 0.5f);
+
+            var text = CreateChild(placeholder, "Text");
+            SetStretch(text);
+            var tmp = text.AddComponent<TextMeshProUGUI>();
+            tmp.text = "[ScreenHeader]";
+            tmp.fontSize = 14;
+            tmp.color = TextMuted;
+            tmp.alignment = TextAlignmentOptions.Center;
+        }
+
+        private static GameObject CreateContentArea(GameObject parent)
+        {
+            var content = CreateChild(parent, "Content");
+            var rect = content.AddComponent<RectTransform>();
+
+            // Stretch, but leave space for header and bottom nav
+            rect.anchorMin = Vector2.zero;
+            rect.anchorMax = Vector2.one;
             rect.offsetMin = new Vector2(0, BOTTOM_NAV_HEIGHT);
+            rect.offsetMax = new Vector2(0, -HEADER_HEIGHT);
 
             return content;
         }
 
-        private static void CreateCharacterDisplay(GameObject parent)
+        private static void CreateOverlayLayer(GameObject parent)
         {
-            var display = CreateChild(parent, "CharacterDisplay");
-            var rect = display.AddComponent<RectTransform>();
+            var overlay = CreateChild(parent, "OverlayLayer");
+            SetStretch(overlay);
+            // 팝업 등을 위한 오버레이 레이어
+        }
 
-            // Left 55%
+        #endregion
+
+        #region LeftTopArea
+
+        private static GameObject CreateLeftTopArea(GameObject parent)
+        {
+            var area = CreateChild(parent, "LeftTopArea");
+            var rect = area.AddComponent<RectTransform>();
+
+            // Top-Left anchored
+            rect.anchorMin = new Vector2(0, 1);
+            rect.anchorMax = new Vector2(0, 1);
+            rect.pivot = new Vector2(0, 1);
+            rect.sizeDelta = new Vector2(LEFT_TOP_WIDTH, LEFT_TOP_HEIGHT);
+            rect.anchoredPosition = new Vector2(20, -20);
+
+            var layout = area.AddComponent<VerticalLayoutGroup>();
+            layout.spacing = 16;
+            layout.padding = new RectOffset(10, 10, 10, 10);
+            layout.childControlWidth = true;
+            layout.childControlHeight = false;
+            layout.childForceExpandWidth = true;
+            layout.childForceExpandHeight = false;
+
+            return area;
+        }
+
+        private static EventBannerCarousel CreateEventBannerCarousel(GameObject parent)
+        {
+            var carousel = CreateChild(parent, "EventBannerCarousel");
+            var rect = carousel.AddComponent<RectTransform>();
+            rect.sizeDelta = new Vector2(0, 150);
+
+            var fitter = carousel.AddComponent<LayoutElement>();
+            fitter.preferredHeight = 150;
+
+            // Background
+            var bgImage = carousel.AddComponent<Image>();
+            bgImage.color = BgCard;
+
+            // Banner Container
+            var bannerContainer = CreateChild(carousel, "BannerContainer");
+            var bannerRect = SetStretch(bannerContainer);
+            bannerRect.offsetMin = new Vector2(0, 20);
+            bannerRect.offsetMax = Vector2.zero;
+
+            // Indicators
+            var indicators = CreateChild(carousel, "Indicators");
+            var indRect = indicators.AddComponent<RectTransform>();
+            indRect.anchorMin = new Vector2(0.5f, 0);
+            indRect.anchorMax = new Vector2(0.5f, 0);
+            indRect.pivot = new Vector2(0.5f, 0);
+            indRect.sizeDelta = new Vector2(100, 16);
+            indRect.anchoredPosition = new Vector2(0, 4);
+
+            var indLayout = indicators.AddComponent<HorizontalLayoutGroup>();
+            indLayout.spacing = 8;
+            indLayout.childAlignment = TextAnchor.MiddleCenter;
+            indLayout.childControlWidth = false;
+            indLayout.childControlHeight = false;
+
+            // Indicator Prefab (hidden)
+            var indicatorPrefab = CreateChild(carousel, "IndicatorPrefab");
+            var indPrefabRect = indicatorPrefab.AddComponent<RectTransform>();
+            indPrefabRect.sizeDelta = new Vector2(8, 8);
+            var indPrefabImg = indicatorPrefab.AddComponent<Image>();
+            indPrefabImg.color = TextMuted;
+            indicatorPrefab.SetActive(false);
+
+            // Add component and connect
+            var comp = carousel.AddComponent<EventBannerCarousel>();
+            ConnectBannerCarouselFields(comp, bannerContainer.transform, indicators.transform, indicatorPrefab);
+
+            return comp;
+        }
+
+        private static PassButton[] CreatePassButtonGroup(GameObject parent)
+        {
+            var group = CreateChild(parent, "PassButtonGroup");
+            var rect = group.AddComponent<RectTransform>();
+            rect.sizeDelta = new Vector2(0, PASS_BUTTON_HEIGHT);
+
+            var fitter = group.AddComponent<LayoutElement>();
+            fitter.preferredHeight = PASS_BUTTON_HEIGHT;
+
+            var layout = group.AddComponent<HorizontalLayoutGroup>();
+            layout.spacing = 8;
+            layout.childControlWidth = true;
+            layout.childControlHeight = true;
+            layout.childForceExpandWidth = true;
+            layout.childForceExpandHeight = true;
+
+            string[] passTypes = { "LevelPass", "StoryPass", "TrialPass", "StepUpPackage" };
+            string[] passLabels = { "레벨패스", "사록패스", "트라이얼패스", "스텝업패키지" };
+
+            var buttons = new PassButton[4];
+            for (int i = 0; i < 4; i++)
+            {
+                buttons[i] = CreatePassButton(group, passTypes[i], passLabels[i]);
+            }
+
+            return buttons;
+        }
+
+        private static PassButton CreatePassButton(GameObject parent, string passType, string label)
+        {
+            var btn = CreateChild(parent, $"PassButton_{passType}");
+
+            // Background
+            var bgImage = btn.AddComponent<Image>();
+            bgImage.color = BgCard;
+
+            // Button
+            var button = btn.AddComponent<Button>();
+
+            // Layout
+            var layout = btn.AddComponent<VerticalLayoutGroup>();
+            layout.spacing = 4;
+            layout.padding = new RectOffset(4, 4, 8, 4);
+            layout.childAlignment = TextAnchor.MiddleCenter;
+            layout.childControlWidth = true;
+            layout.childControlHeight = false;
+
+            // Icon
+            var icon = CreateChild(btn, "Icon");
+            var iconRect = icon.AddComponent<RectTransform>();
+            var iconFitter = icon.AddComponent<LayoutElement>();
+            iconFitter.preferredWidth = 40;
+            iconFitter.preferredHeight = 40;
+            var iconImg = icon.AddComponent<Image>();
+            iconImg.color = AccentGold;
+
+            // Label
+            var labelObj = CreateChild(btn, "Label");
+            var labelFitter = labelObj.AddComponent<LayoutElement>();
+            labelFitter.preferredHeight = 20;
+            var labelTmp = labelObj.AddComponent<TextMeshProUGUI>();
+            labelTmp.text = label;
+            labelTmp.fontSize = 10;
+            labelTmp.color = TextSecondary;
+            labelTmp.alignment = TextAlignmentOptions.Center;
+
+            // New Badge
+            var newBadge = CreateChild(btn, "NewBadge");
+            var badgeRect = newBadge.AddComponent<RectTransform>();
+            badgeRect.anchorMin = new Vector2(1, 1);
+            badgeRect.anchorMax = new Vector2(1, 1);
+            badgeRect.pivot = new Vector2(1, 1);
+            badgeRect.sizeDelta = new Vector2(24, 14);
+            badgeRect.anchoredPosition = new Vector2(-2, -2);
+            var badgeBg = newBadge.AddComponent<Image>();
+            badgeBg.color = AccentSecondary;
+            var badgeText = CreateChild(newBadge, "Text");
+            SetStretch(badgeText);
+            var badgeTmp = badgeText.AddComponent<TextMeshProUGUI>();
+            badgeTmp.text = "NEW";
+            badgeTmp.fontSize = 8;
+            badgeTmp.color = Color.white;
+            badgeTmp.alignment = TextAlignmentOptions.Center;
+            newBadge.SetActive(false);
+
+            // Add component and connect
+            var comp = btn.AddComponent<PassButton>();
+            ConnectPassButtonFields(comp, button, iconImg, labelTmp, newBadge, passType);
+
+            return comp;
+        }
+
+        #endregion
+
+        #region RightTopArea
+
+        private static GameObject CreateRightTopArea(GameObject parent)
+        {
+            var area = CreateChild(parent, "RightTopArea");
+            var rect = area.AddComponent<RectTransform>();
+
+            // Top-Right anchored
+            rect.anchorMin = new Vector2(1, 1);
+            rect.anchorMax = new Vector2(1, 1);
+            rect.pivot = new Vector2(1, 1);
+            rect.sizeDelta = new Vector2(RIGHT_TOP_WIDTH, RIGHT_TOP_HEIGHT);
+            rect.anchoredPosition = new Vector2(-20, -20);
+
+            var layout = area.AddComponent<VerticalLayoutGroup>();
+            layout.spacing = 12;
+            layout.padding = new RectOffset(10, 10, 10, 10);
+            layout.childControlWidth = true;
+            layout.childControlHeight = false;
+            layout.childForceExpandWidth = true;
+            layout.childForceExpandHeight = false;
+
+            return area;
+        }
+
+        private static StageProgressWidget CreateStageProgressWidget(GameObject parent)
+        {
+            var widget = CreateChild(parent, "StageProgressWidget");
+            var rect = widget.AddComponent<RectTransform>();
+            rect.sizeDelta = new Vector2(0, 50);
+
+            var fitter = widget.AddComponent<LayoutElement>();
+            fitter.preferredHeight = 50;
+
+            // Background
+            var bgImage = widget.AddComponent<Image>();
+            bgImage.color = BgCard;
+
+            // Layout
+            var layout = widget.AddComponent<VerticalLayoutGroup>();
+            layout.spacing = 4;
+            layout.padding = new RectOffset(12, 12, 8, 8);
+            layout.childControlWidth = true;
+            layout.childControlHeight = false;
+
+            // Stage Label
+            var stageLabel = CreateChild(widget, "StageLabel");
+            var stageFitter = stageLabel.AddComponent<LayoutElement>();
+            stageFitter.preferredHeight = 16;
+            var stageTmp = stageLabel.AddComponent<TextMeshProUGUI>();
+            stageTmp.text = "11-10";
+            stageTmp.fontSize = 12;
+            stageTmp.color = AccentPrimary;
+            stageTmp.fontStyle = FontStyles.Bold;
+
+            // Stage Name
+            var stageName = CreateChild(widget, "StageName");
+            var nameFitter = stageName.AddComponent<LayoutElement>();
+            nameFitter.preferredHeight = 18;
+            var nameTmp = stageName.AddComponent<TextMeshProUGUI>();
+            nameTmp.text = "최후의 방어선!";
+            nameTmp.fontSize = 14;
+            nameTmp.color = TextPrimary;
+
+            // Add component and connect
+            var comp = widget.AddComponent<StageProgressWidget>();
+            ConnectStageProgressFields(comp, stageTmp, nameTmp);
+
+            return comp;
+        }
+
+        private static QuickMenuButton[] CreateQuickMenuGrid(GameObject parent)
+        {
+            var grid = CreateChild(parent, "QuickMenuGrid");
+            var rect = grid.AddComponent<RectTransform>();
+            rect.sizeDelta = new Vector2(0, 180);
+
+            var fitter = grid.AddComponent<LayoutElement>();
+            fitter.preferredHeight = 180;
+            fitter.flexibleHeight = 1;
+
+            var layout = grid.AddComponent<GridLayoutGroup>();
+            layout.cellSize = new Vector2(QUICK_BUTTON_SIZE, QUICK_BUTTON_SIZE);
+            layout.spacing = new Vector2(8, 8);
+            layout.startCorner = GridLayoutGroup.Corner.UpperLeft;
+            layout.startAxis = GridLayoutGroup.Axis.Horizontal;
+            layout.childAlignment = TextAnchor.UpperLeft;
+            layout.constraint = GridLayoutGroup.Constraint.FixedColumnCount;
+            layout.constraintCount = 4;
+
+            string[] screens = { "LiveEventScreen", "FarmScreen", "FriendScreen", "QuestScreen",
+                                "PowerUpScreen", "MonthlyScreen", "ReturnScreen", "MissionScreen" };
+            string[] labels = { "이벤트", "평일농장", "친구", "퀘스트",
+                              "강해지기", "월간달", "복귀환영", "미션" };
+
+            var buttons = new QuickMenuButton[8];
+            for (int i = 0; i < 8; i++)
+            {
+                buttons[i] = CreateQuickMenuButton(grid, screens[i], labels[i]);
+            }
+
+            return buttons;
+        }
+
+        private static QuickMenuButton CreateQuickMenuButton(GameObject parent, string targetScreen, string label)
+        {
+            var btn = CreateChild(parent, $"QuickMenuButton_{targetScreen}");
+
+            // Background
+            var bgImage = btn.AddComponent<Image>();
+            bgImage.color = BgCard;
+
+            // Button
+            var button = btn.AddComponent<Button>();
+
+            // Layout
+            var layout = btn.AddComponent<VerticalLayoutGroup>();
+            layout.spacing = 4;
+            layout.padding = new RectOffset(4, 4, 8, 4);
+            layout.childAlignment = TextAnchor.MiddleCenter;
+            layout.childControlWidth = true;
+            layout.childControlHeight = false;
+
+            // Icon
+            var icon = CreateChild(btn, "Icon");
+            var iconFitter = icon.AddComponent<LayoutElement>();
+            iconFitter.preferredWidth = 32;
+            iconFitter.preferredHeight = 32;
+            var iconImg = icon.AddComponent<Image>();
+            iconImg.color = AccentPrimary;
+
+            // Label
+            var labelObj = CreateChild(btn, "Label");
+            var labelFitter = labelObj.AddComponent<LayoutElement>();
+            labelFitter.preferredHeight = 14;
+            var labelTmp = labelObj.AddComponent<TextMeshProUGUI>();
+            labelTmp.text = label;
+            labelTmp.fontSize = 10;
+            labelTmp.color = TextSecondary;
+            labelTmp.alignment = TextAlignmentOptions.Center;
+
+            // Badge
+            var badge = CreateChild(btn, "Badge");
+            var badgeRect = badge.AddComponent<RectTransform>();
+            badgeRect.anchorMin = new Vector2(1, 1);
+            badgeRect.anchorMax = new Vector2(1, 1);
+            badgeRect.pivot = new Vector2(1, 1);
+            badgeRect.sizeDelta = new Vector2(20, 20);
+            badgeRect.anchoredPosition = new Vector2(-2, -2);
+            var badgeBg = badge.AddComponent<Image>();
+            badgeBg.color = AccentSecondary;
+            var badgeCount = CreateChild(badge, "Count");
+            SetStretch(badgeCount);
+            var badgeTmp = badgeCount.AddComponent<TextMeshProUGUI>();
+            badgeTmp.text = "";
+            badgeTmp.fontSize = 10;
+            badgeTmp.color = Color.white;
+            badgeTmp.alignment = TextAlignmentOptions.Center;
+            badge.SetActive(false);
+
+            // Add component and connect
+            var comp = btn.AddComponent<QuickMenuButton>();
+            ConnectQuickMenuButtonFields(comp, button, iconImg, labelTmp, badge, badgeTmp, targetScreen);
+
+            return comp;
+        }
+
+        #endregion
+
+        #region CenterArea
+
+        private static GameObject CreateCenterArea(GameObject parent)
+        {
+            var area = CreateChild(parent, "CenterArea");
+            var rect = area.AddComponent<RectTransform>();
+
+            // Left 55% of content area
             rect.anchorMin = new Vector2(0, 0);
             rect.anchorMax = new Vector2(0.55f, 1);
-            rect.offsetMin = Vector2.zero;
-            rect.offsetMax = Vector2.zero;
+            rect.offsetMin = new Vector2(0, 0);
+            rect.offsetMax = new Vector2(0, -LEFT_TOP_HEIGHT - 20);
+
+            return area;
+        }
+
+        private static CharacterDisplayWidget CreateCharacterDisplay(GameObject parent)
+        {
+            var display = CreateChild(parent, "CharacterDisplay");
+            SetStretch(display);
 
             // Glow Effect
             var glow = CreateChild(display, "CharacterGlow");
@@ -139,12 +558,11 @@ namespace Sc.Editor.Wizard.Generators
             glowRect.anchorMax = new Vector2(0.5f, 0);
             glowRect.sizeDelta = new Vector2(300, 100);
             glowRect.anchoredPosition = new Vector2(0, 50);
-
             var glowImage = glow.AddComponent<Image>();
             glowImage.color = new Color(0, 0.83f, 1f, 0.2f);
             glowImage.raycastTarget = false;
 
-            // Character Image Placeholder
+            // Character Image
             var charImage = CreateChild(display, "CharacterImage");
             var charRect = charImage.AddComponent<RectTransform>();
             charRect.anchorMin = new Vector2(0.5f, 0);
@@ -152,177 +570,114 @@ namespace Sc.Editor.Wizard.Generators
             charRect.pivot = new Vector2(0.5f, 0);
             charRect.sizeDelta = new Vector2(350, 500);
             charRect.anchoredPosition = new Vector2(0, 20);
-
             var charImg = charImage.AddComponent<Image>();
             charImg.color = new Color(1, 1, 1, 0.1f);
-            charImg.raycastTarget = false;
+            var charBtn = charImage.AddComponent<Button>();
 
             // Placeholder Text
-            var placeholderText = CreateChild(charImage, "PlaceholderText");
-            var textRect = SetStretch(placeholderText);
-            var tmp = placeholderText.AddComponent<TextMeshProUGUI>();
-            tmp.text = "CHARACTER";
-            tmp.fontSize = 24;
-            tmp.color = TextMuted;
-            tmp.alignment = TextAlignmentOptions.Center;
-        }
+            var placeholder = CreateChild(charImage, "Placeholder");
+            SetStretch(placeholder);
+            var placeholderTmp = placeholder.AddComponent<TextMeshProUGUI>();
+            placeholderTmp.text = "CHARACTER";
+            placeholderTmp.fontSize = 24;
+            placeholderTmp.color = TextMuted;
+            placeholderTmp.alignment = TextAlignmentOptions.Center;
 
-        private static GameObject CreateTabContentArea(GameObject parent)
-        {
-            var area = CreateChild(parent, "TabContentArea");
-            var rect = area.AddComponent<RectTransform>();
+            // Dialogue Box
+            var dialogueBox = CreateChild(display, "DialogueBox");
+            var dialogueRect = dialogueBox.AddComponent<RectTransform>();
+            dialogueRect.anchorMin = new Vector2(0.5f, 0);
+            dialogueRect.anchorMax = new Vector2(0.5f, 0);
+            dialogueRect.pivot = new Vector2(0.5f, 0);
+            dialogueRect.sizeDelta = new Vector2(300, 60);
+            dialogueRect.anchoredPosition = new Vector2(0, 520);
+            var dialogueBg = dialogueBox.AddComponent<Image>();
+            dialogueBg.color = BgCard;
 
-            // Right 45%
-            rect.anchorMin = new Vector2(0.55f, 0);
-            rect.anchorMax = new Vector2(1, 1);
-            rect.offsetMin = new Vector2(10, 10);
-            rect.offsetMax = new Vector2(-20, -10);
+            var dialogueText = CreateChild(dialogueBox, "DialogueText");
+            SetStretch(dialogueText);
+            var dialogueTmp = dialogueText.AddComponent<TextMeshProUGUI>();
+            dialogueTmp.text = "내가 놀고 싶을 때 놀러 오고...";
+            dialogueTmp.fontSize = 14;
+            dialogueTmp.color = TextPrimary;
+            dialogueTmp.alignment = TextAlignmentOptions.Center;
+            dialogueTmp.margin = new Vector4(10, 10, 10, 10);
 
-            return area;
+            // Left Arrow
+            var leftArrow = CreateChild(display, "LeftArrow");
+            var leftRect = leftArrow.AddComponent<RectTransform>();
+            leftRect.anchorMin = new Vector2(0, 0.5f);
+            leftRect.anchorMax = new Vector2(0, 0.5f);
+            leftRect.pivot = new Vector2(0, 0.5f);
+            leftRect.sizeDelta = new Vector2(40, 80);
+            leftRect.anchoredPosition = new Vector2(10, 0);
+            var leftBg = leftArrow.AddComponent<Image>();
+            leftBg.color = BgCard;
+            var leftBtn = leftArrow.AddComponent<Button>();
+            var leftText = CreateChild(leftArrow, "Text");
+            SetStretch(leftText);
+            var leftTmp = leftText.AddComponent<TextMeshProUGUI>();
+            leftTmp.text = "<";
+            leftTmp.fontSize = 24;
+            leftTmp.color = TextPrimary;
+            leftTmp.alignment = TextAlignmentOptions.Center;
+
+            // Right Arrow
+            var rightArrow = CreateChild(display, "RightArrow");
+            var rightRect = rightArrow.AddComponent<RectTransform>();
+            rightRect.anchorMin = new Vector2(1, 0.5f);
+            rightRect.anchorMax = new Vector2(1, 0.5f);
+            rightRect.pivot = new Vector2(1, 0.5f);
+            rightRect.sizeDelta = new Vector2(40, 80);
+            rightRect.anchoredPosition = new Vector2(-10, 0);
+            var rightBg = rightArrow.AddComponent<Image>();
+            rightBg.color = BgCard;
+            var rightBtn = rightArrow.AddComponent<Button>();
+            var rightText = CreateChild(rightArrow, "Text");
+            SetStretch(rightText);
+            var rightTmp = rightText.AddComponent<TextMeshProUGUI>();
+            rightTmp.text = ">";
+            rightTmp.fontSize = 24;
+            rightTmp.color = TextPrimary;
+            rightTmp.alignment = TextAlignmentOptions.Center;
+
+            // Add component and connect
+            var comp = display.AddComponent<CharacterDisplayWidget>();
+            ConnectCharacterDisplayFields(comp, charImg, dialogueTmp, charBtn, leftBtn, rightBtn, glowImage);
+
+            return comp;
         }
 
         #endregion
 
-        #region Tab Contents
+        #region RightBottomArea
 
-        private static GameObject CreateHomeTabContent(GameObject parent)
+        private static GameObject CreateRightBottomArea(GameObject parent)
         {
-            var tab = CreateChild(parent, "HomeTabContent");
-            SetStretch(tab);
-            tab.AddComponent<HomeTabContent>();
+            var area = CreateChild(parent, "RightBottomArea");
+            var rect = area.AddComponent<RectTransform>();
 
-            var layout = tab.AddComponent<VerticalLayoutGroup>();
-            layout.spacing = 16;
-            layout.padding = new RectOffset(10, 10, 10, 10);
-            layout.childControlWidth = true;
-            layout.childControlHeight = false;
-            layout.childForceExpandWidth = true;
-            layout.childForceExpandHeight = false;
+            // Bottom-Right anchored
+            rect.anchorMin = new Vector2(1, 0);
+            rect.anchorMax = new Vector2(1, 0);
+            rect.pivot = new Vector2(1, 0);
+            rect.sizeDelta = new Vector2(RIGHT_BOTTOM_WIDTH, RIGHT_BOTTOM_HEIGHT);
+            rect.anchoredPosition = new Vector2(-20, 20);
 
-            // Section Title: Quick Menu
-            CreateSectionTitle(tab, "QUICK MENU");
-
-            // Quick Menu Grid
-            var quickMenu = CreateChild(tab, "QuickMenu");
-            var quickRect = quickMenu.AddComponent<RectTransform>();
-            // 가로 stretch, 세로 고정
-            quickRect.anchorMin = new Vector2(0, 0.5f);
-            quickRect.anchorMax = new Vector2(1, 0.5f);
-            quickRect.sizeDelta = new Vector2(0, QUICK_BUTTON_SIZE + 20);
-            quickRect.anchoredPosition = Vector2.zero;
-
-            var quickGrid = quickMenu.AddComponent<HorizontalLayoutGroup>();
-            quickGrid.spacing = 12;
-            quickGrid.childControlWidth = true;
-            quickGrid.childControlHeight = true;
-            quickGrid.childForceExpandWidth = true;
-            quickGrid.childForceExpandHeight = true;
-
-            var quickFitter = quickMenu.AddComponent<LayoutElement>();
-            quickFitter.preferredHeight = QUICK_BUTTON_SIZE + 20;
-
-            // Quick Buttons
-            var stageBtn = CreateQuickButton(quickMenu, "StageButton", "Stage", AccentPrimary);
-            var shopBtn = CreateQuickButton(quickMenu, "ShopButton", "Shop", AccentGold);
-            var eventBtn = CreateQuickButton(quickMenu, "EventButton", "Event", AccentSecondary);
-
-            // Connect buttons to HomeTabContent
-            var homeContent = tab.GetComponent<HomeTabContent>();
-            ConnectHomeTabButtons(homeContent, stageBtn, shopBtn, eventBtn);
-
-            // Section Title: Banner
-            CreateSectionTitle(tab, "NOTICE");
-
-            // Banner Area
-            CreateBannerArea(tab);
-
-            return tab;
+            return area;
         }
 
-        private static GameObject CreateCharacterTabContent(GameObject parent)
+        private static (Button, TMP_Text, Button) CreateInGameDashboard(GameObject parent)
         {
-            var tab = CreateChild(parent, "CharacterTabContent");
-            SetStretch(tab);
-            tab.SetActive(false);
-            tab.AddComponent<CharacterTabContent>();
+            var dashboard = CreateChild(parent, "InGameContentDashboard");
+            SetStretch(dashboard);
 
-            var layout = tab.AddComponent<VerticalLayoutGroup>();
-            layout.spacing = 16;
-            layout.padding = new RectOffset(10, 10, 10, 10);
-            layout.childControlWidth = true;
-            layout.childControlHeight = false;
-            layout.childForceExpandWidth = true;
-            layout.childForceExpandHeight = false;
+            // Background
+            var bgImage = dashboard.AddComponent<Image>();
+            bgImage.color = BgCard;
 
-            // Section Title
-            CreateSectionTitle(tab, "MY CHARACTERS");
-
-            // Character Grid Container
-            var gridContainer = CreateChild(tab, "CharacterListContainer");
-            var gridRect = gridContainer.AddComponent<RectTransform>();
-            gridRect.sizeDelta = new Vector2(0, 200);
-
-            var gridLayout = gridContainer.AddComponent<GridLayoutGroup>();
-            gridLayout.cellSize = new Vector2(80, 100);
-            gridLayout.spacing = new Vector2(8, 8);
-            gridLayout.startCorner = GridLayoutGroup.Corner.UpperLeft;
-            gridLayout.startAxis = GridLayoutGroup.Axis.Horizontal;
-            gridLayout.childAlignment = TextAnchor.UpperLeft;
-            gridLayout.constraint = GridLayoutGroup.Constraint.FixedColumnCount;
-            gridLayout.constraintCount = 4;
-
-            var gridFitter = gridContainer.AddComponent<LayoutElement>();
-            gridFitter.preferredHeight = 200;
-            gridFitter.flexibleHeight = 1;
-
-            // Navigate Button
-            var navigateBtn = CreateNavigateButton(tab, "CharacterList");
-
-            // Connect to CharacterTabContent
-            var charContent = tab.GetComponent<CharacterTabContent>();
-            ConnectCharacterTabFields(charContent, gridContainer.transform, navigateBtn);
-
-            return tab;
-        }
-
-        private static GameObject CreateGachaTabContent(GameObject parent)
-        {
-            var tab = CreateChild(parent, "GachaTabContent");
-            SetStretch(tab);
-            tab.SetActive(false);
-            tab.AddComponent<GachaTabContent>();
-
-            var layout = tab.AddComponent<VerticalLayoutGroup>();
-            layout.spacing = 16;
-            layout.padding = new RectOffset(10, 10, 10, 10);
-            layout.childControlWidth = true;
-            layout.childControlHeight = false;
-            layout.childForceExpandWidth = true;
-            layout.childForceExpandHeight = false;
-
-            // Gacha Banner
-            CreateGachaBanner(tab);
-
-            // Navigate Button
-            var navigateBtn = CreateNavigateButton(tab, "Gacha");
-            var btnImage = navigateBtn.GetComponent<Image>();
-            btnImage.color = AccentPurple;
-
-            // Connect to GachaTabContent
-            var gachaContent = tab.GetComponent<GachaTabContent>();
-            ConnectGachaTabFields(gachaContent, null, navigateBtn);
-
-            return tab;
-        }
-
-        private static GameObject CreateSettingsTabContent(GameObject parent)
-        {
-            var tab = CreateChild(parent, "SettingsTabContent");
-            SetStretch(tab);
-            tab.SetActive(false);
-            tab.AddComponent<SettingsTabContent>();
-
-            var layout = tab.AddComponent<VerticalLayoutGroup>();
+            // Layout
+            var layout = dashboard.AddComponent<VerticalLayoutGroup>();
             layout.spacing = 8;
             layout.padding = new RectOffset(10, 10, 10, 10);
             layout.childControlWidth = true;
@@ -330,22 +685,63 @@ namespace Sc.Editor.Wizard.Generators
             layout.childForceExpandWidth = true;
             layout.childForceExpandHeight = false;
 
-            // Section Title
-            CreateSectionTitle(tab, "SETTINGS");
+            // Stage Shortcut Button
+            var shortcut = CreateChild(dashboard, "StageShortcutButton");
+            var shortcutFitter = shortcut.AddComponent<LayoutElement>();
+            shortcutFitter.preferredHeight = 50;
+            var shortcutBg = shortcut.AddComponent<Image>();
+            shortcutBg.color = AccentPrimary;
+            var shortcutBtn = shortcut.AddComponent<Button>();
 
-            // Settings Items
-            CreateSettingsItem(tab, "Sound Settings");
-            CreateSettingsItem(tab, "Game Settings");
-            CreateSettingsItem(tab, "Account");
-            CreateSettingsItem(tab, "Terms of Service");
-            CreateSettingsItem(tab, "Version Info");
+            var shortcutLabel = CreateChild(shortcut, "Label");
+            SetStretch(shortcutLabel);
+            var shortcutTmp = shortcutLabel.AddComponent<TextMeshProUGUI>();
+            shortcutTmp.text = "11-1 바로 가자!";
+            shortcutTmp.fontSize = 14;
+            shortcutTmp.fontStyle = FontStyles.Bold;
+            shortcutTmp.color = BgDeep;
+            shortcutTmp.alignment = TextAlignmentOptions.Center;
 
-            return tab;
+            // Character Mini Group (placeholder)
+            var miniGroup = CreateChild(dashboard, "CharacterMiniGroup");
+            var miniFitter = miniGroup.AddComponent<LayoutElement>();
+            miniFitter.preferredHeight = 50;
+            var miniLayout = miniGroup.AddComponent<HorizontalLayoutGroup>();
+            miniLayout.spacing = 4;
+            miniLayout.childAlignment = TextAnchor.MiddleCenter;
+
+            for (int i = 0; i < 4; i++)
+            {
+                var mini = CreateChild(miniGroup, $"CharMini_{i}");
+                var miniRect = mini.AddComponent<RectTransform>();
+                miniRect.sizeDelta = new Vector2(40, 40);
+                var miniImg = mini.AddComponent<Image>();
+                miniImg.color = new Color(1, 1, 1, 0.2f);
+            }
+
+            // Adventure Button
+            var adventure = CreateChild(dashboard, "AdventureButton");
+            var advFitter = adventure.AddComponent<LayoutElement>();
+            advFitter.preferredHeight = 50;
+            var advBg = adventure.AddComponent<Image>();
+            advBg.color = AccentSecondary;
+            var advBtn = adventure.AddComponent<Button>();
+
+            var advLabel = CreateChild(adventure, "Label");
+            SetStretch(advLabel);
+            var advTmp = advLabel.AddComponent<TextMeshProUGUI>();
+            advTmp.text = "모험";
+            advTmp.fontSize = 16;
+            advTmp.fontStyle = FontStyles.Bold;
+            advTmp.color = Color.white;
+            advTmp.alignment = TextAlignmentOptions.Center;
+
+            return (shortcutBtn, shortcutTmp, advBtn);
         }
 
         #endregion
 
-        #region Bottom Navigation
+        #region BottomNav
 
         private static GameObject CreateBottomNav(GameObject parent)
         {
@@ -361,109 +757,109 @@ namespace Sc.Editor.Wizard.Generators
 
             // Background
             var bgImage = nav.AddComponent<Image>();
-            bgImage.color = new Color(0, 0, 0, 0.8f);
+            bgImage.color = new Color(0, 0, 0, 0.9f);
 
-            // TabGroupWidget
-            var tabGroup = nav.AddComponent<TabGroupWidget>();
+            // ScrollRect for horizontal scrolling
+            var scrollRect = nav.AddComponent<ScrollRect>();
+            scrollRect.horizontal = true;
+            scrollRect.vertical = false;
+            scrollRect.movementType = ScrollRect.MovementType.Elastic;
 
-            // Button Container
-            var buttonContainer = CreateChild(nav, "TabButtonContainer");
-            var containerRect = buttonContainer.AddComponent<RectTransform>();
-            containerRect.anchorMin = new Vector2(0.5f, 0.5f);
-            containerRect.anchorMax = new Vector2(0.5f, 0.5f);
-            containerRect.sizeDelta = new Vector2(500, TAB_BUTTON_HEIGHT);
+            // Viewport
+            var viewport = CreateChild(nav, "Viewport");
+            var vpRect = SetStretch(viewport);
+            vpRect.offsetMin = new Vector2(10, 10);
+            vpRect.offsetMax = new Vector2(-10, -10);
+            var vpMask = viewport.AddComponent<Mask>();
+            vpMask.showMaskGraphic = false;
+            var vpImage = viewport.AddComponent<Image>();
 
-            var containerLayout = buttonContainer.AddComponent<HorizontalLayoutGroup>();
-            containerLayout.spacing = 8;
-            containerLayout.childControlWidth = true;
-            containerLayout.childControlHeight = true;
-            containerLayout.childForceExpandWidth = true;
-            containerLayout.childForceExpandHeight = true;
+            // Content
+            var content = CreateChild(viewport, "Content");
+            var contentRect = content.AddComponent<RectTransform>();
+            contentRect.anchorMin = new Vector2(0, 0.5f);
+            contentRect.anchorMax = new Vector2(0, 0.5f);
+            contentRect.pivot = new Vector2(0, 0.5f);
+            contentRect.sizeDelta = new Vector2(800, CONTENT_NAV_HEIGHT);
 
-            // Create Tab Buttons
-            var homeBtn = CreateTabButton(buttonContainer, "HomeTab", "HOME", 0);
-            var charBtn = CreateTabButton(buttonContainer, "CharacterTab", "CHARACTER", 1);
-            var gachaBtn = CreateTabButton(buttonContainer, "GachaTab", "GACHA", 2);
-            var settingsBtn = CreateTabButton(buttonContainer, "SettingsTab", "SETTINGS", 3);
+            var contentLayout = content.AddComponent<HorizontalLayoutGroup>();
+            contentLayout.spacing = 8;
+            contentLayout.childControlWidth = false;
+            contentLayout.childControlHeight = true;
+            contentLayout.childForceExpandWidth = false;
+            contentLayout.childForceExpandHeight = true;
 
-            // Tab Button Prefab (hidden template)
-            var prefabTemplate = CreateTabButtonPrefab(nav);
+            var contentFitter = content.AddComponent<ContentSizeFitter>();
+            contentFitter.horizontalFit = ContentSizeFitter.FitMode.PreferredSize;
 
-            // Connect TabGroupWidget fields
-            ConnectTabGroupFields(tabGroup, buttonContainer.transform, prefabTemplate);
+            scrollRect.viewport = vpRect;
+            scrollRect.content = contentRect;
 
             return nav;
         }
 
-        private static GameObject CreateTabButton(GameObject parent, string name, string label, int index)
+        private static ContentNavButton[] CreateContentNavButtons(GameObject parent)
         {
-            var btn = CreateChild(parent, name);
+            var viewport = parent.transform.Find("Viewport");
+            var content = viewport?.Find("Content");
+            if (content == null) return new ContentNavButton[0];
+
+            string[] screens = { "GachaScreen", "CashShopScreen", "ShopScreen", "CharacterListScreen",
+                               "CardScreen", "TheaterScreen", "GuildScreen" };
+            string[] labels = { "모집", "캐시상점", "상점", "사도", "카드", "극장", "고단" };
+            Color[] colors = { AccentPurple, AccentGold, AccentPrimary, AccentSecondary,
+                             AccentPrimary, AccentPurple, AccentGold };
+
+            var buttons = new ContentNavButton[7];
+            for (int i = 0; i < 7; i++)
+            {
+                buttons[i] = CreateContentNavButton(content.gameObject, screens[i], labels[i], colors[i]);
+            }
+
+            return buttons;
+        }
+
+        private static ContentNavButton CreateContentNavButton(GameObject parent, string targetScreen, string label, Color accentColor)
+        {
+            var btn = CreateChild(parent, $"ContentNavButton_{targetScreen}");
             var rect = btn.AddComponent<RectTransform>();
-            rect.sizeDelta = new Vector2(TAB_BUTTON_WIDTH, TAB_BUTTON_HEIGHT);
+            rect.sizeDelta = new Vector2(CONTENT_NAV_WIDTH, CONTENT_NAV_HEIGHT);
+
+            var fitter = btn.AddComponent<LayoutElement>();
+            fitter.preferredWidth = CONTENT_NAV_WIDTH;
 
             // Background
             var bgImage = btn.AddComponent<Image>();
             bgImage.color = BgCard;
 
-            // Button Component
+            // Button
             var button = btn.AddComponent<Button>();
-            var colors = button.colors;
-            colors.normalColor = Color.white;
-            colors.highlightedColor = new Color(1, 1, 1, 0.9f);
-            colors.pressedColor = new Color(0.8f, 0.8f, 0.8f, 1f);
-            button.colors = colors;
-
-            // TabButton Component
-            var tabButton = btn.AddComponent<TabButton>();
 
             // Layout
             var layout = btn.AddComponent<VerticalLayoutGroup>();
             layout.spacing = 4;
-            layout.padding = new RectOffset(8, 8, 8, 8);
+            layout.padding = new RectOffset(8, 8, 12, 8);
             layout.childAlignment = TextAnchor.MiddleCenter;
             layout.childControlWidth = true;
             layout.childControlHeight = false;
-            layout.childForceExpandWidth = true;
-            layout.childForceExpandHeight = false;
 
-            // Icon Placeholder
+            // Icon
             var icon = CreateChild(btn, "Icon");
-            var iconRect = icon.AddComponent<RectTransform>();
-            iconRect.sizeDelta = new Vector2(24, 24);
-
             var iconFitter = icon.AddComponent<LayoutElement>();
-            iconFitter.preferredWidth = 24;
-            iconFitter.preferredHeight = 24;
-
-            var iconImage = icon.AddComponent<Image>();
-            iconImage.color = TextMuted;
+            iconFitter.preferredWidth = 32;
+            iconFitter.preferredHeight = 32;
+            var iconImg = icon.AddComponent<Image>();
+            iconImg.color = accentColor;
 
             // Label
             var labelObj = CreateChild(btn, "Label");
-            var labelRect = labelObj.AddComponent<RectTransform>();
-            labelRect.sizeDelta = new Vector2(0, 16);
-
             var labelFitter = labelObj.AddComponent<LayoutElement>();
-            labelFitter.preferredHeight = 16;
-
-            var labelText = labelObj.AddComponent<TextMeshProUGUI>();
-            labelText.text = label;
-            labelText.fontSize = 11;
-            labelText.color = TextMuted;
-            labelText.alignment = TextAlignmentOptions.Center;
-
-            // Selected Indicator
-            var indicator = CreateChild(btn, "SelectedIndicator");
-            var indRect = indicator.AddComponent<RectTransform>();
-            indRect.anchorMin = new Vector2(0.2f, 1);
-            indRect.anchorMax = new Vector2(0.8f, 1);
-            indRect.pivot = new Vector2(0.5f, 1);
-            indRect.sizeDelta = new Vector2(0, 3);
-            indRect.anchoredPosition = Vector2.zero;
-
-            var indImage = indicator.AddComponent<Image>();
-            indImage.color = AccentPrimary;
-            indicator.SetActive(false);
+            labelFitter.preferredHeight = 18;
+            var labelTmp = labelObj.AddComponent<TextMeshProUGUI>();
+            labelTmp.text = label;
+            labelTmp.fontSize = 12;
+            labelTmp.color = TextSecondary;
+            labelTmp.alignment = TextAlignmentOptions.Center;
 
             // Badge
             var badge = CreateChild(btn, "Badge");
@@ -472,425 +868,162 @@ namespace Sc.Editor.Wizard.Generators
             badgeRect.anchorMax = new Vector2(1, 1);
             badgeRect.pivot = new Vector2(1, 1);
             badgeRect.sizeDelta = new Vector2(20, 20);
-            badgeRect.anchoredPosition = new Vector2(-8, -8);
-
+            badgeRect.anchoredPosition = new Vector2(-4, -4);
             var badgeBg = badge.AddComponent<Image>();
             badgeBg.color = AccentSecondary;
-
-            var badgeText = CreateChild(badge, "Count");
-            var badgeTextRect = SetStretch(badgeText);
-            var badgeTmp = badgeText.AddComponent<TextMeshProUGUI>();
+            var badgeCount = CreateChild(badge, "Count");
+            SetStretch(badgeCount);
+            var badgeTmp = badgeCount.AddComponent<TextMeshProUGUI>();
             badgeTmp.text = "";
             badgeTmp.fontSize = 10;
             badgeTmp.color = Color.white;
             badgeTmp.alignment = TextAlignmentOptions.Center;
-
             badge.SetActive(false);
 
-            // Connect TabButton fields
-            ConnectTabButtonFields(tabButton, button, labelText, bgImage, indicator, badge, badgeTmp);
-
-            return btn;
-        }
-
-        private static GameObject CreateTabButtonPrefab(GameObject parent)
-        {
-            var prefab = CreateTabButton(parent, "TabButtonPrefab", "TAB", -1);
-            prefab.SetActive(false);
-            return prefab;
-        }
-
-        #endregion
-
-        #region UI Components
-
-        private static void CreateSectionTitle(GameObject parent, string title)
-        {
-            var titleObj = CreateChild(parent, $"Title_{title}");
-            var rect = titleObj.AddComponent<RectTransform>();
-            rect.sizeDelta = new Vector2(0, 24);
-
-            var fitter = titleObj.AddComponent<LayoutElement>();
-            fitter.preferredHeight = 24;
-
-            var layout = titleObj.AddComponent<HorizontalLayoutGroup>();
-            layout.spacing = 10;
-            layout.childAlignment = TextAnchor.MiddleLeft;
-            layout.childControlWidth = false;
-            layout.childControlHeight = true;
-
-            // Accent Bar
-            var bar = CreateChild(titleObj, "AccentBar");
-            var barRect = bar.AddComponent<RectTransform>();
-            barRect.sizeDelta = new Vector2(4, 16);
-
-            var barFitter = bar.AddComponent<LayoutElement>();
-            barFitter.preferredWidth = 4;
-            barFitter.preferredHeight = 16;
-
-            var barImage = bar.AddComponent<Image>();
-            barImage.color = AccentPrimary;
-
-            // Text
-            var text = CreateChild(titleObj, "Text");
-            var textRect = text.AddComponent<RectTransform>();
-
-            var textTmp = text.AddComponent<TextMeshProUGUI>();
-            textTmp.text = title;
-            textTmp.fontSize = 14;
-            textTmp.fontStyle = FontStyles.Bold;
-            textTmp.color = TextSecondary;
-        }
-
-        private static GameObject CreateQuickButton(GameObject parent, string name, string label, Color accentColor)
-        {
-            var btn = CreateChild(parent, name);
-            var rect = btn.AddComponent<RectTransform>();
-            rect.sizeDelta = new Vector2(QUICK_BUTTON_SIZE, QUICK_BUTTON_SIZE);
-
-            // Background
-            var bgImage = btn.AddComponent<Image>();
-            bgImage.color = BgCard;
-
-            // Button
-            var button = btn.AddComponent<Button>();
-            var colors = button.colors;
-            colors.normalColor = Color.white;
-            colors.highlightedColor = new Color(1, 1, 1, 0.9f);
-            button.colors = colors;
-
-            // Layout
-            var layout = btn.AddComponent<VerticalLayoutGroup>();
-            layout.spacing = 8;
-            layout.padding = new RectOffset(10, 10, 15, 10);
-            layout.childAlignment = TextAnchor.MiddleCenter;
-            layout.childControlWidth = true;
-            layout.childControlHeight = false;
-            layout.childForceExpandWidth = true;
-            layout.childForceExpandHeight = false;
-
-            // Icon Placeholder
-            var icon = CreateChild(btn, "Icon");
-            var iconRect = icon.AddComponent<RectTransform>();
-            iconRect.sizeDelta = new Vector2(32, 32);
-
-            var iconFitter = icon.AddComponent<LayoutElement>();
-            iconFitter.preferredWidth = 32;
-            iconFitter.preferredHeight = 32;
-
-            var iconImage = icon.AddComponent<Image>();
-            iconImage.color = accentColor;
-
-            // Label
-            var labelObj = CreateChild(btn, "Label");
-            var labelRect = labelObj.AddComponent<RectTransform>();
-            labelRect.sizeDelta = new Vector2(0, 18);
-
-            var labelFitter = labelObj.AddComponent<LayoutElement>();
-            labelFitter.preferredHeight = 18;
-
-            var labelText = labelObj.AddComponent<TextMeshProUGUI>();
-            labelText.text = label;
-            labelText.fontSize = 13;
-            labelText.color = TextSecondary;
-            labelText.alignment = TextAlignmentOptions.Center;
-
-            return btn;
-        }
-
-        private static void CreateBannerArea(GameObject parent)
-        {
-            var banner = CreateChild(parent, "BannerArea");
-            var rect = banner.AddComponent<RectTransform>();
-            rect.sizeDelta = new Vector2(0, 100);
-
-            var fitter = banner.AddComponent<LayoutElement>();
-            fitter.preferredHeight = 100;
-            fitter.flexibleHeight = 0;
-
-            // Background
-            var bgImage = banner.AddComponent<Image>();
-            bgImage.color = BgCard;
-
-            // Banner Text
-            var textObj = CreateChild(banner, "BannerText");
-            SetStretch(textObj);
-
-            var layout = textObj.AddComponent<VerticalLayoutGroup>();
-            layout.childAlignment = TextAnchor.MiddleCenter;
-            layout.childControlWidth = true;
-            layout.childControlHeight = false;
-
-            var title = CreateChild(textObj, "Title");
-            var titleRect = title.AddComponent<RectTransform>();
-            titleRect.sizeDelta = new Vector2(0, 30);
-
-            var titleFitter = title.AddComponent<LayoutElement>();
-            titleFitter.preferredHeight = 30;
-
-            var titleTmp = title.AddComponent<TextMeshProUGUI>();
-            titleTmp.text = "NEW CHARACTER PICKUP";
-            titleTmp.fontSize = 18;
-            titleTmp.fontStyle = FontStyles.Bold;
-            titleTmp.color = AccentGold;
-            titleTmp.alignment = TextAlignmentOptions.Center;
-
-            var subtitle = CreateChild(textObj, "Subtitle");
-            var subRect = subtitle.AddComponent<RectTransform>();
-            subRect.sizeDelta = new Vector2(0, 20);
-
-            var subFitter = subtitle.AddComponent<LayoutElement>();
-            subFitter.preferredHeight = 20;
-
-            var subTmp = subtitle.AddComponent<TextMeshProUGUI>();
-            subTmp.text = "2x Rate UP!";
-            subTmp.fontSize = 12;
-            subTmp.color = TextSecondary;
-            subTmp.alignment = TextAlignmentOptions.Center;
-        }
-
-        private static void CreateGachaBanner(GameObject parent)
-        {
-            var banner = CreateChild(parent, "GachaBanner");
-            var rect = banner.AddComponent<RectTransform>();
-            rect.sizeDelta = new Vector2(0, 150);
-
-            var fitter = banner.AddComponent<LayoutElement>();
-            fitter.preferredHeight = 150;
-
-            // Background with gradient-like effect
-            var bgImage = banner.AddComponent<Image>();
-            bgImage.color = new Color(0.3f, 0.15f, 0.4f, 0.8f);
-
-            // Content Layout
-            var layout = banner.AddComponent<VerticalLayoutGroup>();
-            layout.spacing = 8;
-            layout.padding = new RectOffset(20, 20, 15, 15);
-            layout.childAlignment = TextAnchor.MiddleCenter;
-            layout.childControlWidth = true;
-            layout.childControlHeight = false;
-
-            // Title
-            var title = CreateChild(banner, "Title");
-            var titleRect = title.AddComponent<RectTransform>();
-
-            var titleFitter = title.AddComponent<LayoutElement>();
-            titleFitter.preferredHeight = 30;
-
-            var titleTmp = title.AddComponent<TextMeshProUGUI>();
-            titleTmp.text = "PREMIUM SUMMON";
-            titleTmp.fontSize = 20;
-            titleTmp.fontStyle = FontStyles.Bold;
-            titleTmp.color = AccentGold;
-            titleTmp.alignment = TextAlignmentOptions.Center;
-
-            // Featured
-            var featured = CreateChild(banner, "Featured");
-            var featuredFitter = featured.AddComponent<LayoutElement>();
-            featuredFitter.preferredHeight = 20;
-
-            var featuredTmp = featured.AddComponent<TextMeshProUGUI>();
-            featuredTmp.text = "Featured: SSR Aria";
-            featuredTmp.fontSize = 14;
-            featuredTmp.color = TextSecondary;
-            featuredTmp.alignment = TextAlignmentOptions.Center;
-
-            // Rates
-            var rates = CreateChild(banner, "Rates");
-            var ratesRect = rates.AddComponent<RectTransform>();
-            rates.AddComponent<HorizontalLayoutGroup>().spacing = 30;
-            rates.GetComponent<HorizontalLayoutGroup>().childAlignment = TextAnchor.MiddleCenter;
-
-            var ratesFitter = rates.AddComponent<LayoutElement>();
-            ratesFitter.preferredHeight = 40;
-
-            CreateRateItem(rates, "SSR", "3%", AccentGold);
-            CreateRateItem(rates, "SR", "15%", AccentPurple);
-            CreateRateItem(rates, "R", "82%", AccentPrimary);
-        }
-
-        private static void CreateRateItem(GameObject parent, string label, string value, Color color)
-        {
-            var item = CreateChild(parent, $"Rate_{label}");
-            var layout = item.AddComponent<VerticalLayoutGroup>();
-            layout.childAlignment = TextAnchor.MiddleCenter;
-
-            var valueObj = CreateChild(item, "Value");
-            var valueTmp = valueObj.AddComponent<TextMeshProUGUI>();
-            valueTmp.text = value;
-            valueTmp.fontSize = 18;
-            valueTmp.fontStyle = FontStyles.Bold;
-            valueTmp.color = color;
-            valueTmp.alignment = TextAlignmentOptions.Center;
-
-            var labelObj = CreateChild(item, "Label");
-            var labelTmp = labelObj.AddComponent<TextMeshProUGUI>();
-            labelTmp.text = label;
-            labelTmp.fontSize = 10;
-            labelTmp.color = TextMuted;
-            labelTmp.alignment = TextAlignmentOptions.Center;
-        }
-
-        private static GameObject CreateNavigateButton(GameObject parent, string targetName)
-        {
-            var btn = CreateChild(parent, "NavigateButton");
-            var rect = btn.AddComponent<RectTransform>();
-            rect.sizeDelta = new Vector2(0, 50);
-
-            var fitter = btn.AddComponent<LayoutElement>();
-            fitter.preferredHeight = 50;
-
-            // Background
-            var bgImage = btn.AddComponent<Image>();
-            bgImage.color = AccentPrimary;
-
-            // Button
-            var button = btn.AddComponent<Button>();
-
-            // Label
-            var label = CreateChild(btn, "Label");
-            SetStretch(label);
-
-            var labelTmp = label.AddComponent<TextMeshProUGUI>();
-            labelTmp.text = $"Go to {targetName} →";
-            labelTmp.fontSize = 14;
-            labelTmp.fontStyle = FontStyles.Bold;
-            labelTmp.color = BgDeep;
-            labelTmp.alignment = TextAlignmentOptions.Center;
-
-            return btn;
-        }
-
-        private static void CreateSettingsItem(GameObject parent, string label)
-        {
-            var item = CreateChild(parent, $"Settings_{label.Replace(" ", "")}");
-            var rect = item.AddComponent<RectTransform>();
-            rect.sizeDelta = new Vector2(0, 50);
-
-            var fitter = item.AddComponent<LayoutElement>();
-            fitter.preferredHeight = 50;
-
-            // Background
-            var bgImage = item.AddComponent<Image>();
-            bgImage.color = BgCard;
-
-            // Button
-            item.AddComponent<Button>();
-
-            // Layout
-            var layout = item.AddComponent<HorizontalLayoutGroup>();
-            layout.spacing = 10;
-            layout.padding = new RectOffset(16, 16, 0, 0);
-            layout.childAlignment = TextAnchor.MiddleLeft;
-            layout.childControlWidth = false;
-            layout.childControlHeight = true;
-            layout.childForceExpandWidth = false;
-
-            // Label
-            var labelObj = CreateChild(item, "Label");
-            var labelTmp = labelObj.AddComponent<TextMeshProUGUI>();
-            labelTmp.text = label;
-            labelTmp.fontSize = 14;
-            labelTmp.color = TextPrimary;
-
-            // Arrow (right side)
-            var arrow = CreateChild(item, "Arrow");
-            var arrowRect = arrow.AddComponent<RectTransform>();
-
-            var arrowFitter = arrow.AddComponent<LayoutElement>();
-            arrowFitter.preferredWidth = 20;
-            arrowFitter.flexibleWidth = 0;
-
-            var arrowTmp = arrow.AddComponent<TextMeshProUGUI>();
-            arrowTmp.text = "→";
-            arrowTmp.fontSize = 14;
-            arrowTmp.color = TextMuted;
-            arrowTmp.alignment = TextAlignmentOptions.Right;
-
-            // Spacer between label and arrow
-            var spacer = CreateChild(item, "Spacer");
-            var spacerFitter = spacer.AddComponent<LayoutElement>();
-            spacerFitter.flexibleWidth = 1;
-
-            // Reorder: Label, Spacer, Arrow
-            spacer.transform.SetSiblingIndex(1);
+            // Glow Effect (hidden by default)
+            var glow = CreateChild(btn, "GlowEffect");
+            var glowRect = glow.AddComponent<RectTransform>();
+            glowRect.anchorMin = new Vector2(0.5f, 0);
+            glowRect.anchorMax = new Vector2(0.5f, 0);
+            glowRect.pivot = new Vector2(0.5f, 0);
+            glowRect.sizeDelta = new Vector2(60, 4);
+            glowRect.anchoredPosition = new Vector2(0, 2);
+            var glowImg = glow.AddComponent<Image>();
+            glowImg.color = accentColor;
+            glow.SetActive(false);
+
+            // Add component and connect
+            var comp = btn.AddComponent<ContentNavButton>();
+            ConnectContentNavButtonFields(comp, button, iconImg, labelTmp, badge, badgeTmp, glowImg, targetScreen);
+
+            return comp;
         }
 
         #endregion
 
         #region SerializeField Connections
 
-        private static void ConnectSerializedFields(GameObject root, GameObject bottomNav,
-            GameObject[] tabContents)
+        private static void ConnectSerializedFields(
+            GameObject root,
+            EventBannerCarousel bannerCarousel,
+            PassButton[] passButtons,
+            StageProgressWidget stageProgress,
+            QuickMenuButton[] quickMenuButtons,
+            CharacterDisplayWidget characterDisplay,
+            Button stageShortcut,
+            TMP_Text stageShortcutLabel,
+            Button adventureBtn,
+            ContentNavButton[] contentNavButtons,
+            ScrollRect bottomNavScroll)
         {
             var lobbyScreen = root.GetComponent<LobbyScreen>();
-            var tabGroup = bottomNav.GetComponent<TabGroupWidget>();
-
             var so = new SerializedObject(lobbyScreen);
 
-            // TabGroup
-            so.FindProperty("_tabGroup").objectReferenceValue = tabGroup;
+            // Left Top Area
+            so.FindProperty("_eventBannerCarousel").objectReferenceValue = bannerCarousel;
 
-            // TabContents array
-            var tabContentsProperty = so.FindProperty("_tabContents");
-            tabContentsProperty.arraySize = tabContents.Length;
-            for (int i = 0; i < tabContents.Length; i++)
+            var passButtonsProp = so.FindProperty("_passButtons");
+            passButtonsProp.arraySize = passButtons.Length;
+            for (int i = 0; i < passButtons.Length; i++)
             {
-                var content = tabContents[i].GetComponent<LobbyTabContent>();
-                tabContentsProperty.GetArrayElementAtIndex(i).objectReferenceValue = content;
+                passButtonsProp.GetArrayElementAtIndex(i).objectReferenceValue = passButtons[i];
             }
 
+            // Right Top Area
+            so.FindProperty("_stageProgressWidget").objectReferenceValue = stageProgress;
+
+            var quickMenuProp = so.FindProperty("_quickMenuButtons");
+            quickMenuProp.arraySize = quickMenuButtons.Length;
+            for (int i = 0; i < quickMenuButtons.Length; i++)
+            {
+                quickMenuProp.GetArrayElementAtIndex(i).objectReferenceValue = quickMenuButtons[i];
+            }
+
+            // Center Area
+            so.FindProperty("_characterDisplay").objectReferenceValue = characterDisplay;
+
+            // Right Bottom Area
+            var dashboardGO = stageShortcut?.transform.parent?.gameObject;
+            so.FindProperty("_inGameDashboard").objectReferenceValue = dashboardGO;
+            so.FindProperty("_stageShortcutButton").objectReferenceValue = stageShortcut;
+            so.FindProperty("_stageShortcutLabel").objectReferenceValue = stageShortcutLabel;
+            so.FindProperty("_adventureButton").objectReferenceValue = adventureBtn;
+
+            // Bottom Nav
+            var contentNavProp = so.FindProperty("_contentNavButtons");
+            contentNavProp.arraySize = contentNavButtons.Length;
+            for (int i = 0; i < contentNavButtons.Length; i++)
+            {
+                contentNavProp.GetArrayElementAtIndex(i).objectReferenceValue = contentNavButtons[i];
+            }
+
+            so.FindProperty("_bottomNavScroll").objectReferenceValue = bottomNavScroll;
+
             so.ApplyModifiedPropertiesWithoutUndo();
         }
 
-        private static void ConnectTabGroupFields(TabGroupWidget tabGroup, Transform buttonContainer,
-            GameObject prefab)
+        private static void ConnectBannerCarouselFields(EventBannerCarousel comp, Transform bannerContainer, Transform indicatorContainer, GameObject indicatorPrefab)
         {
-            var so = new SerializedObject(tabGroup);
-            so.FindProperty("_tabButtonContainer").objectReferenceValue = buttonContainer;
-            so.FindProperty("_tabButtonPrefab").objectReferenceValue = prefab.GetComponent<TabButton>();
+            var so = new SerializedObject(comp);
+            so.FindProperty("_bannerContainer").objectReferenceValue = bannerContainer;
+            so.FindProperty("_indicatorContainer").objectReferenceValue = indicatorContainer;
+            so.FindProperty("_indicatorPrefab").objectReferenceValue = indicatorPrefab;
             so.ApplyModifiedPropertiesWithoutUndo();
         }
 
-        private static void ConnectTabButtonFields(TabButton tabButton, Button button, TMP_Text label,
-            Image background, GameObject indicator, GameObject badge, TMP_Text badgeCount)
+        private static void ConnectPassButtonFields(PassButton comp, Button button, Image icon, TMP_Text label, GameObject newBadge, string passType)
         {
-            var so = new SerializedObject(tabButton);
+            var so = new SerializedObject(comp);
             so.FindProperty("_button").objectReferenceValue = button;
-            so.FindProperty("_labelText").objectReferenceValue = label;
-            so.FindProperty("_backgroundImage").objectReferenceValue = background;
-            so.FindProperty("_selectedIndicator").objectReferenceValue = indicator;
+            so.FindProperty("_icon").objectReferenceValue = icon;
+            so.FindProperty("_label").objectReferenceValue = label;
+            so.FindProperty("_newBadge").objectReferenceValue = newBadge;
+            so.FindProperty("_passType").stringValue = passType;
+            so.ApplyModifiedPropertiesWithoutUndo();
+        }
+
+        private static void ConnectStageProgressFields(StageProgressWidget comp, TMP_Text stageLabel, TMP_Text stageName)
+        {
+            var so = new SerializedObject(comp);
+            so.FindProperty("_stageLabel").objectReferenceValue = stageLabel;
+            so.FindProperty("_stageName").objectReferenceValue = stageName;
+            so.ApplyModifiedPropertiesWithoutUndo();
+        }
+
+        private static void ConnectQuickMenuButtonFields(QuickMenuButton comp, Button button, Image icon, TMP_Text label, GameObject badge, TMP_Text badgeCount, string targetScreen)
+        {
+            var so = new SerializedObject(comp);
+            so.FindProperty("_button").objectReferenceValue = button;
+            so.FindProperty("_icon").objectReferenceValue = icon;
+            so.FindProperty("_label").objectReferenceValue = label;
             so.FindProperty("_badge").objectReferenceValue = badge;
-            so.FindProperty("_badgeCountText").objectReferenceValue = badgeCount;
+            so.FindProperty("_badgeCount").objectReferenceValue = badgeCount;
+            so.FindProperty("_targetScreen").stringValue = targetScreen;
             so.ApplyModifiedPropertiesWithoutUndo();
         }
 
-        private static void ConnectHomeTabButtons(HomeTabContent homeContent, GameObject stageBtn,
-            GameObject shopBtn, GameObject eventBtn)
+        private static void ConnectCharacterDisplayFields(CharacterDisplayWidget comp, Image charImage, TMP_Text dialogueText, Button charButton, Button leftArrow, Button rightArrow, Image glow)
         {
-            var so = new SerializedObject(homeContent);
-            so.FindProperty("_stageButton").objectReferenceValue = stageBtn.GetComponent<Button>();
-            so.FindProperty("_shopButton").objectReferenceValue = shopBtn.GetComponent<Button>();
-            so.FindProperty("_eventButton").objectReferenceValue = eventBtn.GetComponent<Button>();
+            var so = new SerializedObject(comp);
+            so.FindProperty("_characterImage").objectReferenceValue = charImage;
+            so.FindProperty("_dialogueText").objectReferenceValue = dialogueText;
+            so.FindProperty("_characterButton").objectReferenceValue = charButton;
+            so.FindProperty("_leftArrow").objectReferenceValue = leftArrow;
+            so.FindProperty("_rightArrow").objectReferenceValue = rightArrow;
+            so.FindProperty("_glowEffect").objectReferenceValue = glow;
             so.ApplyModifiedPropertiesWithoutUndo();
         }
 
-        private static void ConnectCharacterTabFields(CharacterTabContent content, Transform container,
-            GameObject navigateBtn)
+        private static void ConnectContentNavButtonFields(ContentNavButton comp, Button button, Image icon, TMP_Text label, GameObject badge, TMP_Text badgeCount, Image glow, string targetScreen)
         {
-            var so = new SerializedObject(content);
-            so.FindProperty("_characterListContainer").objectReferenceValue = container;
-            so.FindProperty("_navigateButton").objectReferenceValue = navigateBtn.GetComponent<Button>();
-            so.ApplyModifiedPropertiesWithoutUndo();
-        }
-
-        private static void ConnectGachaTabFields(GachaTabContent content, Transform container,
-            GameObject navigateBtn)
-        {
-            var so = new SerializedObject(content);
-            if (container != null)
-                so.FindProperty("_gachaPoolContainer").objectReferenceValue = container;
-            so.FindProperty("_navigateButton").objectReferenceValue = navigateBtn.GetComponent<Button>();
+            var so = new SerializedObject(comp);
+            so.FindProperty("_button").objectReferenceValue = button;
+            so.FindProperty("_icon").objectReferenceValue = icon;
+            so.FindProperty("_label").objectReferenceValue = label;
+            so.FindProperty("_badge").objectReferenceValue = badge;
+            so.FindProperty("_badgeCount").objectReferenceValue = badgeCount;
+            so.FindProperty("_glowEffect").objectReferenceValue = glow;
+            so.FindProperty("_targetScreen").stringValue = targetScreen;
             so.ApplyModifiedPropertiesWithoutUndo();
         }
 

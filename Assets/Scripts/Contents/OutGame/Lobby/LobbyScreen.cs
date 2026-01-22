@@ -3,79 +3,213 @@ using Sc.Common.UI;
 using Sc.Common.UI.Widgets;
 using Sc.Contents.Event;
 using Sc.Contents.Gacha;
+using Sc.Contents.Lobby.Widgets;
 using Sc.Contents.Shop;
 using Sc.Core;
 using Sc.Foundation;
 using Sc.LocalServer;
 using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace Sc.Contents.Lobby
 {
     /// <summary>
-    /// 로비 화면 State
+    /// 로비 화면 상태.
     /// </summary>
     public class LobbyState : IScreenState
     {
-        /// <summary>
-        /// 현재 선택된 탭 인덱스
-        /// </summary>
-        public int ActiveTabIndex;
+        public int SelectedCharacterIndex { get; set; }
+        public int CurrentBannerIndex { get; set; }
     }
 
     /// <summary>
-    /// 로비 화면 - 메인 허브 화면
+    /// 로비 메인 화면.
+    /// 스펙: Docs/Specs/Lobby.md
     /// </summary>
     public class LobbyScreen : ScreenWidget<LobbyScreen, LobbyState>
     {
-        [Header("Tab System")]
-        [SerializeField] private TabGroupWidget _tabGroup;
-        [SerializeField] private LobbyTabContent[] _tabContents;
+        #region SerializeFields
 
-        [Header("UI References")]
-        [SerializeField] private TMP_Text _welcomeText;
+        [Header("Left Top Area")] [SerializeField]
+        private EventBannerCarousel _eventBannerCarousel;
+
+        [SerializeField] private PassButton[] _passButtons;
+
+        [Header("Right Top Area")] [SerializeField]
+        private StageProgressWidget _stageProgressWidget;
+
+        [SerializeField] private QuickMenuButton[] _quickMenuButtons;
+
+        [Header("Center Area")] [SerializeField]
+        private CharacterDisplayWidget _characterDisplay;
+
+        [Header("Right Bottom Area")] [SerializeField]
+        private GameObject _inGameDashboard;
+
+        [SerializeField] private Button _stageShortcutButton;
+        [SerializeField] private TMP_Text _stageShortcutLabel;
+        [SerializeField] private Button _adventureButton;
+
+        [Header("Bottom Nav")] [SerializeField]
+        private ContentNavButton[] _contentNavButtons;
+
+        [SerializeField] private ScrollRect _bottomNavScroll;
+
+        #endregion
+
+        #region Private Fields
 
         private LobbyState _currentState;
         private LobbyEntryTaskRunner _taskRunner;
         private bool _isTaskRunning;
 
+        #endregion
+
+        #region Lifecycle
+
         protected override void OnInitialize()
         {
-            Debug.Log("[LobbyScreen] OnInitialize 시작");
-            Debug.Log($"[LobbyScreen] _tabGroup:{_tabGroup != null}, _tabContents:{_tabContents != null}, Length:{_tabContents?.Length ?? 0}");
+            Debug.Log("[LobbyScreen] OnInitialize");
 
-            if (_tabGroup == null || _tabContents == null || _tabContents.Length == 0)
-            {
-                Debug.LogError("[LobbyScreen] TabGroup 또는 TabContents가 설정되지 않았습니다.");
-                return;
-            }
-
-            for (int i = 0; i < _tabContents.Length; i++)
-            {
-                Debug.Log($"[LobbyScreen] TabContent[{i}]: {(_tabContents[i] != null ? _tabContents[i].name : "NULL")}");
-            }
-
-            InitializeTabSystem();
+            InitializeEventBanner();
+            InitializePassButtons();
+            InitializeQuickMenu();
+            InitializeCharacterDisplay();
+            InitializeInGameDashboard();
+            InitializeBottomNav();
             InitializeTaskRunner();
             RegisterBadgeProviders();
-            Debug.Log("[LobbyScreen] OnInitialize 완료");
         }
 
-        private void InitializeTabSystem()
+        protected override void OnBind(LobbyState state)
         {
-            Debug.Log("[LobbyScreen] InitializeTabSystem 시작");
-            _tabGroup.OnTabChanged += OnTabChanged;
+            _currentState = state ?? new LobbyState();
+            Debug.Log($"[LobbyScreen] OnBind - CharacterIndex: {_currentState.SelectedCharacterIndex}");
 
-            // 탭 컨텐츠 초기 비활성화
-            for (int i = 0; i < _tabContents.Length; i++)
+            // Header 설정
+            ScreenHeader.Instance?.Configure("lobby_default");
+
+            RefreshUI();
+        }
+
+        protected override void OnShow()
+        {
+            Debug.Log("[LobbyScreen] OnShow");
+
+            // DataManager 이벤트 구독
+            if (DataManager.Instance != null)
             {
-                if (_tabContents[i] != null)
+                DataManager.Instance.OnUserDataChanged += OnUserDataChanged;
+            }
+
+            // 배지 갱신
+            BadgeManager.Instance?.RefreshAll();
+            RefreshAllBadges();
+
+            RefreshUI();
+
+            // 로비 진입 후처리 Task 실행
+            RunLobbyEntryTasksAsync().Forget();
+        }
+
+        protected override void OnHide()
+        {
+            Debug.Log("[LobbyScreen] OnHide");
+
+            if (DataManager.Instance != null)
+            {
+                DataManager.Instance.OnUserDataChanged -= OnUserDataChanged;
+            }
+        }
+
+        private void OnDestroy()
+        {
+            if (BadgeManager.Instance != null)
+            {
+                BadgeManager.Instance.OnBadgeChanged -= OnBadgeChanged;
+            }
+
+            CleanupEventHandlers();
+        }
+
+        public override LobbyState GetState()
+        {
+            return _currentState;
+        }
+
+        #endregion
+
+        #region Initialization
+
+        private void InitializeEventBanner()
+        {
+            if (_eventBannerCarousel == null) return;
+
+            _eventBannerCarousel.OnBannerClicked += OnBannerClicked;
+        }
+
+        private void InitializePassButtons()
+        {
+            if (_passButtons == null) return;
+
+            foreach (var button in _passButtons)
+            {
+                if (button != null)
                 {
-                    _tabContents[i].gameObject.SetActive(false);
-                    Debug.Log($"[LobbyScreen] TabContent[{i}] 비활성화됨");
+                    button.OnClicked += OnPassButtonClicked;
                 }
             }
-            Debug.Log("[LobbyScreen] InitializeTabSystem 완료");
+        }
+
+        private void InitializeQuickMenu()
+        {
+            if (_quickMenuButtons == null) return;
+
+            foreach (var button in _quickMenuButtons)
+            {
+                if (button != null)
+                {
+                    button.OnClicked += OnQuickMenuClicked;
+                }
+            }
+        }
+
+        private void InitializeCharacterDisplay()
+        {
+            if (_characterDisplay == null) return;
+
+            _characterDisplay.OnCharacterClicked += OnCharacterClicked;
+            _characterDisplay.OnCharacterChanged += OnCharacterChanged;
+
+            // TODO: 보유 캐릭터 목록으로 초기화
+            // _characterDisplay.Initialize(ownedCharacterIds);
+        }
+
+        private void InitializeInGameDashboard()
+        {
+            if (_stageShortcutButton != null)
+            {
+                _stageShortcutButton.onClick.AddListener(OnStageShortcutClicked);
+            }
+
+            if (_adventureButton != null)
+            {
+                _adventureButton.onClick.AddListener(OnAdventureClicked);
+            }
+        }
+
+        private void InitializeBottomNav()
+        {
+            if (_contentNavButtons == null) return;
+
+            foreach (var button in _contentNavButtons)
+            {
+                if (button != null)
+                {
+                    button.OnClicked += OnContentNavClicked;
+                }
+            }
         }
 
         private void InitializeTaskRunner()
@@ -116,44 +250,205 @@ namespace Sc.Contents.Lobby
             BadgeManager.Instance.OnBadgeChanged += OnBadgeChanged;
         }
 
-        protected override void OnBind(LobbyState state)
+        private void CleanupEventHandlers()
         {
-            _currentState = state ?? new LobbyState();
-            Debug.Log($"[LobbyScreen] OnBind - Tab: {_currentState.ActiveTabIndex}");
+            if (_eventBannerCarousel != null)
+                _eventBannerCarousel.OnBannerClicked -= OnBannerClicked;
 
-            // Header 설정
-            ScreenHeader.Instance?.Configure("lobby_default");
-
-            RefreshUI();
-        }
-
-        protected override void OnShow()
-        {
-            Debug.Log("[LobbyScreen] OnShow 시작");
-            Debug.Log($"[LobbyScreen] _tabGroup:{_tabGroup != null}, _tabContents:{_tabContents?.Length ?? 0}");
-
-            // DataManager 이벤트 구독
-            if (DataManager.Instance != null)
+            if (_passButtons != null)
             {
-                DataManager.Instance.OnUserDataChanged += OnUserDataChanged;
+                foreach (var button in _passButtons)
+                {
+                    if (button != null)
+                        button.OnClicked -= OnPassButtonClicked;
+                }
             }
 
-            // 배지 전체 갱신
-            BadgeManager.Instance?.RefreshAll();
-            RefreshAllBadges();
+            if (_quickMenuButtons != null)
+            {
+                foreach (var button in _quickMenuButtons)
+                {
+                    if (button != null)
+                        button.OnClicked -= OnQuickMenuClicked;
+                }
+            }
 
-            // 초기 탭 선택
-            int initialTab = _currentState?.ActiveTabIndex ?? 0;
-            Debug.Log($"[LobbyScreen] SelectTab 호출 예정 - index:{initialTab}");
-            _tabGroup.SelectTab(initialTab);
-            Debug.Log("[LobbyScreen] SelectTab 호출 완료");
+            if (_characterDisplay != null)
+            {
+                _characterDisplay.OnCharacterClicked -= OnCharacterClicked;
+                _characterDisplay.OnCharacterChanged -= OnCharacterChanged;
+            }
 
-            RefreshUI();
+            if (_stageShortcutButton != null)
+                _stageShortcutButton.onClick.RemoveListener(OnStageShortcutClicked);
 
-            // 로비 진입 후처리 Task 실행
-            RunLobbyEntryTasksAsync().Forget();
-            Debug.Log("[LobbyScreen] OnShow 완료");
+            if (_adventureButton != null)
+                _adventureButton.onClick.RemoveListener(OnAdventureClicked);
+
+            if (_contentNavButtons != null)
+            {
+                foreach (var button in _contentNavButtons)
+                {
+                    if (button != null)
+                        button.OnClicked -= OnContentNavClicked;
+                }
+            }
         }
+
+        #endregion
+
+        #region Event Handlers
+
+        private void OnBannerClicked(int index)
+        {
+            Debug.Log($"[LobbyScreen] Banner clicked: {index}");
+            // TODO: 배너에 연결된 화면으로 이동
+        }
+
+        private void OnPassButtonClicked(string passType)
+        {
+            Debug.Log($"[LobbyScreen] Pass button clicked: {passType}");
+            // TODO: 패스 상세 화면으로 이동
+        }
+
+        private void OnQuickMenuClicked(string targetScreen)
+        {
+            Debug.Log($"[LobbyScreen] QuickMenu clicked: {targetScreen}");
+            NavigateTo(targetScreen);
+        }
+
+        private void OnCharacterClicked(string characterId)
+        {
+            Debug.Log($"[LobbyScreen] Character clicked: {characterId}");
+            // TODO: 캐릭터 상호작용 또는 상세 화면
+        }
+
+        private void OnCharacterChanged(int index)
+        {
+            if (_currentState != null)
+            {
+                _currentState.SelectedCharacterIndex = index;
+            }
+        }
+
+        private void OnStageShortcutClicked()
+        {
+            Debug.Log("[LobbyScreen] Stage shortcut clicked");
+            NavigateTo("StageSelectScreen");
+        }
+
+        private void OnAdventureClicked()
+        {
+            Debug.Log("[LobbyScreen] Adventure clicked");
+            NavigateTo("StageSelectScreen");
+        }
+
+        private void OnContentNavClicked(string targetScreen)
+        {
+            Debug.Log($"[LobbyScreen] ContentNav clicked: {targetScreen}");
+            NavigateTo(targetScreen);
+        }
+
+        private void OnUserDataChanged()
+        {
+            RefreshUI();
+            BadgeManager.Instance?.RefreshAll();
+        }
+
+        private void OnBadgeChanged(BadgeType type, int count)
+        {
+            RefreshBadgeForType(type, count);
+        }
+
+        #endregion
+
+        #region Navigation
+
+        private void NavigateTo(string screenName)
+        {
+            if (string.IsNullOrEmpty(screenName))
+            {
+                Debug.LogWarning("[LobbyScreen] NavigateTo: screenName is empty");
+                return;
+            }
+
+            // TODO: NavigationManager를 통한 화면 이동
+            Debug.Log($"[LobbyScreen] Navigate to: {screenName}");
+        }
+
+        #endregion
+
+        #region UI Refresh
+
+        private void RefreshUI()
+        {
+            RefreshStageProgress();
+            RefreshCharacterDisplay();
+            RefreshInGameDashboard();
+        }
+
+        private void RefreshStageProgress()
+        {
+            if (_stageProgressWidget == null) return;
+
+            // TODO: DataManager에서 현재 스테이지 진행 정보 가져오기
+            _stageProgressWidget.SetProgress(11, 10, "최후의 방어선!");
+        }
+
+        private void RefreshCharacterDisplay()
+        {
+            if (_characterDisplay == null) return;
+
+            // TODO: DataManager에서 보유 캐릭터 정보 가져와서 표시
+        }
+
+        private void RefreshInGameDashboard()
+        {
+            if (_stageShortcutLabel == null) return;
+
+            // TODO: DataManager에서 현재 스테이지 정보 가져오기
+            _stageShortcutLabel.text = "11-1 바로 가자!";
+        }
+
+        private void RefreshAllBadges()
+        {
+            if (BadgeManager.Instance == null) return;
+
+            // ContentNavButton 배지 갱신
+            RefreshBadgeForType(BadgeType.Gacha, BadgeManager.Instance.GetBadge(BadgeType.Gacha));
+            RefreshBadgeForType(BadgeType.Shop, BadgeManager.Instance.GetBadge(BadgeType.Shop));
+            RefreshBadgeForType(BadgeType.Character, BadgeManager.Instance.GetBadge(BadgeType.Character));
+            RefreshBadgeForType(BadgeType.Event, BadgeManager.Instance.GetBadge(BadgeType.Event));
+        }
+
+        private void RefreshBadgeForType(BadgeType type, int count)
+        {
+            if (_contentNavButtons == null) return;
+
+            string targetScreen = type switch
+            {
+                BadgeType.Gacha => "GachaScreen",
+                BadgeType.Shop => "ShopScreen",
+                BadgeType.Character => "CharacterListScreen",
+                BadgeType.Event => "LiveEventScreen",
+                _ => null
+            };
+
+            if (string.IsNullOrEmpty(targetScreen)) return;
+
+            foreach (var button in _contentNavButtons)
+            {
+                if (button != null && button.TargetScreen == targetScreen)
+                {
+                    button.SetBadge(count);
+                    break;
+                }
+            }
+        }
+
+        #endregion
+
+        #region Lobby Entry Tasks
 
         private async UniTaskVoid RunLobbyEntryTasksAsync()
         {
@@ -183,121 +478,6 @@ namespace Sc.Contents.Lobby
             {
                 _isTaskRunning = false;
             }
-        }
-
-        protected override void OnHide()
-        {
-            Debug.Log("[LobbyScreen] OnHide");
-
-            if (DataManager.Instance != null)
-            {
-                DataManager.Instance.OnUserDataChanged -= OnUserDataChanged;
-            }
-        }
-
-        private void OnDestroy()
-        {
-            if (BadgeManager.Instance != null)
-            {
-                BadgeManager.Instance.OnBadgeChanged -= OnBadgeChanged;
-            }
-        }
-
-        public override LobbyState GetState()
-        {
-            if (_currentState != null && _tabGroup != null)
-            {
-                _currentState.ActiveTabIndex = _tabGroup.CurrentTabIndex;
-            }
-            return _currentState;
-        }
-
-        #region Tab System
-
-        private void OnTabChanged(int index)
-        {
-            Debug.Log($"[LobbyScreen] OnTabChanged 호출됨 - index:{index}");
-            
-            if (_tabContents == null)
-            {
-                Debug.LogError("[LobbyScreen] OnTabChanged - _tabContents가 null!");
-                return;
-            }
-
-            for (int i = 0; i < _tabContents.Length; i++)
-            {
-                if (_tabContents[i] == null)
-                {
-                    Debug.LogWarning($"[LobbyScreen] TabContent[{i}]가 null");
-                    continue;
-                }
-
-                if (i == index)
-                {
-                    Debug.Log($"[LobbyScreen] TabContent[{i}] 활성화 - {_tabContents[i].name}");
-                    _tabContents[i].gameObject.SetActive(true);
-                    _tabContents[i].OnTabSelected();
-                }
-                else
-                {
-                    _tabContents[i].OnTabDeselected();
-                    _tabContents[i].gameObject.SetActive(false);
-                }
-            }
-
-            Debug.Log($"[LobbyScreen] Tab changed to {index}");
-        }
-
-        private void OnBadgeChanged(BadgeType type, int count)
-        {
-            int tabIndex = GetTabIndexForBadge(type);
-            if (tabIndex >= 0 && _tabGroup != null)
-            {
-                _tabGroup.SetBadgeCount(tabIndex, count);
-            }
-        }
-
-        private void RefreshAllBadges()
-        {
-            if (BadgeManager.Instance == null || _tabGroup == null)
-                return;
-
-            _tabGroup.SetBadgeCount(0, BadgeManager.Instance.GetBadge(BadgeType.Home));
-            _tabGroup.SetBadgeCount(1, BadgeManager.Instance.GetBadge(BadgeType.Character));
-            _tabGroup.SetBadgeCount(2, BadgeManager.Instance.GetBadge(BadgeType.Gacha));
-            // Settings 탭 (index 3)은 배지 없음
-        }
-
-        private int GetTabIndexForBadge(BadgeType type)
-        {
-            return type switch
-            {
-                BadgeType.Home => 0,
-                BadgeType.Character => 1,
-                BadgeType.Gacha => 2,
-                _ => -1
-            };
-        }
-
-        #endregion
-
-        #region UI Refresh
-
-        private void RefreshUI()
-        {
-            if (_welcomeText != null && DataManager.Instance?.IsInitialized == true)
-            {
-                var nickname = DataManager.Instance.Profile.Nickname;
-                _welcomeText.text = $"환영합니다, {nickname}님!";
-            }
-        }
-
-        private void OnUserDataChanged()
-        {
-            RefreshUI();
-
-            // 배지 갱신
-            BadgeManager.Instance?.RefreshAll();
         }
 
         #endregion
