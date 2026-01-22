@@ -103,9 +103,56 @@ Editor/Wizard/
 
 ---
 
+## 🔨 진행 중: UI-PREFAB
+
+> **시작일**: 2026-01-22
+> **목표**: UI Prefab 규칙화 및 구조 재정립
+> **계획 문서**: [.claude/plans/joyful-dancing-hennessy.md](../.claude/plans/joyful-dancing-hennessy.md)
+
+### Phase 1: UI 문서화 (진행 중)
+
+레퍼런스 이미지 기반 Screen UI 레이아웃 문서화
+
+| Screen | 레퍼런스 | 스펙 문서 | 상태 |
+|--------|----------|-----------|------|
+| LobbyScreen | Lobby.jpg | Lobby.md | ✅ |
+| CharacterListScreen | CharacterList.jpg | Character.md | ✅ |
+| CharacterDetailScreen | CharacterDetail.jpg | Character.md | ✅ |
+| ShopScreen | Shop.jpg | Shop.md | ✅ |
+| GachaScreen | Gacha.jpg | Gacha.md | ✅ |
+| LiveEventScreen | LiveEvent.jpg | LiveEvent.md | ✅ |
+| StageSelectScreen | StageSelectScreen.jpg | Stage.md | ✅ |
+| PartySelectScreen | PartySelect.jpg | Stage.md | ✅ |
+| InGameContentDashboard | StageDashboard.jpg | Stage.md | ✅ |
+| InventoryScreen | Inventory.jpg | Inventory.md | ✅ |
+
+**작업 가이드**: [Design/UI_DOCUMENTATION_GUIDE.md](Design/UI_DOCUMENTATION_GUIDE.md)
+**작업 정의서**: [Design/UI_DOCUMENTATION_TASKS.md](Design/UI_DOCUMENTATION_TASKS.md)
+
+### Phase 2: PrefabGenerator 확장 (대기)
+
+| 작업 | 파일 | 상태 |
+|------|------|------|
+| UITheme.cs | Editor/Wizard/Generators/ | ⬜ |
+| UIComponentBuilder.cs | Editor/Wizard/Generators/ | ⬜ |
+| ScreenTemplateFactory.cs | Editor/Wizard/Generators/ | ⬜ |
+| PopupTemplateFactory.cs | Editor/Wizard/Generators/ | ⬜ |
+| ScreenTemplateAttribute.cs | Common/UI/Attributes/ | ⬜ |
+| PopupTemplateAttribute.cs | Common/UI/Attributes/ | ⬜ |
+| PrefabGenerator 수정 | Editor/Wizard/Generators/ | ⬜ |
+
+### Phase 3: 프리팹 재생성 (대기)
+
+- [ ] 테스트 프리팹 삭제
+- [ ] 기존 프리팹 삭제
+- [ ] 템플릿 기반 재생성
+- [ ] Addressables 재등록
+
+---
+
 ## 🚀 다음 단계
 
-**현재**: 대기 중
+**현재**: UI-PREFAB Phase 1 (문서화)
 
 **이후 가능한 방향**:
 1. 인게임 전투 시스템 (BATTLE-V1)

@@ -15,6 +15,225 @@ updated: 2026-01-21
 
 캐릭터 소환(뽑기) 시스템. 재화를 소비하여 캐릭터를 획득하고 천장 시스템을 통해 확정 획득 제공
 
+## 레퍼런스
+- `Docs/Design/Reference/Gacha.jpg`
+
+---
+
+## UI 레이아웃 구조
+
+### 전체 구조
+
+```
+GachaScreen (FullScreen)
+├─ ScreenHeader ─────────────────────────────────────────────────────────
+│   ├─ [Left] BackButton + Title ("사도 모집")
+│   └─ [Right] CurrencyHUD (유료 52, 골드 549,061, 무료 0, 프리미엄 1,809, 신앙심 4)
+│
+├─ LeftArea ────────────────────────┬─ RightArea ────────────────────────
+│   ├─ MenuButtonGroup (세로)       │   ├─ BannerCarousel
+│   │   ├─ GachaButton (사도 모집)  │   │   └─ BannerSlides (픽업 사도 모집 x3, 사도 모집)
+│   │   ├─ SpecialButton (특별 모집)│   │
+│   │   └─ CardButton (카드 뽑기)   │   ├─ BannerInfoArea
+│   │                               │   │   ├─ BannerTitle ("용족 성골 귀족 비비")
+│   ├─ CharacterDisplay             │   │   ├─ BannerPeriod (2026-01-22 ~ 2026-01-29)
+│   │   └─ PickupCharacterImage     │   │   └─ BannerDescription (기간 중 픽업 등장...)
+│   │                               │   │
+│   └─ (빈 공간)                    │   ├─ PityInfoArea
+│                                   │   │   ├─ PityLabel ("신앙심 110")
+│                                   │   │   └─ ExchangeButton ("교환")
+│                                   │   │
+│                                   │   └─ PullButtonGroup
+│                                   │       ├─ FreePullButton ("1일 1회 모집", 무료 30)
+│                                   │       ├─ SinglePullButton ("1회 모집", 프리미엄 1)
+│                                   │       └─ MultiPullButton ("10회 모집", 프리미엄 10)
+│                                   │           └─ GuaranteeBadge ("★2 확정")
+│
+└─ BottomNav ────────────────────────────────────────────────────────────
+    └─ InfoButtonGroup
+        ├─ CharacterInfoButton ("사도 정보")
+        ├─ RateInfoButton ("확률 정보")
+        └─ HistoryButton ("기록")
+```
+
+### 영역별 상세
+
+#### 1. ScreenHeader (상단 헤더)
+| 위치 | 요소 | 설명 |
+|------|------|------|
+| Left | BackButton | 뒤로가기 (<) |
+| Left | TitleText | "사도 모집" |
+| Right | CurrencyHUD | 유료(52), 골드(549,061), 무료(0), 프리미엄(1,809), 신앙심(4) |
+| Right | SettingsButton | 설정 |
+| Right | MailButton | 메일 |
+
+#### 2. LeftArea (좌측)
+| 요소 | 설명 |
+|------|------|
+| **MenuButtonGroup** | 가챠 메뉴 버튼 그룹 (세로 배치) |
+| - GachaButton | "사도 모집" - 캐릭터 가챠 (활성) |
+| - SpecialButton | "특별 모집" - 특별 가챠 |
+| - CardButton | "카드 뽑기" - 카드 가챠 |
+| **CharacterDisplay** | 픽업 캐릭터 일러스트 (비비) |
+
+#### 3. RightArea - BannerCarousel (우상단)
+| 요소 | 설명 |
+|------|------|
+| **BannerSlides** | 가챠 배너 가로 스크롤 |
+| - Slide 1-3 | "픽업 사도 모집" (캐릭터 썸네일) |
+| - Slide 4 | "사도 모집" (상시 배너) |
+| **IndicatorDots** | 현재 배너 위치 표시 |
+
+#### 4. RightArea - BannerInfoArea (우측 중앙)
+| 요소 | 설명 |
+|------|------|
+| **BannerTitle** | "용족 성골 귀족 비비" (픽업 캐릭터명) |
+| **BannerPeriod** | "2026-01-22 11:00 ~ 2026-01-29 10:59" |
+| **BannerDescription** | 픽업 정보 상세 (10회 모집 시 ★2 이상 확정 등) |
+
+#### 5. RightArea - PityInfoArea (우측)
+| 요소 | 설명 |
+|------|------|
+| **PityLabel** | "신앙심 110" - 천장 전용 재화 |
+| **ExchangeButton** | "교환" - 신앙심으로 캐릭터 교환 |
+| **PityDescription** | 사용하지 않은 신앙심은 다음 픽업 모집에 이월 |
+
+#### 6. RightArea - PullButtonGroup (우하단)
+| 버튼 | 라벨 | 비용 | 비고 |
+|------|------|------|------|
+| FreePullButton | "1일 1회 모집" | 무료 30 | "1회 남음" 표시 |
+| SinglePullButton | "1회 모집" | 프리미엄 1 | 단일 소환 |
+| MultiPullButton | "10회 모집" | 프리미엄 10 | "★2 확정" 배지 |
+
+#### 7. BottomNav (하단)
+| 버튼 | 라벨 | 이동 화면 |
+|------|------|----------|
+| CharacterInfoButton | 사도 정보 | CharacterDetailPopup (풀 내 캐릭터 목록) |
+| RateInfoButton | 확률 정보 | RateDetailPopup |
+| HistoryButton | 기록 | GachaHistoryScreen |
+
+---
+
+### Prefab 계층 구조
+
+```
+GachaScreen (RectTransform: Stretch)
+├─ Background
+│   └─ Image (BgDeep)
+│
+├─ SafeArea
+│   ├─ Header (Top, 80px)
+│   │   └─ ScreenHeader [Prefab]
+│   │       ├─ BackButton
+│   │       ├─ TitleText ("사도 모집")
+│   │       └─ CurrencyHUD
+│   │
+│   ├─ Content (Stretch, Top=80, Bottom=80)
+│   │   ├─ LeftArea (Anchor: Left, Width=350)
+│   │   │   ├─ MenuButtonGroup (VerticalLayoutGroup)
+│   │   │   │   ├─ GachaButton
+│   │   │   │   ├─ SpecialButton
+│   │   │   │   └─ CardButton
+│   │   │   │
+│   │   │   └─ CharacterDisplay (Anchor: Stretch)
+│   │   │       └─ CharacterImage
+│   │   │
+│   │   └─ RightArea (Anchor: Right, Stretch)
+│   │       ├─ BannerCarousel (Top, Height=120)
+│   │       │   ├─ BannerContainer (HorizontalScroll)
+│   │       │   │   └─ BannerSlot x4
+│   │       │   └─ Indicators
+│   │       │
+│   │       ├─ BannerInfoArea (Center)
+│   │       │   ├─ BannerTitle
+│   │       │   ├─ BannerPeriod
+│   │       │   └─ BannerDescription
+│   │       │
+│   │       ├─ PityInfoArea
+│   │       │   ├─ PityIcon
+│   │       │   ├─ PityLabel
+│   │       │   ├─ PityDescription
+│   │       │   └─ ExchangeButton
+│   │       │
+│   │       └─ PullButtonGroup (Bottom, HorizontalLayoutGroup)
+│   │           ├─ FreePullButton
+│   │           │   ├─ RemainingLabel ("1회 남음")
+│   │           │   ├─ ButtonLabel ("1일 1회 모집")
+│   │           │   └─ CostGroup (Icon + "30")
+│   │           ├─ SinglePullButton
+│   │           │   ├─ ButtonLabel ("1회 모집")
+│   │           │   └─ CostGroup (Icon + "1")
+│   │           └─ MultiPullButton
+│   │               ├─ GuaranteeBadge ("★2 확정")
+│   │               ├─ ButtonLabel ("10회 모집")
+│   │               └─ CostGroup (Icon + "10")
+│   │
+│   └─ BottomNav (Bottom, 80px)
+│       └─ InfoButtonGroup (HorizontalLayoutGroup, Center)
+│           ├─ CharacterInfoButton (Icon + "사도 정보")
+│           ├─ RateInfoButton (Icon + "확률 정보")
+│           └─ HistoryButton (Icon + "기록")
+│
+└─ OverlayLayer
+```
+
+---
+
+### 컴포넌트 매핑
+
+| 영역 | Widget/Component | SerializeField |
+|------|------------------|----------------|
+| Header | ScreenHeader | `_screenHeader` |
+| Header | BackButton | `_backButton` |
+| Left | MenuButtonGroup | `_menuButtons` |
+| Left | CharacterDisplay | `_characterDisplay` |
+| Right | BannerCarousel | `_bannerCarousel` |
+| Right | BannerTitle | `_bannerTitleText` |
+| Right | BannerPeriod | `_bannerPeriodText` |
+| Right | BannerDescription | `_bannerDescText` |
+| Right | PityLabel | `_pityLabel` |
+| Right | ExchangeButton | `_exchangeButton` |
+| Right | FreePullButton | `_freePullButton` |
+| Right | SinglePullButton | `_singlePullButton` |
+| Right | MultiPullButton | `_multiPullButton` |
+| Right | GuaranteeBadge | `_guaranteeBadge` |
+| Bottom | CharacterInfoButton | `_characterInfoButton` |
+| Bottom | RateInfoButton | `_rateInfoButton` |
+| Bottom | HistoryButton | `_historyButton` |
+
+---
+
+### 네비게이션 흐름
+
+```
+GachaScreen
+├─ BackButton → LobbyScreen (이전 화면)
+├─ BannerSlot 클릭 → 배너 변경 (내부 상태)
+├─ FreePullButton → [Cost Check] → GachaResultPopup
+├─ SinglePullButton → [Cost Check] → GachaResultPopup
+├─ MultiPullButton → [Cost Check] → GachaResultPopup
+├─ ExchangeButton → PityExchangePopup (신앙심 교환)
+├─ CharacterInfoButton → CharacterDetailPopup (풀 내 캐릭터)
+├─ RateInfoButton → RateDetailPopup (확률 상세)
+├─ HistoryButton → GachaHistoryScreen (가챠 기록)
+└─ MenuButtonGroup
+    ├─ GachaButton → 현재 화면 (캐릭터 가챠)
+    ├─ SpecialButton → (TBD) 특별 모집
+    └─ CardButton → (TBD) 카드 뽑기
+```
+
+### 연결 팝업/화면
+
+| 팝업/화면 | 진입 경로 | 설명 |
+|-----------|-----------|------|
+| **GachaResultPopup** | Pull 버튼 클릭 후 | 가챠 결과 연출 및 획득 캐릭터 표시 |
+| **RateDetailPopup** | 확률 정보 버튼 | 등급별 확률, 픽업 확률, 천장 정보 |
+| **GachaHistoryScreen** | 기록 버튼 | 최근 가챠 이력 조회 |
+| **PityExchangePopup** | 교환 버튼 | 신앙심으로 캐릭터 교환 |
+| **CostConfirmPopup** | 재화 부족 시 | 재화 구매 유도 |
+
+---
+
 ## 의존성
 
 ### 참조

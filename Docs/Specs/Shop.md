@@ -15,6 +15,184 @@ updated: 2026-01-20
 
 재화를 소비하여 상품을 구매하고 보상을 획득하는 상점 시스템
 
+## 레퍼런스
+- `Docs/Design/Reference/Shop.jpg`
+
+---
+
+## UI 레이아웃 구조
+
+### 전체 구조
+
+```
+ShopScreen (FullScreen)
+├─ Header ─────────────────────────────────────────────────────────────────────
+│   ├─ [Left] BackButton (< 상점)
+│   └─ [Right] CurrencyHUD (골드: 549,061, 프리미엄: 1,809) + HomeButton
+│
+├─ LeftArea ─────────────────────┬─ RightArea ─────────────────────────────────
+│   ├─ ShopkeeperDisplay         │   ├─ ProductGrid (상품 목록 2x3)
+│   │   ├─ CharacterImage        │   │   ├─ ProductItem (왕사탕, 일일갱신, 1골드)
+│   │   └─ DialogueBox           │   │   ├─ ProductItem (별사탕, 일일갱신, 1골드)
+│   │       └─ "오늘은 뭘        │   │   ├─ ProductItem (장비의정석, 일일갱신, 1골드)
+│   │          보여드릴까요?"    │   │   ├─ ProductItem (MUSIM칩, 일일갱신, 1,000골드)
+│   │                            │   │   ├─ ProductItem (모카롱, 일일갱신, 25,000골드)
+│   └─ TabList (세로 탭 목록)    │   │   └─ ProductItem (슈카롱, 일일갱신, 50,000골드)
+│       ├─ DailyShopTab (선택됨) │   │
+│       ├─ MiscShopTab           │   └─ ProductGridFooter
+│       ├─ BattleGemShopTab      │       ├─ 고단 성장 재료 상자
+│       ├─ CertificateShopTab    │       ├─ 교주의방 꾸미기
+│       ├─ RecommendShopTab      │       └─ 고단 요리 상자
+│       ├─ FrontierShopTab       │
+│       └─ YeowooShopTab         │
+│                                │
+└─ Footer ─────────────────────────────────────────────────────────────────────
+    ├─ RefreshTimer (갱신까지 10시간 12분)
+    ├─ SelectAllToggle (모두 선택 OFF)
+    └─ BulkPurchaseButton (일괄 구매)
+```
+
+### 영역별 상세
+
+#### 1. Header (상단 헤더)
+| 위치 | 요소 | 설명 |
+|------|------|------|
+| Left | BackButton | 뒤로가기 + "상점" 타이틀 |
+| Right | CurrencyHUD | 골드(549,061), 프리미엄(1,809) |
+| Right | HomeButton | 홈 버튼 (로비로 이동) |
+
+#### 2. LeftArea (좌측 영역)
+| 요소 | 설명 |
+|------|------|
+| **ShopkeeperDisplay** | 상점 NPC 표시 영역 |
+| - CharacterImage | 상점 NPC 캐릭터 (보라색 머리 캐릭터) |
+| - DialogueBox | 대화 말풍선 ("오늘은 뭘 보여드릴까요?") |
+| **TabList** | 세로 탭 목록 (VerticalLayoutGroup) |
+| - DailyShopTab | 데일리 상점 (활성 상태, 주황색) |
+| - MiscShopTab | 잡화 상점 |
+| - BattleGemShopTab | 배틀젬 상점 |
+| - CertificateShopTab | 증명서 상점 |
+| - RecommendShopTab | 추천 상점 |
+| - FrontierShopTab | 프론티어 상점 |
+| - YeowooShopTab | 여우주연상 상점 |
+
+#### 3. RightArea (우측 상품 영역)
+| 요소 | 설명 |
+|------|------|
+| **ProductGrid** | 상품 그리드 (2행 x 3열) |
+| - ProductItem | 개별 상품 카드 |
+|   - ProductIcon | 상품 아이콘/이미지 |
+|   - TagLabel | 태그 ("일일갱신", "15K" 등) |
+|   - ProductName | 상품명 (왕사탕, 별사탕 등) |
+|   - PurchaseLimit | 구매 가능 횟수 (구매 가능 1/1) |
+|   - PriceLabel | 가격 (1골드, 1,000골드 등) |
+| **ProductGridFooter** | 추가 상품 바로가기 |
+| - 고단 성장 재료 상자 | 카테고리 바로가기 |
+| - 교주의방 꾸미기 | 카테고리 바로가기 |
+| - 고단 요리 상자 | 카테고리 바로가기 |
+
+#### 4. Footer (하단 영역)
+| 요소 | 설명 |
+|------|------|
+| **RefreshTimer** | 갱신 타이머 (갱신까지 10시간 12분) |
+| **SelectAllToggle** | 모두 선택 토글 (OFF/ON) |
+| **BulkPurchaseButton** | 일괄 구매 버튼 |
+
+---
+
+### Prefab 계층 구조
+
+```
+ShopScreen (RectTransform: Stretch)
+├─ Background
+│   └─ Image (상점 배경 - 나무 상자 테마)
+│
+├─ SafeArea
+│   ├─ Header (Top, 60px)
+│   │   ├─ BackButtonGroup
+│   │   │   ├─ BackButton (< 아이콘)
+│   │   │   └─ TitleText ("상점")
+│   │   └─ RightGroup
+│   │       ├─ CurrencyHUD [Prefab]
+│   │       │   ├─ GoldDisplay (549,061)
+│   │       │   └─ PremiumDisplay (1,809)
+│   │       └─ HomeButton
+│   │
+│   ├─ Content (Stretch, Top=60, Bottom=60)
+│   │   ├─ LeftArea (Anchor: Left, 280px)
+│   │   │   ├─ ShopkeeperDisplay
+│   │   │   │   ├─ CharacterImage
+│   │   │   │   └─ DialogueBox
+│   │   │   │       └─ DialogueText
+│   │   │   └─ TabList (VerticalLayoutGroup)
+│   │   │       └─ ShopTabButton x7
+│   │   │
+│   │   └─ RightArea (Anchor: Stretch, Left=280)
+│   │       ├─ ProductContainer
+│   │       │   ├─ ProductGrid (GridLayoutGroup 3x2)
+│   │       │   │   └─ ShopProductItem x6 [Prefab]
+│   │       │   └─ ProductGridFooter (HorizontalLayoutGroup)
+│   │       │       └─ CategoryShortcut x3
+│   │       └─ ProductGridBackground
+│   │           └─ Image (열린 상자 프레임)
+│   │
+│   └─ Footer (Bottom, 50px)
+│       ├─ RefreshTimerGroup
+│       │   ├─ RefreshIcon
+│       │   └─ RefreshTimerText
+│       ├─ SelectAllToggle
+│       │   ├─ ToggleBackground
+│       │   └─ ToggleText ("모두 선택 OFF")
+│       └─ BulkPurchaseButton
+│           └─ ButtonText ("일괄 구매")
+│
+└─ OverlayLayer
+```
+
+---
+
+### 컴포넌트 매핑
+
+| 영역 | Widget/Component | SerializeField |
+|------|------------------|----------------|
+| Header | BackButton | `_backButton` |
+| Header | TitleText | `_titleText` |
+| Header | CurrencyHUD | `_currencyHUD` |
+| Header | HomeButton | `_homeButton` |
+| LeftArea | CharacterImage | `_shopkeeperImage` |
+| LeftArea | DialogueText | `_dialogueText` |
+| LeftArea | TabList (TabGroupWidget) | `_tabGroup` |
+| RightArea | ProductGrid | `_productGrid` |
+| RightArea | ProductGridFooter | `_categoryShortcuts` |
+| Footer | RefreshTimerText | `_refreshTimerText` |
+| Footer | SelectAllToggle | `_selectAllToggle` |
+| Footer | BulkPurchaseButton | `_bulkPurchaseButton` |
+
+---
+
+### 네비게이션 흐름
+
+```
+ShopScreen
+├─ BackButton → LobbyScreen (이전 화면)
+├─ HomeButton → LobbyScreen
+├─ TabButton → 탭 전환 (상품 목록 갱신)
+│   ├─ DailyShopTab → 데일리 상품 목록
+│   ├─ MiscShopTab → 잡화 상품 목록
+│   ├─ BattleGemShopTab → 배틀젬 상품 목록
+│   ├─ CertificateShopTab → 증명서 상품 목록
+│   ├─ RecommendShopTab → 추천 상품 목록
+│   ├─ FrontierShopTab → 프론티어 상품 목록
+│   └─ YeowooShopTab → 여우주연상 상품 목록
+├─ ProductItem → CostConfirmPopup (구매 확인)
+│   ├─ Confirm → ShopPurchaseRequest → RewardPopup
+│   └─ Cancel → ShopScreen
+├─ BulkPurchaseButton → CostConfirmPopup (일괄 구매)
+└─ CategoryShortcut → 해당 탭으로 스크롤/전환
+```
+
+---
+
 ## 의존성
 
 ### 참조

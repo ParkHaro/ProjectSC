@@ -18,6 +18,687 @@ changelog:
 
 인게임 전투(Stage) 선택, 파티 편성, 전투 시작까지의 아웃게임 → 인게임 브릿지 시스템
 
+---
+
+## 레퍼런스
+
+- `Docs/Design/Reference/StageSelectScreen.jpg` - 스테이지 선택 화면
+- `Docs/Design/Reference/PartySelect.jpg` - 파티 편성 화면
+- `Docs/Design/Reference/StageDashbaord.jpg` - 인게임 컨텐츠 대시보드
+
+---
+
+## StageSelectScreen UI 레이아웃 구조
+
+### 전체 구조
+
+```
+StageSelectScreen (FullScreen)
+├─ ScreenHeader ─────────────────────────────────────────────────────────
+│   ├─ [Left] BackButton + TitleText ("스테이지 리스트")
+│   └─ [Right] CurrencyHUD (스태미나 102/102, 골드 549,061, 프리미엄 1,809)
+│
+├─ RightTopArea ────────────────────────────────────────────────────────
+│   └─ StageProgressWidget ("11-10 최후의 방어선! 알프트반선!")
+│
+├─ StageMapArea (중앙 전체) ─────────────────────────────────────────────
+│   ├─ MapBackground (도시 배경)
+│   │
+│   ├─ StageNodes (아이소메트릭 맵)
+│   │   ├─ StageNode (10-3) ★★☆
+│   │   ├─ StageNode (10-4) ★★☆
+│   │   ├─ StageNode (10-5) ★★☆
+│   │   ├─ StageNode (10-6) ★★★
+│   │   ├─ StageNode (10-7) ★★★ ← 현재 선택
+│   │   ├─ StageNode (10-8) ★★☆
+│   │   ├─ StageNode (10-9) ★★★
+│   │   └─ StageNode (10-10) ★★☆
+│   │
+│   ├─ ChapterNavigation
+│   │   ├─ PrevChapter ("<" 이전 월드)
+│   │   └─ NextChapter (">" 다음 월드)
+│   │
+│   └─ StageInfoBubble (선택 노드 상단)
+│       ├─ RecommendedPower ("권장 전투력: 117,660")
+│       ├─ StageName ("깜빡이는 터널!")
+│       ├─ EnemyPreview (적 캐릭터 미리보기)
+│       └─ PartyPreview (내 파티 캐릭터)
+│
+├─ StarProgressBar (좌하단) ──────────────────────────────────────────────
+│   ├─ CurrentStars (★ 14/30)
+│   └─ RewardMilestones (10→25, 20→50, 30→100)
+│
+└─ FooterArea ───────────────────────────────────────────────────────────
+    ├─ DifficultyTabs
+    │   ├─ NormalTab ("순한맛")
+    │   ├─ HardTab ("매운맛")
+    │   └─ HellTab ("핵불맛")
+    └─ WorldMapButton ("세계지도")
+```
+
+### 영역별 상세
+
+#### 1. ScreenHeader (상단 헤더)
+| 요소 | 설명 |
+|------|------|
+| **BackButton** | 이전 화면으로 돌아가기 |
+| **TitleText** | "스테이지 리스트" |
+| **CurrencyHUD** | 스태미나(102/102), 골드(549,061), 프리미엄(1,809) |
+
+#### 2. RightTopArea (우상단)
+| 요소 | 설명 |
+|------|------|
+| **StageProgressWidget** | 현재/최고 진행 스테이지 표시 ("11-10 최후의 방어선! 알프트반선!") |
+| - ProgressLabel | 스테이지 번호 + 이름 |
+| - NavigateButton | 해당 스테이지로 바로 이동 (>>) |
+
+#### 3. StageMapArea (중앙 맵 영역)
+| 요소 | 설명 |
+|------|------|
+| **MapBackground** | 아이소메트릭 도시 배경 (챕터별 다름) |
+| **StageNodes** | 스테이지 노드 (격자 배치) |
+| - StageNode | 개별 스테이지 (번호 + 별점) |
+| - SelectedNode | 선택된 노드 (하이라이트 + 캐릭터 표시) |
+| - LockedNode | 잠긴 노드 (자물쇠 아이콘) |
+| **ChapterNavigation** | 챕터 이동 화살표 |
+| - PrevChapter | "< 이전 월드" |
+| - NextChapter | "> 다음 월드" |
+
+#### 4. StageInfoBubble (스테이지 정보 버블)
+| 요소 | 설명 |
+|------|------|
+| **RecommendedPower** | "권장 전투력: 117,660" |
+| **StageName** | 스테이지 이름 ("깜빡이는 터널!") |
+| **EnemyPreview** | 적 캐릭터 미리보기 (보스 등) |
+| **PartyPreview** | 현재 파티 캐릭터 미리보기 |
+
+#### 5. StarProgressBar (별 진행도)
+| 요소 | 설명 |
+|------|------|
+| **CurrentStars** | 현재 획득 별 수 (★ 14/30) |
+| **RewardMilestones** | 보상 구간 (10→25, 20→50, 30→100) |
+| - MilestoneIcon | 각 구간 아이콘 (잎사귀) |
+| - MilestoneReward | 보상 수량 |
+
+#### 6. FooterArea (하단)
+| 요소 | 설명 |
+|------|------|
+| **DifficultyTabs** | 난이도 탭 |
+| - NormalTab | "순한맛" (Normal) |
+| - HardTab | "매운맛" (Hard) |
+| - HellTab | "핵불맛" (Hell) |
+| **WorldMapButton** | "세계지도" - 월드맵 화면으로 이동 |
+
+---
+
+### Prefab 계층 구조
+
+```
+StageSelectScreen (RectTransform: Stretch)
+├─ Background
+│   └─ MapBackground (Image, 챕터별 배경)
+│
+├─ SafeArea
+│   ├─ Header (Top, 80px)
+│   │   └─ ScreenHeader [Prefab]
+│   │       ├─ BackButton
+│   │       ├─ TitleText
+│   │       └─ CurrencyHUD
+│   │
+│   ├─ Content (Stretch, Top=80, Bottom=120)
+│   │   ├─ RightTopArea (Anchor: TopRight, 300x60)
+│   │   │   └─ StageProgressWidget
+│   │   │       ├─ ProgressLabel
+│   │   │       └─ NavigateButton
+│   │   │
+│   │   ├─ StageMapArea (Stretch)
+│   │   │   ├─ StageNodeContainer
+│   │   │   │   └─ StageNode [Prefab] x N
+│   │   │   │       ├─ NodeBackground
+│   │   │   │       ├─ StageNumberText
+│   │   │   │       ├─ StarGroup (★★★)
+│   │   │   │       ├─ CharacterPreview (선택 시)
+│   │   │   │       └─ LockIcon (잠금 시)
+│   │   │   │
+│   │   │   ├─ StageInfoBubble (Dynamic Position)
+│   │   │   │   ├─ BubbleBackground
+│   │   │   │   ├─ RecommendedPowerText
+│   │   │   │   ├─ StageNameText
+│   │   │   │   ├─ EnemyPreviewContainer
+│   │   │   │   └─ PartyPreviewContainer
+│   │   │   │
+│   │   │   └─ ChapterNavigation
+│   │   │       ├─ PrevChapterButton (Anchor: Left)
+│   │   │       └─ NextChapterButton (Anchor: Right)
+│   │   │
+│   │   └─ StarProgressBar (Anchor: BottomLeft, 400x80)
+│   │       ├─ StarIcon
+│   │       ├─ ProgressText (14/30)
+│   │       ├─ ProgressSlider
+│   │       └─ MilestoneContainer
+│   │           └─ MilestoneItem x 3
+│   │
+│   └─ Footer (Bottom, 120px)
+│       ├─ DifficultyTabGroup (HorizontalLayoutGroup)
+│       │   ├─ NormalTab
+│       │   ├─ HardTab
+│       │   └─ HellTab
+│       └─ WorldMapButton (Anchor: Right)
+│
+└─ OverlayLayer
+```
+
+---
+
+### 컴포넌트 매핑
+
+| 영역 | Widget/Component | SerializeField |
+|------|------------------|----------------|
+| Header | ScreenHeader | `_screenHeader` |
+| RightTop | StageProgressWidget | `_stageProgressWidget` |
+| Map | StageMapArea | `_stageMapArea` |
+| Map | StageNodeContainer | `_stageNodeContainer` |
+| Map | StageInfoBubble | `_stageInfoBubble` |
+| Map | PrevChapterButton | `_prevChapterButton` |
+| Map | NextChapterButton | `_nextChapterButton` |
+| Progress | StarProgressBar | `_starProgressBar` |
+| Footer | DifficultyTabGroup | `_difficultyTabs` |
+| Footer | WorldMapButton | `_worldMapButton` |
+| ContentModule | ContentModuleContainer | `_contentModuleContainer` |
+
+---
+
+### 네비게이션 흐름
+
+```
+StageSelectScreen
+├─ StageNode 클릭 → StageInfoBubble 표시
+├─ StageInfoBubble 클릭 → PartySelectScreen (해당 스테이지)
+├─ PrevChapter → 이전 챕터 스테이지 로드
+├─ NextChapter → 다음 챕터 스테이지 로드
+├─ DifficultyTab → 해당 난이도 스테이지 로드
+├─ WorldMapButton → WorldMapScreen (TBD)
+├─ StageProgressWidget → 최고 진행 스테이지로 이동
+└─ BackButton → 이전 화면 (InGameContentDashboard / Lobby)
+```
+
+---
+
+## PartySelectScreen UI 레이아웃 구조
+
+### 전체 구조
+
+```
+PartySelectScreen (FullScreen)
+├─ ScreenHeader ─────────────────────────────────────────────────────────
+│   ├─ [Left] BackButton + StageInfo ("10-7. 깜빡이는 터널!")
+│   └─ [Right] CurrencyHUD (스태미나, 골드, 프리미엄) + HomeButton
+│
+├─ LeftArea (전투 미리보기) ──────────────────────────────────────────────
+│   ├─ ElementIndicator (속성 아이콘 - 불/물/풀/빛/어둠)
+│   │
+│   ├─ BattlePreviewArea
+│   │   ├─ PartyFormation (좌측 - 아군)
+│   │   │   ├─ FrontLine (캐릭터 x3)
+│   │   │   └─ BackLine (캐릭터 x3)
+│   │   │
+│   │   └─ EnemyFormation (우측 - 적)
+│   │       └─ EnemySpots (빨간 원형 영역)
+│   │
+│   ├─ QuickActionBar
+│   │   ├─ AutoFormButton ("일괄 해제")
+│   │   └─ StageInfoButton ("스테이지 정보")
+│   │
+│   └─ FormationSettingButton ("덱 설정")
+│
+├─ StageInfoPanel (상단 중앙) ───────────────────────────────────────────
+│   ├─ EntryInfo (입장 조건)
+│   │   ├─ EntryCost (30 스태미나)
+│   │   └─ RecommendedPower ("권장 전투력: 123,188")
+│   │
+│   ├─ BorrowInfo ("사도 대여: 0/1")
+│   │
+│   └─ FormationStatus
+│       ├─ PartyCount ("편성된 사도: 6/6, 집략군 1")
+│       └─ CardCount ("편성된 카드: 24/24, 집략군 카드 1")
+│
+├─ RightPanel (캐릭터 선택) ─────────────────────────────────────────────
+│   ├─ TabBar
+│   │   ├─ RentalTab ("대여")
+│   │   ├─ FilterTab ("필터 OFF")
+│   │   └─ SortTab ("전투력") + SortButton
+│   │
+│   ├─ CharacterGrid (3열 스크롤)
+│   │   └─ CharacterSlot x N
+│   │       ├─ Portrait
+│   │       ├─ Level ("Lv.52")
+│   │       ├─ Stars (★★★★★)
+│   │       ├─ CombatPower ("25,555")
+│   │       └─ EquippedBadge (편성 시)
+│   │
+│   └─ ActionBar (하단)
+│       ├─ QuickBattleButton ("빠른전투불가")
+│       ├─ StartButton ("출발") + CostIcon (10)
+│       └─ AutoButton ("자동OFF")
+│
+└─ FooterBar ────────────────────────────────────────────────────────────
+    ├─ EntryCostDisplay (60 스태미나)
+    └─ RecommendedPowerDisplay (117,660)
+```
+
+### 영역별 상세
+
+#### 1. ScreenHeader (상단 헤더)
+| 요소 | 설명 |
+|------|------|
+| **BackButton** | 이전 화면(StageSelectScreen)으로 |
+| **StageInfo** | "10-7. 깜빡이는 터널!" (스테이지 번호 + 이름) |
+| **CurrencyHUD** | 스태미나(102/102), 골드(549,061), 프리미엄(1,809) |
+| **HomeButton** | 로비로 바로 이동 |
+
+#### 2. LeftArea (전투 미리보기)
+| 요소 | 설명 |
+|------|------|
+| **ElementIndicator** | 속성 아이콘 (불/물/풀/빛/어둠) - 유리 속성 표시 |
+| **BattlePreviewArea** | 전투 시뮬레이션 미리보기 |
+| - PartyFormation | 아군 배치 (앞줄 3, 뒷줄 3) |
+| - EnemyFormation | 적 위치 표시 (빨간 원형 영역) |
+| **AutoFormButton** | "일괄 해제" - 편성 전체 해제 |
+| **StageInfoButton** | "스테이지 정보" → StageInfoPopup |
+| **FormationSettingButton** | "덱 설정" - 프리셋 관리 |
+
+#### 3. StageInfoPanel (스테이지 정보)
+| 요소 | 설명 |
+|------|------|
+| **EntryCost** | 입장 비용 (30 스태미나) |
+| **RecommendedPower** | 권장 전투력 (123,188) |
+| **BorrowInfo** | 사도 대여 정보 ("사도 대여: 0/1") |
+| **PartyCount** | 편성된 사도 수 ("편성된 사도: 6/6, 집략군 1") |
+| **CardCount** | 편성된 카드 수 ("편성된 카드: 24/24") |
+
+#### 4. RightPanel (캐릭터 선택 영역)
+| 요소 | 설명 |
+|------|------|
+| **TabBar** | 필터/정렬 탭 |
+| - RentalTab | "대여" - 친구 캐릭터 대여 |
+| - FilterTab | "필터 OFF" - 필터링 옵션 |
+| - SortTab | "전투력" - 정렬 기준 + 순서 토글 |
+| **CharacterGrid** | 캐릭터 목록 (3열 그리드, 세로 스크롤) |
+
+#### 5. CharacterSlot (캐릭터 슬롯)
+| 요소 | 설명 |
+|------|------|
+| **Portrait** | 캐릭터 초상화 |
+| **ElementIcon** | 속성 아이콘 (좌상단) |
+| **Level** | 레벨 표시 ("Lv.52") |
+| **Stars** | 성급 (★★★★★) |
+| **CombatPower** | 전투력 ("25,555") |
+| **EquippedBadge** | 편성 여부 표시 (선택 시 녹색 테두리) |
+| **SearchIcon** | 상세 정보 버튼 (돋보기) |
+
+#### 6. ActionBar (하단 액션 영역)
+| 요소 | 설명 |
+|------|------|
+| **QuickBattleButton** | "빠른전투불가" (소탕 불가 표시) |
+| **StartButton** | "출발" + 비용 표시 (10) → 전투 시작 |
+| **AutoButton** | "자동OFF" - 자동 전투 토글 |
+
+#### 7. FooterBar (하단 정보)
+| 요소 | 설명 |
+|------|------|
+| **EntryCostDisplay** | 60 스태미나 (사각 코인 아이콘) |
+| **RecommendedPowerDisplay** | 117,660 (권장 전투력) |
+
+---
+
+### Prefab 계층 구조
+
+```
+PartySelectScreen (RectTransform: Stretch)
+├─ Background
+│   └─ BattlePreviewBackground
+│
+├─ SafeArea
+│   ├─ Header (Top, 80px)
+│   │   └─ ScreenHeader [Prefab]
+│   │       ├─ BackButton
+│   │       ├─ StageInfoText
+│   │       ├─ CurrencyHUD
+│   │       └─ HomeButton
+│   │
+│   ├─ Content (Stretch, Top=80)
+│   │   ├─ LeftArea (Anchor: Left, Width=60%)
+│   │   │   ├─ ElementIndicator (Anchor: TopLeft)
+│   │   │   │   └─ ElementIcon x 5
+│   │   │   │
+│   │   │   ├─ BattlePreviewArea (Center)
+│   │   │   │   ├─ PartyFormation
+│   │   │   │   │   ├─ FrontLineSlot x 3
+│   │   │   │   │   └─ BackLineSlot x 3
+│   │   │   │   │
+│   │   │   │   └─ EnemyFormation
+│   │   │   │       └─ EnemySpot x N
+│   │   │   │
+│   │   │   ├─ QuickActionBar (Anchor: BottomLeft)
+│   │   │   │   ├─ AutoFormButton
+│   │   │   │   └─ StageInfoButton
+│   │   │   │
+│   │   │   └─ FormationSettingButton (Anchor: BottomLeft)
+│   │   │
+│   │   ├─ StageInfoPanel (Anchor: TopCenter)
+│   │   │   ├─ EntryInfoGroup
+│   │   │   │   ├─ EntryCostText
+│   │   │   │   └─ RecommendedPowerText
+│   │   │   ├─ BorrowInfoText
+│   │   │   └─ FormationStatusGroup
+│   │   │       ├─ PartyCountText
+│   │   │       └─ CardCountText
+│   │   │
+│   │   └─ RightPanel (Anchor: Right, Width=40%)
+│   │       ├─ TabBar (Top, 50px)
+│   │       │   ├─ RentalTab
+│   │       │   ├─ FilterTab
+│   │       │   └─ SortTab
+│   │       │
+│   │       ├─ CharacterGrid (Stretch, GridLayoutGroup 3열)
+│   │       │   └─ CharacterSlot [Prefab] x N
+│   │       │       ├─ Portrait
+│   │       │       ├─ ElementIcon
+│   │       │       ├─ LevelText
+│   │       │       ├─ StarGroup
+│   │       │       ├─ CombatPowerText
+│   │       │       ├─ EquippedIndicator
+│   │       │       └─ SearchButton
+│   │       │
+│   │       └─ ActionBar (Bottom, 80px)
+│   │           ├─ QuickBattleButton
+│   │           ├─ StartButton
+│   │           └─ AutoToggle
+│   │
+│   └─ Footer (Bottom, 60px)
+│       ├─ EntryCostDisplay
+│       └─ RecommendedPowerDisplay
+│
+└─ OverlayLayer
+```
+
+---
+
+### 컴포넌트 매핑
+
+| 영역 | Widget/Component | SerializeField |
+|------|------------------|----------------|
+| Header | ScreenHeader | `_screenHeader` |
+| Header | StageInfoText | `_stageInfoText` |
+| Left | ElementIndicator | `_elementIndicator` |
+| Left | BattlePreviewArea | `_battlePreviewArea` |
+| Left | PartyFormation | `_partyFormation` |
+| Left | EnemyFormation | `_enemyFormation` |
+| Left | AutoFormButton | `_autoFormButton` |
+| Left | StageInfoButton | `_stageInfoButton` |
+| Left | FormationSettingButton | `_formationSettingButton` |
+| Center | StageInfoPanel | `_stageInfoPanel` |
+| Center | EntryCostText | `_entryCostText` |
+| Center | RecommendedPowerText | `_recommendedPowerText` |
+| Center | PartyCountText | `_partyCountText` |
+| Right | CharacterGrid | `_characterGrid` |
+| Right | RentalTab | `_rentalTab` |
+| Right | FilterTab | `_filterTab` |
+| Right | SortTab | `_sortTab` |
+| Bottom | QuickBattleButton | `_quickBattleButton` |
+| Bottom | StartButton | `_startButton` |
+| Bottom | AutoToggle | `_autoToggle` |
+
+---
+
+### 네비게이션 흐름
+
+```
+PartySelectScreen
+├─ CharacterSlot 클릭 → 파티에 추가/제거
+├─ CharacterSlot 길게 누르기 → CharacterDetailPopup
+├─ RentalTab → 친구 캐릭터 목록 표시
+├─ FilterTab → FilterPopup
+├─ SortTab → 정렬 변경
+├─ AutoFormButton → 파티 일괄 해제
+├─ StageInfoButton → StageInfoPopup
+├─ FormationSettingButton → PresetManagePopup
+├─ StartButton → BattleScene (전투 시작)
+├─ QuickBattleButton → 즉시 전투 결과 (조건 충족 시)
+└─ BackButton → StageSelectScreen
+```
+
+---
+
+## InGameContentDashboard UI 레이아웃 구조
+
+### 전체 구조
+
+```
+InGameContentDashboard (FullScreen) - "모험"
+├─ ScreenHeader ─────────────────────────────────────────────────────────
+│   ├─ [Left] BackButton + TitleText ("모험")
+│   └─ [Right] CurrencyHUD (스태미나, 골드, 프리미엄) + HomeButton
+│
+├─ RightTopArea ────────────────────────────────────────────────────────
+│   └─ StageProgressWidget ("11-10 최후의 방어선! 알프트반선!")
+│
+├─ ContentArea (방 인테리어 배경) ───────────────────────────────────────
+│   │
+│   ├─ LeftSide
+│   │   ├─ ShortTermClassButton ("단기 속성반")
+│   │   │   └─ SeasonInfo ("02/19/11:00 시즌 시작")
+│   │   │
+│   │   └─ DimensionClashButton ("차원 대충돌")
+│   │       └─ DungeonLabel ("딜: 리버리")
+│   │
+│   ├─ CenterArea
+│   │   ├─ NurulingBustersButton ("누루링 버스터즈")
+│   │   │   └─ CharacterSprite (캐릭터 장식)
+│   │   │
+│   │   ├─ PVPButton ("PVP")
+│   │   │   └─ TrophyIcon
+│   │   │
+│   │   └─ MainStoryProgress (중앙 하단)
+│   │       ├─ ProgressLabel ("제 1 엘리베이터 B7 도전중")
+│   │       ├─ StageNameLabel ("세계수 급착기지")
+│   │       └─ TimeRemaining ("06일 17시간 07분")
+│   │
+│   ├─ RightSide
+│   │   ├─ DungeonButton ("던전")
+│   │   │   └─ DungeonIcon
+│   │   │
+│   │   ├─ InvasionButton ("침략")
+│   │   │   └─ CharacterSprite
+│   │   │
+│   │   └─ DeckFormationButton ("덱 편성")
+│   │       └─ FormationIcon
+│   │
+│   └─ Decorations (배경 장식)
+│       ├─ FurnitureItems (가구, 선반, 액자 등)
+│       └─ CharacterMascots (마스코트 캐릭터들)
+│
+└─ (Footer 없음 - 전체 화면 활용)
+```
+
+### 영역별 상세
+
+#### 1. ScreenHeader (상단 헤더)
+| 요소 | 설명 |
+|------|------|
+| **BackButton** | 이전 화면(Lobby)으로 |
+| **TitleText** | "모험" |
+| **CurrencyHUD** | 스태미나(102/102), 티켓(180/180), 골드(549,061), 프리미엄(1,809) |
+| **HomeButton** | 로비로 바로 이동 |
+
+#### 2. RightTopArea (우상단)
+| 요소 | 설명 |
+|------|------|
+| **StageProgressWidget** | 현재 스토리 진행 상황 ("11-10 최후의 방어선! 알프트반선!") |
+| - ProgressLabel | 스테이지 번호 + 이름 |
+| - NavigateButton | 해당 스테이지로 바로 이동 (>>) |
+
+#### 3. ContentArea - LeftSide (좌측 컨텐츠)
+| 요소 | 설명 |
+|------|------|
+| **ShortTermClassButton** | "단기 속성반" - 속성별 단기 이벤트 |
+| - SeasonInfo | 시즌 정보 ("02/19/11:00 시즌 시작") |
+| **DimensionClashButton** | "차원 대충돌" - 차원 레이드 컨텐츠 |
+| - DungeonLabel | 현재 던전 정보 ("딜: 리버리") |
+
+#### 4. ContentArea - CenterArea (중앙 컨텐츠)
+| 요소 | 설명 |
+|------|------|
+| **NurulingBustersButton** | "누루링 버스터즈" - 미니게임/보스전 |
+| **PVPButton** | "PVP" - 실시간 대전 |
+| - TrophyIcon | 트로피 아이콘 |
+| **MainStoryProgress** | 메인 스토리 진행 현황 |
+| - ProgressLabel | "제 1 엘리베이터 B7 도전중" |
+| - StageNameLabel | "세계수 급착기지" |
+| - TimeRemaining | 남은 시간 ("06일 17시간 07분") |
+
+#### 5. ContentArea - RightSide (우측 컨텐츠)
+| 요소 | 설명 |
+|------|------|
+| **DungeonButton** | "던전" - 일일/주간 던전 (골드, 경험치 등) |
+| **InvasionButton** | "침략" - 침략 컨텐츠 |
+| **DeckFormationButton** | "덱 편성" - 파티 프리셋 관리 |
+
+#### 6. Decorations (배경 장식)
+| 요소 | 설명 |
+|------|------|
+| **FurnitureItems** | 방 가구들 (선반, 칠판, 액자, 트로피 등) |
+| **CharacterMascots** | 마스코트 캐릭터들 (장식용) |
+
+---
+
+### Prefab 계층 구조
+
+```
+InGameContentDashboard (RectTransform: Stretch)
+├─ Background
+│   └─ RoomBackground (Image, 방 인테리어)
+│
+├─ SafeArea
+│   ├─ Header (Top, 80px)
+│   │   └─ ScreenHeader [Prefab]
+│   │       ├─ BackButton
+│   │       ├─ TitleText
+│   │       ├─ CurrencyHUD
+│   │       └─ HomeButton
+│   │
+│   ├─ Content (Stretch, Top=80)
+│   │   ├─ RightTopArea (Anchor: TopRight, 300x60)
+│   │   │   └─ StageProgressWidget
+│   │   │       ├─ ProgressLabel
+│   │   │       └─ NavigateButton
+│   │   │
+│   │   ├─ ContentButtons (Stretch, Free Position)
+│   │   │   │
+│   │   │   ├─ LeftSide
+│   │   │   │   ├─ ShortTermClassButton (Anchor: Left)
+│   │   │   │   │   ├─ ButtonBackground
+│   │   │   │   │   ├─ ContentLabel
+│   │   │   │   │   ├─ SeasonInfoText
+│   │   │   │   │   └─ CharacterSprite
+│   │   │   │   │
+│   │   │   │   └─ DimensionClashButton (Anchor: BottomLeft)
+│   │   │   │       ├─ ButtonBackground
+│   │   │   │       ├─ ContentLabel
+│   │   │   │       ├─ DungeonInfoText
+│   │   │   │       └─ CharacterSprite
+│   │   │   │
+│   │   │   ├─ CenterArea
+│   │   │   │   ├─ NurulingBustersButton (Anchor: TopCenter)
+│   │   │   │   │   ├─ ButtonBackground
+│   │   │   │   │   ├─ ContentLabel
+│   │   │   │   │   └─ CharacterSprite
+│   │   │   │   │
+│   │   │   │   ├─ PVPButton (Anchor: CenterLeft)
+│   │   │   │   │   ├─ ButtonBackground
+│   │   │   │   │   ├─ ContentLabel
+│   │   │   │   │   └─ TrophyIcon
+│   │   │   │   │
+│   │   │   │   └─ MainStoryProgressPanel (Anchor: BottomCenter)
+│   │   │   │       ├─ ProgressLabelText
+│   │   │   │       ├─ StageNameText
+│   │   │   │       ├─ TimeRemainingText
+│   │   │   │       └─ EnterButton
+│   │   │   │
+│   │   │   └─ RightSide
+│   │   │       ├─ DungeonButton (Anchor: TopRight)
+│   │   │       │   ├─ ButtonBackground
+│   │   │       │   ├─ ContentLabel
+│   │   │       │   └─ DungeonIcon
+│   │   │       │
+│   │   │       ├─ InvasionButton (Anchor: Right)
+│   │   │       │   ├─ ButtonBackground
+│   │   │       │   ├─ ContentLabel
+│   │   │       │   └─ CharacterSprite
+│   │   │       │
+│   │   │       └─ DeckFormationButton (Anchor: BottomRight)
+│   │   │           ├─ ButtonBackground
+│   │   │           ├─ ContentLabel
+│   │   │           └─ FormationIcon
+│   │   │
+│   │   └─ DecorationLayer (Behind Buttons)
+│   │       └─ DecorationSprite x N
+│   │
+│   └─ (No Footer)
+│
+└─ OverlayLayer
+```
+
+---
+
+### 컴포넌트 매핑
+
+| 영역 | Widget/Component | SerializeField |
+|------|------------------|----------------|
+| Header | ScreenHeader | `_screenHeader` |
+| RightTop | StageProgressWidget | `_stageProgressWidget` |
+| Left | ShortTermClassButton | `_shortTermClassButton` |
+| Left | DimensionClashButton | `_dimensionClashButton` |
+| Center | NurulingBustersButton | `_nurulingBustersButton` |
+| Center | PVPButton | `_pvpButton` |
+| Center | MainStoryProgressPanel | `_mainStoryProgressPanel` |
+| Right | DungeonButton | `_dungeonButton` |
+| Right | InvasionButton | `_invasionButton` |
+| Right | DeckFormationButton | `_deckFormationButton` |
+| Background | RoomBackground | `_roomBackground` |
+
+---
+
+### 네비게이션 흐름
+
+```
+InGameContentDashboard ("모험")
+├─ MainStoryProgressPanel → StageSelectScreen (메인스토리)
+├─ DungeonButton → StageDashboard (던전 카테고리 선택)
+├─ InvasionButton → StageSelectScreen (침략 스테이지)
+├─ ShortTermClassButton → EventStageScreen (속성반 이벤트)
+├─ DimensionClashButton → DimensionRaidScreen (차원 레이드)
+├─ NurulingBustersButton → MinigameScreen (미니게임)
+├─ PVPButton → PVPLobbyScreen (PVP)
+├─ DeckFormationButton → DeckManageScreen (덱 편성)
+├─ StageProgressWidget → StageSelectScreen (현재 진행 스테이지)
+└─ BackButton → LobbyScreen
+```
+
+---
+
+### 컨텐츠 버튼 상태
+
+| 버튼 | 상태 | 표시 |
+|------|------|------|
+| **활성** | 진입 가능 | 일반 표시 |
+| **비활성** | 레벨/조건 미충족 | 어둡게 + 잠금 아이콘 |
+| **이벤트** | 기간 한정 | 시간 표시 + 하이라이트 |
+| **신규** | 새 컨텐츠 | NEW 배지 |
+| **진행중** | 미완료 컨텐츠 | 진행도 표시 |
+
+---
+
 ## 핵심 개념
 
 | 용어 | 정의 | 예시 |

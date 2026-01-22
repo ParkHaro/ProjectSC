@@ -15,6 +15,206 @@ updated: 2026-01-18
 
 라이브 서비스 운영을 위한 기간제 이벤트 시스템. 미션, 상점, 스테이지 등 다양한 컨텐츠를 포함하는 컨테이너.
 
+## 레퍼런스
+- `Docs/Design/Reference/LiveEvent.jpg`
+
+---
+
+## UI 레이아웃 구조
+
+### 전체 구조
+
+```
+LiveEventScreen (FullScreen)
+├─ ScreenHeader ─────────────────────────────────────────────────────────
+│   ├─ [Left] ProfileWidget (레벨, 닉네임, EXP)
+│   └─ [Right] CurrencyHUD (골드, 프리미엄) + CharacterIcons + Settings + Mail
+│
+├─ ContentArea ──────────────────────────────────────────────────────────
+│   │
+│   ├─ LeftPanel (EventList) ───────────────┬─ RightPanel (EventDetail) ─
+│   │   │                                   │
+│   │   ├─ EventBannerItem (세로 스크롤)    │   ├─ EventTitleBanner
+│   │   │   ├─ "사도면접"                   │   │   └─ 이벤트 타이틀 이미지
+│   │   │   ├─ "진출! 유령어의 세상"        │   │
+│   │   │   ├─ "맛이 하는 달"               │   ├─ CharacterIllust
+│   │   │   ├─ "사도면접"                   │   │   └─ 이벤트 캐릭터 일러스트
+│   │   │   └─ "트리커패스"                 │   │
+│   │   │                                   │   ├─ EventPeriodLabel
+│   │   └─ (선택된 항목 하이라이트)         │   │   └─ "이벤트 시작: 2026-01-15 11:00"
+│   │                                       │   │   └─ "이벤트 종료: 2026-01-29 10:59"
+│   │                                       │   │
+│   │                                       │   ├─ RewardPreview
+│   │                                       │   │   ├─ "참여 시 획득 가능한 보상"
+│   │                                       │   │   └─ RewardIconList
+│   │                                       │   │
+│   │                                       │   └─ EnterButton
+│   │                                       │       └─ "바로 가기" → EventDetailScreen
+│   │                                       │
+└───┴───────────────────────────────────────┴────────────────────────────
+```
+
+### 영역별 상세
+
+#### 1. ScreenHeader (공통 컴포넌트)
+| 위치 | 요소 | 설명 |
+|------|------|------|
+| Left | ProfileWidget | 레벨(Lv.40), 닉네임("하로"), EXP 바 |
+| Center | TitleText | "이벤트" |
+| Right | CurrencyHUD | 골드(549,061), 프리미엄(1,809) |
+| Right | CharacterIcons | 미니 캐릭터 아이콘 (3개) |
+| Right | SettingsButton | 설정 |
+| Right | MailButton | 메일 (배지 표시: 2) |
+
+#### 2. LeftPanel (EventList)
+| 요소 | 설명 |
+|------|------|
+| **EventBannerList** | 활성 이벤트 배너 목록 (세로 스크롤) |
+| - EventBannerItem | 개별 이벤트 배너 |
+|   - BannerImage | 이벤트 썸네일 이미지 |
+|   - EventNameLabel | 이벤트 이름 |
+|   - NewBadge | NEW 뱃지 (미방문 시, 분홍 꽃 아이콘) |
+|   - SelectionIndicator | 선택 상태 표시 (하이라이트) |
+
+#### 3. RightPanel (EventDetail)
+| 요소 | 설명 |
+|------|------|
+| **EventTitleBanner** | 이벤트 타이틀 배너 이미지 |
+| **CharacterIllust** | 이벤트 대표 캐릭터 일러스트 |
+| **DecoElements** | 데코 요소 (슬라임 캐릭터 등) |
+| **EventPeriodGroup** | 이벤트 기간 정보 |
+| - StartTimeLabel | 시작 시간 ("이벤트 시작: 2026-01-15 11:00(UTC +9)") |
+| - EndTimeLabel | 종료 시간 ("이벤트 종료: 2026-01-29 10:59(UTC +9)") |
+| **RewardPreviewGroup** | 보상 미리보기 |
+| - PreviewTitleLabel | "참여 시 획득 가능한 보상" |
+| - RewardIconList | 보상 아이콘 목록 |
+| **EnterButton** | "바로 가기" 버튼 → EventDetailScreen 이동 |
+
+---
+
+### Prefab 계층 구조
+
+```
+LiveEventScreen (RectTransform: Stretch)
+├─ Background
+│   └─ Image (BgDeep, 연두색 그라데이션)
+│
+├─ SafeArea
+│   ├─ Header (Top, 80px)
+│   │   └─ ScreenHeader [Prefab]
+│   │       ├─ ProfileWidget
+│   │       ├─ TitleText ("이벤트")
+│   │       ├─ CurrencyHUD
+│   │       ├─ CharacterIconGroup
+│   │       ├─ SettingsButton
+│   │       └─ MailButton
+│   │
+│   └─ Content (Stretch, Top=80)
+│       ├─ LeftPanel (Anchor: Left, Width=350, Stretch Vertical)
+│       │   └─ EventBannerScrollView (VerticalLayoutGroup)
+│       │       ├─ EventBannerItem [Prefab] x N
+│       │       │   ├─ BannerImage
+│       │       │   ├─ EventNameLabel
+│       │       │   ├─ NewBadge
+│       │       │   └─ SelectionHighlight
+│       │       └─ ...
+│       │
+│       └─ RightPanel (Anchor: Stretch, Left=350)
+│           ├─ EventDetailContainer
+│           │   ├─ TitleBannerArea (Top)
+│           │   │   ├─ TitleBannerImage
+│           │   │   └─ DecoElements
+│           │   │
+│           │   ├─ CharacterArea (Center)
+│           │   │   └─ CharacterIllust
+│           │   │
+│           │   ├─ PeriodArea (Bottom-Center)
+│           │   │   ├─ StartTimeLabel
+│           │   │   └─ EndTimeLabel
+│           │   │
+│           │   ├─ RewardPreviewArea (Bottom-Left)
+│           │   │   ├─ PreviewTitleLabel
+│           │   │   └─ RewardIconContainer (HorizontalLayoutGroup)
+│           │   │       └─ RewardIcon x N
+│           │   │
+│           │   └─ ButtonArea (Bottom-Right)
+│           │       └─ EnterButton ("바로 가기")
+│           │
+│           └─ BottomTabBar (선택, EventDetailScreen에서 사용 가능)
+│
+└─ OverlayLayer
+```
+
+---
+
+### 컴포넌트 매핑
+
+| 영역 | Widget/Component | SerializeField |
+|------|------------------|----------------|
+| Header | ScreenHeader | `_screenHeader` |
+| LeftPanel | ScrollRect | `_eventListScrollView` |
+| LeftPanel | Transform (Content) | `_eventBannerContainer` |
+| LeftPanel | EventBannerItem (Prefab) | `_eventBannerPrefab` |
+| RightPanel | Image | `_titleBannerImage` |
+| RightPanel | Image | `_characterIllust` |
+| RightPanel | TMP_Text | `_startTimeLabel` |
+| RightPanel | TMP_Text | `_endTimeLabel` |
+| RightPanel | TMP_Text | `_rewardPreviewTitle` |
+| RightPanel | Transform | `_rewardIconContainer` |
+| RightPanel | Button | `_enterButton` |
+| Selection | LiveEventData | `_selectedEvent` (런타임) |
+
+#### EventBannerItem 컴포넌트 매핑
+
+| 요소 | SerializeField |
+|------|----------------|
+| BannerImage | `_bannerImage` |
+| EventNameLabel | `_eventNameLabel` |
+| NewBadge | `_newBadge` |
+| SelectionHighlight | `_selectionHighlight` |
+| Button | `_bannerButton` |
+
+---
+
+### 네비게이션 흐름
+
+```
+LobbyScreen
+    │ [이벤트 버튼] 또는 [이벤트 배너]
+    ▼
+LiveEventScreen
+    │
+    ├─ EventBannerItem 선택 → RightPanel 갱신 (화면 내 전환)
+    │
+    ├─ EnterButton ("바로 가기") → EventDetailScreen
+    │   │
+    │   ├─ [미션] 탭 → EventMissionTab
+    │   │   └─ MissionItem [보상받기] → ClaimEventMissionRequest
+    │   │
+    │   ├─ [스테이지] 탭 → EventStageTab (StageListScreen 재사용)
+    │   │   └─ StageItem → PartySelectScreen → BattleScreen
+    │   │
+    │   └─ [상점] 탭 → EventShopTab (ShopScreen 재사용)
+    │       └─ ShopItem → 구매 확인 → PurchaseRequest
+    │
+    └─ BackButton → LobbyScreen
+```
+
+---
+
+### 상태별 UI 변화
+
+| 상태 | UI 변화 |
+|------|---------|
+| 이벤트 목록 로딩 | LeftPanel에 로딩 스피너 표시 |
+| 이벤트 없음 | "진행 중인 이벤트가 없습니다" 메시지 |
+| 이벤트 선택 | 해당 배너 하이라이트, RightPanel 정보 갱신 |
+| 미방문 이벤트 | NEW 뱃지 표시 (분홍 꽃 아이콘) |
+| 유예 기간 | "유예 기간" 라벨 + 남은 일수 표시 |
+| 보상 수령 가능 | "보상!" 뱃지 표시 |
+
+---
+
 ## 의존성
 
 ### 참조

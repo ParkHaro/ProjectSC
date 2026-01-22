@@ -8,6 +8,185 @@
 - 로그인 후 자동 실행 작업(출석체크, 재화 전환, 알림) 처리
 - 유저 상태 정보 표시
 
+## 레퍼런스
+- `Docs/Design/Reference/Lobby.jpg`
+
+---
+
+## UI 레이아웃 구조
+
+### 전체 구조
+
+```
+LobbyScreen (FullScreen)
+├─ ScreenHeader ─────────────────────────────────────────────────────────
+│   ├─ [Left] Profile (레벨, 닉네임, EXP)
+│   └─ [Right] CurrencyHUD (스태미나, 골드, 프리미엄) + Settings + Mail
+│
+├─ LeftTopArea ──────────────────────┬─ RightTopArea ────────────────────
+│   ├─ EventBannerCarousel           │   ├─ StageProgressWidget
+│   │   └─ Slides (좌우 스와이프)    │   │   └─ "11-10 최후의 방어선!"
+│   └─ PassButtonGroup               │   └─ QuickMenuGrid (2x4)
+│       ├─ LevelPass                 │       ├─ EventPopup, Farm, Friend, Quest
+│       ├─ StoryPass                 │       └─ PowerUp, Monthly, Return, ...
+│       ├─ TrialPass                 │
+│       └─ StepUpPackage             │
+│                                    │
+├─ CenterArea ───────────────────────┼─ RightBottomArea ─────────────────
+│   ├─ CharacterDisplay              │   └─ InGameContentDashboard
+│   │   ├─ CharacterImage (터치)     │       ├─ StageShortcut (11-1 바로가자!)
+│   │   └─ DialogueText              │       ├─ CharacterMini
+│   └─ CharacterSwitch (< >)         │       └─ AdventureButton (모험)
+│                                    │
+└─ BottomNav ────────────────────────┴───────────────────────────────────
+    └─ ContentButtonGroup (스크롤 가능)
+        ├─ GachaButton (모집)
+        ├─ CashShopButton (캐시상점)
+        ├─ ShopButton (상점)
+        ├─ CharacterButton (사도)
+        ├─ CardButton (카드)
+        ├─ TheaterButton (극장)
+        └─ GuildButton (고단)
+```
+
+### 영역별 상세
+
+#### 1. ScreenHeader (별도 컴포넌트)
+| 위치 | 요소 | 설명 |
+|------|------|------|
+| Left | ProfileWidget | 레벨, 닉네임, EXP 버튼 |
+| Right | CurrencyHUD | 스태미나(102/102), 골드(549,061), 프리미엄(1,809) |
+| Right | SettingsButton | 설정 |
+| Right | MailButton | 메일 (배지 표시) |
+
+#### 2. LeftTopArea (좌상단)
+| 요소 | 설명 |
+|------|------|
+| **EventBannerCarousel** | 이벤트 배너 슬라이드 (좌우 스와이프) |
+| **PassButtonGroup** | 패스/상품 버튼 (4개) |
+| - LevelPass | 레벨패스 |
+| - StoryPass | 사록패스 |
+| - TrialPass | 트라이얼패스 |
+| - StepUpPackage | 스텝업패키지 |
+
+#### 3. RightTopArea (우상단)
+| 요소 | 설명 |
+|------|------|
+| **StageProgressWidget** | 현재 스테이지 진행 표시 (11-10 최후의 방어선! 알프트반선!) |
+| **QuickMenuGrid** | 퀵메뉴 아이콘 그리드 (2행 x 4열) |
+| - Row 1 | 이벤트팝업, 평일농장, 친구, 퀘스트 |
+| - Row 2 | 빠르게강해지기, 많이하는달, 복귀환영, ... |
+
+#### 4. CenterArea (중앙)
+| 요소 | 설명 |
+|------|------|
+| **CharacterDisplay** | 메인 캐릭터 일러스트 (터치 시 상호작용) |
+| **DialogueText** | 캐릭터 대사 ("내가 놀고 싶을 때 놀러 오고...") |
+| **CharacterSwitch** | 좌우 화살표 (< >) 캐릭터 전환 |
+
+#### 5. RightBottomArea (우하단)
+| 요소 | 설명 |
+|------|------|
+| **InGameContentDashboard** | 인게임 컨텐츠 대시보드 |
+| - StageShortcut | 스테이지 바로가기 (11-1 바로 가자!) |
+| - CharacterMini | 파티 캐릭터 미니 이미지 |
+| - AdventureButton | "모험" 버튼 → StageSelectScreen |
+
+#### 6. BottomNav (하단 네비게이션)
+| 버튼 | 라벨 | 이동 화면 |
+|------|------|----------|
+| GachaButton | 모집 | GachaScreen |
+| CashShopButton | 캐시상점 | (TBD) |
+| ShopButton | 상점 | ShopScreen |
+| CharacterButton | 사도 | CharacterListScreen |
+| CardButton | 카드 | (TBD) |
+| TheaterButton | 극장 | (TBD) |
+| GuildButton | 고단 | (TBD) |
+
+---
+
+### Prefab 계층 구조
+
+```
+LobbyScreen (RectTransform: Stretch)
+├─ Background
+│   └─ Image (BgDeep)
+│
+├─ SafeArea
+│   ├─ Header (Top, 80px)
+│   │   └─ ScreenHeader [Prefab]
+│   │
+│   ├─ Content (Stretch, Top=80)
+│   │   ├─ LeftTopArea (Anchor: TopLeft, 400x300)
+│   │   │   ├─ EventBannerCarousel
+│   │   │   │   ├─ BannerContainer (HorizontalScroll)
+│   │   │   │   └─ Indicators
+│   │   │   └─ PassButtonGroup (HorizontalLayoutGroup)
+│   │   │       └─ PassButton x4
+│   │   │
+│   │   ├─ RightTopArea (Anchor: TopRight, 350x250)
+│   │   │   ├─ StageProgressWidget
+│   │   │   │   ├─ StageLabel
+│   │   │   │   └─ ProgressBar (선택)
+│   │   │   └─ QuickMenuGrid (GridLayoutGroup 4x2)
+│   │   │       └─ QuickMenuButton x8
+│   │   │
+│   │   ├─ CenterArea (Anchor: Center, Stretch)
+│   │   │   ├─ CharacterDisplay
+│   │   │   │   ├─ CharacterImage
+│   │   │   │   └─ DialogueBox
+│   │   │   │       └─ DialogueText
+│   │   │   ├─ LeftArrow (Button)
+│   │   │   └─ RightArrow (Button)
+│   │   │
+│   │   └─ RightBottomArea (Anchor: BottomRight, 200x180)
+│   │       └─ InGameContentDashboard
+│   │           ├─ StageShortcutButton
+│   │           ├─ CharacterMiniGroup
+│   │           └─ AdventureButton
+│   │
+│   └─ BottomNav (Bottom, 100px)
+│       └─ ContentButtonGroup (HorizontalLayoutGroup, Scroll)
+│           └─ ContentButton x7
+│
+└─ OverlayLayer
+```
+
+---
+
+### 컴포넌트 매핑
+
+| 영역 | Widget/Component | SerializeField |
+|------|------------------|----------------|
+| Header | ScreenHeader | `_screenHeader` |
+| LeftTop | EventBannerCarousel | `_eventBannerCarousel` |
+| LeftTop | PassButtonGroup | `_passButtons` |
+| RightTop | StageProgressWidget | `_stageProgressWidget` |
+| RightTop | QuickMenuGrid | `_quickMenuButtons` |
+| Center | CharacterDisplay | `_characterDisplay` |
+| Center | DialogueText | `_dialogueText` |
+| Center | LeftArrow/RightArrow | `_leftArrow`, `_rightArrow` |
+| RightBottom | InGameContentDashboard | `_inGameDashboard` |
+| BottomNav | ContentButtonGroup | `_contentButtons` |
+
+---
+
+### 네비게이션 흐름
+
+```
+LobbyScreen
+├─ GachaButton → GachaScreen
+├─ ShopButton → ShopScreen
+├─ CharacterButton → CharacterListScreen
+├─ AdventureButton → StageSelectScreen
+├─ StageShortcut → StageSelectScreen (특정 스테이지)
+├─ EventBanner → LiveEventScreen / EventDetailScreen
+├─ QuickMenu → 각 기능별 Screen/Popup
+└─ ProfileWidget → (TBD) ProfileScreen
+```
+
+---
+
 ## 참조
 - Sc.Common (UI, Popup, Services)
 - Sc.Core (DataManager, NetworkManager)
