@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using Sc.Common.UI;
+using Sc.Common.UI.Attributes;
 using Sc.Common.UI.Widgets;
 using Sc.Core;
 using Sc.Data;
@@ -27,10 +28,12 @@ namespace Sc.Contents.Event
     /// <summary>
     /// 라이브 이벤트 화면 - 활성 이벤트 목록
     /// </summary>
+    [ScreenTemplate(ScreenTemplateType.Standard)]
     public class LiveEventScreen : ScreenWidget<LiveEventScreen, LiveEventState>
     {
-        [Header("UI References")]
-        [SerializeField] private Transform _eventListContainer;
+        [Header("UI References")] [SerializeField]
+        private Transform _eventListContainer;
+
         [SerializeField] private EventBannerItem _bannerItemPrefab;
         [SerializeField] private Button _backButton;
         [SerializeField] private TMP_Text _emptyText;
@@ -106,7 +109,8 @@ namespace Sc.Contents.Event
 
         private void OnGetActiveEventsCompleted(GetActiveEventsCompletedEvent evt)
         {
-            Debug.Log($"[LiveEventScreen] GetActiveEvents completed: {evt.ActiveEvents?.Count ?? 0} active, {evt.GracePeriodEvents?.Count ?? 0} grace period");
+            Debug.Log(
+                $"[LiveEventScreen] GetActiveEvents completed: {evt.ActiveEvents?.Count ?? 0} active, {evt.GracePeriodEvents?.Count ?? 0} grace period");
 
             _isLoading = false;
             SetLoadingState(false);
@@ -117,6 +121,7 @@ namespace Sc.Contents.Event
             {
                 allEvents.AddRange(evt.ActiveEvents);
             }
+
             if (evt.GracePeriodEvents != null)
             {
                 allEvents.AddRange(evt.GracePeriodEvents);
@@ -174,6 +179,7 @@ namespace Sc.Contents.Event
                     Destroy(banner.gameObject);
                 }
             }
+
             _spawnedBanners.Clear();
         }
 

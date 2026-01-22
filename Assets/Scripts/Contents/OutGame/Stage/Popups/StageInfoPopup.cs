@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using Sc.Common.UI;
+using Sc.Common.UI.Attributes;
 using Sc.Core;
 using Sc.Data;
 using TMPro;
@@ -12,6 +13,7 @@ namespace Sc.Contents.Stage
     /// 스테이지 상세 정보 팝업.
     /// 스테이지명, 난이도, 권장전투력, 별 조건, 보상, 입장 제한 표시.
     /// </summary>
+    [PopupTemplate(PopupTemplateType.Info)]
     public class StageInfoPopup : PopupWidget<StageInfoPopup, StageInfoState>
     {
         [Header("Header")]

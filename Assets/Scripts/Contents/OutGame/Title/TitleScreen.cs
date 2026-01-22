@@ -1,4 +1,5 @@
 using Sc.Common.UI;
+using Sc.Common.UI.Attributes;
 using Sc.Common.UI.Widgets;
 using Sc.Contents.Lobby;
 using TMPro;
@@ -19,6 +20,7 @@ namespace Sc.Contents.Title
     /// 타이틀 화면 - 터치 시 로비로 전환
     /// NavigationManager가 루트 Screen 보호 (스택 1개일 때 Back 거부)
     /// </summary>
+    [ScreenTemplate(ScreenTemplateType.FullScreen)]
     public class TitleScreen : ScreenWidget<TitleScreen, TitleState>
     {
         [Header("UI References")] [SerializeField]

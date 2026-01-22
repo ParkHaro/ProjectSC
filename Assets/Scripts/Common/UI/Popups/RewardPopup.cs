@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
+using Sc.Common.UI.Attributes;
 using Sc.Core;
 using Sc.Data;
 using TMPro;
@@ -12,6 +13,7 @@ namespace Sc.Common.UI
     /// <summary>
     /// 획득 보상 목록을 표시하는 범용 팝업.
     /// </summary>
+    [PopupTemplate(PopupTemplateType.Reward)]
     public class RewardPopup : PopupWidget<RewardPopup, RewardPopup.State>
     {
         #region Nested State
@@ -51,6 +53,7 @@ namespace Sc.Common.UI
                     Debug.LogWarning("[RewardPopup] Rewards가 비어있음");
                     return false;
                 }
+
                 return true;
             }
         }
@@ -59,24 +62,22 @@ namespace Sc.Common.UI
 
         #region SerializeFields
 
-        [Header("UI References")]
-        [SerializeField] private TMP_Text _titleText;
+        [Header("UI References")] [SerializeField]
+        private TMP_Text _titleText;
+
         [SerializeField] private Transform _rewardContainer;
         [SerializeField] private RewardItem _rewardItemPrefab;
         [SerializeField] private Button _confirmButton;
         [SerializeField] private TMP_Text _confirmButtonText;
         [SerializeField] private Button _backgroundButton;
 
-        [Header("Layout")]
-        [SerializeField] private GridLayoutGroup _layoutGroup;
+        [Header("Layout")] [SerializeField] private GridLayoutGroup _layoutGroup;
 
-        [Header("Settings")]
-        [SerializeField] private Vector2 _largeCellSize = new Vector2(120, 140);
+        [Header("Settings")] [SerializeField] private Vector2 _largeCellSize = new Vector2(120, 140);
         [SerializeField] private Vector2 _mediumCellSize = new Vector2(80, 100);
         [SerializeField] private Vector2 _smallCellSize = new Vector2(60, 80);
 
-        [Header("Fallback")]
-        [SerializeField] private Sprite _fallbackIcon;
+        [Header("Fallback")] [SerializeField] private Sprite _fallbackIcon;
 
         #endregion
 
@@ -145,6 +146,7 @@ namespace Sc.Common.UI
                 AssetManager.Instance?.ReleaseScope(_iconScope);
                 _iconScope = null;
             }
+
             _iconHandles.Clear();
 
             _currentState = null;
@@ -290,6 +292,7 @@ namespace Sc.Common.UI
             {
                 return handle.Asset;
             }
+
             return _fallbackIcon;
         }
 

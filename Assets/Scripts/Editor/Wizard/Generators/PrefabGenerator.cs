@@ -2,7 +2,9 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using Sc.Common.UI;
+using Sc.Common.UI.Attributes;
 using Sc.Contents.Lobby;
 using Sc.Contents.Title;
 using UnityEditor;
@@ -24,6 +26,42 @@ namespace Sc.Editor.Wizard.Generators
         private const string ADDRESSABLE_GROUP = "UI";
 
         #region Public API
+
+        /// <summary>
+        /// 모든 프리팹을 삭제 후 재생성.
+        /// </summary>
+        public static (int screens, int popups) RegenerateAllPrefabs()
+        {
+            // 기존 프리팹 삭제
+            DeleteAllPrefabs(SCREEN_PATH);
+            DeleteAllPrefabs(POPUP_PATH);
+
+            AssetDatabase.Refresh();
+
+            // 재생성
+            var screens = GenerateAllScreenPrefabs();
+            var popups = GenerateAllPopupPrefabs();
+
+            Debug.Log($"[PrefabGenerator] 재생성 완료: Screen {screens}개, Popup {popups}개");
+            return (screens, popups);
+        }
+
+        /// <summary>
+        /// 특정 경로의 모든 프리팹 삭제.
+        /// </summary>
+        public static void DeleteAllPrefabs(string path)
+        {
+            if (!Directory.Exists(path))
+                return;
+
+            var prefabs = Directory.GetFiles(path, "*.prefab");
+            foreach (var prefab in prefabs)
+            {
+                AssetDatabase.DeleteAsset(prefab.Replace("\\", "/"));
+            }
+
+            Debug.Log($"[PrefabGenerator] {prefabs.Length}개 프리팹 삭제: {path}");
+        }
 
         /// <summary>
         /// 모든 Screen 타입을 스캔하여 프리팹 생성.
@@ -145,7 +183,7 @@ namespace Sc.Editor.Wizard.Generators
 
         private static GameObject CreateScreenGameObject(Type screenType)
         {
-            // LobbyScreen 전용 빌더 사용
+            // LobbyScreen 전용 빌더 사용 (커스텀 위젯 구조)
             if (screenType == typeof(LobbyScreen))
             {
                 return LobbyScreenPrefabBuilder.Build();
@@ -157,55 +195,28 @@ namespace Sc.Editor.Wizard.Generators
                 return TitleScreenPrefabBuilder.Build();
             }
 
-            // 기본 Screen 생성
-            var go = new GameObject(screenType.Name);
+            // ScreenTemplateAttribute가 있으면 팩토리 사용
+            var attr = screenType.GetCustomAttribute<ScreenTemplateAttribute>();
+            if (attr != null)
+            {
+                return ScreenTemplateFactory.Create(screenType);
+            }
 
-            // RectTransform 설정 (전체 화면)
-            // Canvas는 부모(NavigationManager.ScreenCanvas)에서 제공하므로 추가하지 않음
-            var rectTransform = go.AddComponent<RectTransform>();
-            rectTransform.anchorMin = Vector2.zero;
-            rectTransform.anchorMax = Vector2.one;
-            rectTransform.offsetMin = Vector2.zero;
-            rectTransform.offsetMax = Vector2.zero;
-
-            // CanvasGroup 추가 (Transition용 alpha 제어)
-            go.AddComponent<CanvasGroup>();
-
-            // 배경 Image 추가
-            var bg = go.AddComponent<Image>();
-            bg.color = new Color(0.1f, 0.1f, 0.15f, 1f);
-            bg.raycastTarget = true;
-
-            // Screen 컴포넌트 추가
-            go.AddComponent(screenType);
-
-            return go;
+            // Attribute 없는 경우 기본 Standard 템플릿 사용
+            return ScreenTemplateFactory.Create(screenType);
         }
 
         private static GameObject CreatePopupGameObject(Type popupType)
         {
-            var go = new GameObject(popupType.Name);
+            // PopupTemplateAttribute가 있으면 팩토리 사용
+            var attr = popupType.GetCustomAttribute<PopupTemplateAttribute>();
+            if (attr != null)
+            {
+                return PopupTemplateFactory.Create(popupType);
+            }
 
-            // RectTransform 설정 (중앙 고정 크기)
-            // Canvas는 부모(NavigationManager.PopupCanvas)에서 제공하므로 추가하지 않음
-            var rectTransform = go.AddComponent<RectTransform>();
-            rectTransform.anchorMin = new Vector2(0.5f, 0.5f);
-            rectTransform.anchorMax = new Vector2(0.5f, 0.5f);
-            rectTransform.sizeDelta = new Vector2(600, 400);
-            rectTransform.anchoredPosition = Vector2.zero;
-
-            // CanvasGroup 추가 (Transition용 alpha 제어)
-            go.AddComponent<CanvasGroup>();
-
-            // 배경 Image 추가
-            var bg = go.AddComponent<Image>();
-            bg.color = new Color(0.1f, 0.1f, 0.15f, 0.95f);
-            bg.raycastTarget = true;
-
-            // Popup 컴포넌트 추가
-            go.AddComponent(popupType);
-
-            return go;
+            // Attribute 없는 경우 기본 Confirm 템플릿 사용
+            return PopupTemplateFactory.Create(popupType);
         }
 
         #endregion

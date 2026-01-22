@@ -1,3 +1,4 @@
+using Sc.Common.UI.Attributes;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -7,10 +8,12 @@ namespace Sc.Common.UI
     /// <summary>
     /// 범용 확인/취소 팝업. ShowCancelButton=false로 Alert 모드 지원.
     /// </summary>
+    [PopupTemplate(PopupTemplateType.Confirm)]
     public class ConfirmPopup : PopupWidget<ConfirmPopup, ConfirmState>
     {
-        [Header("UI References")]
-        [SerializeField] private TMP_Text _titleText;
+        [Header("UI References")] [SerializeField]
+        private TMP_Text _titleText;
+
         [SerializeField] private TMP_Text _messageText;
         [SerializeField] private Button _confirmButton;
         [SerializeField] private Button _cancelButton;

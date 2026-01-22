@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using Sc.Common.UI;
+using Sc.Common.UI.Attributes;
 using Sc.Common.UI.Widgets;
 using Sc.Core;
 using Sc.Data;
@@ -27,6 +28,7 @@ namespace Sc.Contents.Gacha
     /// <summary>
     /// 가챠 화면 - 캐릭터 소환
     /// </summary>
+    [ScreenTemplate(ScreenTemplateType.Standard)]
     public class GachaScreen : ScreenWidget<GachaScreen, GachaState>
     {
         [Header("배너 영역")]

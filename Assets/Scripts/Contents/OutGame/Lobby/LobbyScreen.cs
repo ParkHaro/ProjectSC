@@ -1,5 +1,6 @@
 using Cysharp.Threading.Tasks;
 using Sc.Common.UI;
+using Sc.Common.UI.Attributes;
 using Sc.Common.UI.Widgets;
 using Sc.Contents.Event;
 using Sc.Contents.Gacha;
@@ -27,6 +28,7 @@ namespace Sc.Contents.Lobby
     /// 로비 메인 화면.
     /// 스펙: Docs/Specs/Lobby.md
     /// </summary>
+    [ScreenTemplate(ScreenTemplateType.Tabbed)]
     public class LobbyScreen : ScreenWidget<LobbyScreen, LobbyState>
     {
         #region SerializeFields

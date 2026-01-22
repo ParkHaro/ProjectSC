@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Sc.Common.UI;
+using Sc.Common.UI.Attributes;
 using Sc.Common.UI.Widgets;
 using Sc.Core;
 using Sc.Data;
@@ -16,6 +17,7 @@ namespace Sc.Contents.Shop
     /// <summary>
     /// 상점 화면
     /// </summary>
+    [ScreenTemplate(ScreenTemplateType.Standard)]
     public class ShopScreen : ScreenWidget<ShopScreen, ShopScreen.ShopState>
     {
         /// <summary>

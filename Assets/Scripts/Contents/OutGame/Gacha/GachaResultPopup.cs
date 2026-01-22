@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using Sc.Common.UI;
+using Sc.Common.UI.Attributes;
 using Sc.Core;
 using Sc.Data;
 using Sc.Packet;
@@ -23,10 +24,12 @@ namespace Sc.Contents.Gacha
     /// <summary>
     /// 가챠 결과 팝업 - 소환 결과 표시
     /// </summary>
+    [PopupTemplate(PopupTemplateType.FullScreen)]
     public class GachaResultPopup : PopupWidget<GachaResultPopup, GachaResultState>
     {
-        [Header("UI References")]
-        [SerializeField] private Transform _resultContainer;
+        [Header("UI References")] [SerializeField]
+        private Transform _resultContainer;
+
         [SerializeField] private GameObject _resultItemPrefab;
         [SerializeField] private Button _confirmButton;
         [SerializeField] private Button _retryButton;
@@ -137,10 +140,10 @@ namespace Sc.Contents.Gacha
         {
             return rarity switch
             {
-                Rarity.SSR => new Color(1f, 0.84f, 0f, 0.3f),      // 금색
-                Rarity.SR => new Color(0.5f, 0f, 0.5f, 0.3f),      // 보라색
-                Rarity.R => new Color(0f, 0.5f, 1f, 0.3f),         // 파란색
-                _ => new Color(0.5f, 0.5f, 0.5f, 0.3f)             // 회색
+                Rarity.SSR => new Color(1f, 0.84f, 0f, 0.3f), // 금색
+                Rarity.SR => new Color(0.5f, 0f, 0.5f, 0.3f), // 보라색
+                Rarity.R => new Color(0f, 0.5f, 1f, 0.3f), // 파란색
+                _ => new Color(0.5f, 0.5f, 0.5f, 0.3f) // 회색
             };
         }
 
@@ -153,6 +156,7 @@ namespace Sc.Contents.Gacha
                     Destroy(item);
                 }
             }
+
             _spawnedItems.Clear();
         }
 

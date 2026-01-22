@@ -1,3 +1,4 @@
+using Sc.Common.UI.Attributes;
 using Sc.Data;
 using TMPro;
 using UnityEngine;
@@ -8,10 +9,12 @@ namespace Sc.Common.UI
     /// <summary>
     /// 재화 소모 확인 팝업. 재화 아이콘과 수량을 시각적으로 표시.
     /// </summary>
+    [PopupTemplate(PopupTemplateType.Confirm, 500f, 350f)]
     public class CostConfirmPopup : PopupWidget<CostConfirmPopup, CostConfirmState>
     {
-        [Header("UI References")]
-        [SerializeField] private TMP_Text _titleText;
+        [Header("UI References")] [SerializeField]
+        private TMP_Text _titleText;
+
         [SerializeField] private TMP_Text _messageText;
         [SerializeField] private Button _confirmButton;
         [SerializeField] private Button _cancelButton;
@@ -19,19 +22,20 @@ namespace Sc.Common.UI
         [SerializeField] private TMP_Text _cancelButtonText;
         [SerializeField] private Button _backgroundButton;
 
-        [Header("Cost Display")]
-        [SerializeField] private Image _costIcon;
+        [Header("Cost Display")] [SerializeField]
+        private Image _costIcon;
+
         [SerializeField] private TMP_Text _costAmountText;
         [SerializeField] private TMP_Text _currentAmountText;
 
-        [Header("Cost Icon Sprites")]
-        [SerializeField] private Sprite _goldIcon;
+        [Header("Cost Icon Sprites")] [SerializeField]
+        private Sprite _goldIcon;
+
         [SerializeField] private Sprite _gemIcon;
         [SerializeField] private Sprite _staminaIcon;
         [SerializeField] private Sprite _defaultIcon;
 
-        [Header("Colors")]
-        [SerializeField] private Color _normalColor = Color.white;
+        [Header("Colors")] [SerializeField] private Color _normalColor = Color.white;
         [SerializeField] private Color _insufficientColor = Color.red;
 
         private CostConfirmState _currentState;

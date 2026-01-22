@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Text;
 using Sc.Common.UI;
+using Sc.Common.UI.Attributes;
 using Sc.Core;
 using Sc.Data;
 using TMPro;
@@ -12,6 +13,7 @@ namespace Sc.Contents.Gacha
     /// <summary>
     /// 가챠 확률 상세 팝업
     /// </summary>
+    [PopupTemplate(PopupTemplateType.Info)]
     public class RateDetailPopup : PopupWidget<RateDetailPopup, RateDetailState>
     {
         [Header("UI References")]

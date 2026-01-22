@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using Sc.Common.UI;
+using Sc.Common.UI.Attributes;
 using Sc.Common.UI.Widgets;
 using Sc.Core;
 using Sc.Data;
@@ -14,24 +15,27 @@ namespace Sc.Contents.Gacha
     /// <summary>
     /// 가챠 히스토리 화면
     /// </summary>
+    [ScreenTemplate(ScreenTemplateType.Standard)]
     public class GachaHistoryScreen : ScreenWidget<GachaHistoryScreen, GachaHistoryState>
     {
         private const int MaxDisplayRecords = 100;
 
-        [Header("UI References")]
-        [SerializeField] private TMP_Text _titleText;
+        [Header("UI References")] [SerializeField]
+        private TMP_Text _titleText;
+
         [SerializeField] private Button _backButton;
         [SerializeField] private TMP_Dropdown _filterDropdown;
         [SerializeField] private ScrollRect _scrollRect;
 
-        [Header("History List")]
-        [SerializeField] private Transform _historyContainer;
+        [Header("History List")] [SerializeField]
+        private Transform _historyContainer;
+
         [SerializeField] private GameObject _historyItemPrefab;
         [SerializeField] private GameObject _emptyStatePanel;
         [SerializeField] private TMP_Text _emptyStateText;
 
-        [Header("Statistics")]
-        [SerializeField] private TMP_Text _statisticsText;
+        [Header("Statistics")] [SerializeField]
+        private TMP_Text _statisticsText;
 
         private GachaHistoryState _currentState;
         private readonly List<GachaHistoryItem> _historyItems = new();
@@ -215,6 +219,7 @@ namespace Sc.Contents.Gacha
                     Destroy(item.gameObject);
                 }
             }
+
             _historyItems.Clear();
         }
 

@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using Sc.Common.UI;
+using Sc.Common.UI.Attributes;
 using Sc.Common.UI.Widgets;
 using Sc.Core;
 using Sc.Data;
@@ -37,6 +38,7 @@ namespace Sc.Contents.Event
     /// <summary>
     /// 이벤트 상세 화면 - 탭 기반 서브 컨텐츠
     /// </summary>
+    [ScreenTemplate(ScreenTemplateType.Detail)]
     public class EventDetailScreen : ScreenWidget<EventDetailScreen, EventDetailState>
     {
         [Header("UI References")]
