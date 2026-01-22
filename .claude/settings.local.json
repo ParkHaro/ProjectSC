@@ -30,7 +30,23 @@
       "Bash(git add:*)",
       "Bash(git commit -m \"$\\(cat <<''EOF''\nImprove multi-session management structure\n\n- _active.json에 sessions/file_owners/completed 구조 추가\n- 영역 선언\\(scope\\) + 실제 변경 파일\\(modified_files\\) 추적\n- 세션 간 충돌 방지 규칙 문서화\nEOF\n\\)\")",
       "Bash(git commit:*)",
-      "mcp__plugin_serena_serena__replace_content"
+      "mcp__plugin_serena_serena__replace_content",
+      "mcp__plugin_serena_serena__find_referencing_symbols",
+      "mcp__plugin_serena_serena__list_memories",
+      "mcp__ide__getDiagnostics",
+      "Bash(if [ -f \"C:/Users/haro7/Projects/Unity/ProjectSC/Assets/Scripts/Debug/Sc.Debug.asmdef.meta\" ])",
+      "Bash(then mv \"C:/Users/haro7/Projects/Unity/ProjectSC/Assets/Scripts/Debug/Sc.Debug.asmdef.meta\" \"C:/Users/haro7/Projects/Unity/ProjectSC/Assets/Scripts/Debug/Sc.DebugTools.asmdef.meta\")",
+      "Bash(else echo \"No meta file found\")",
+      "Bash(fi)",
+      "mcp__plugin_serena_serena__think_about_whether_you_are_done",
+      "Bash(git checkout:*)",
+      "Skill(frontend-design:frontend-design)",
+      "Skill(frontend-design)",
+      "mcp__plugin_serena_serena__search_for_pattern",
+      "WebFetch(domain:mblogthumb-phinf.pstatic.net)",
+      "mcp__plugin_serena_serena__replace_symbol_body",
+      "Bash(powershell -Command \"Get-Content ''$env:LOCALAPPDATA\\\\Unity\\\\Editor\\\\Editor.log'' -Tail 200 | Select-String -Pattern ''Lobby|Home|Tab|Error|Exception'' | Select-Object -Last 50\")",
+      "Bash(powershell -Command:*)"
     ]
   },
   "hooks": {
