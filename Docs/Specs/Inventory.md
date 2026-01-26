@@ -214,27 +214,58 @@ InventoryScreen
 ## 구조
 
 ```
-Contents/Shared/Inventory/
-├── Logic/
-│   ├── InventoryManager.cs
-│   └── ItemSlot.cs
-└── UI/
-    └── InventoryView.cs
+Contents/OutGame/Inventory/
+├── InventoryScreen.cs
+├── Sc.Contents.Inventory.asmdef
+└── Widgets/
+    ├── ItemCard.cs
+    ├── ItemDetailWidget.cs
+    └── InventoryTabWidget.cs
 ```
 
 ---
 
 ## 클래스 목록
 
-### Logic
+### Screen
 
 | 클래스 | 설명 | 상태 |
 |--------|------|------|
-| InventoryManager | 인벤토리 관리 | ⬜ |
-| ItemSlot | 아이템 슬롯 데이터 | ⬜ |
+| InventoryScreen | 인벤토리 화면 (ScreenWidget) | ✅ |
 
-### UI
+### Widgets
 
 | 클래스 | 설명 | 상태 |
 |--------|------|------|
-| InventoryView | 인벤토리 화면 | ⬜ |
+| ItemCard | 아이템 카드 (아이콘, 수량, 등급, 선택) | ✅ |
+| ItemDetailWidget | 아이템 상세 정보 위젯 | ✅ |
+| InventoryTabWidget | 카테고리 탭 위젯 | ✅ |
+| InventoryTabButton | 개별 탭 버튼 컴포넌트 | ✅ |
+
+### Enums
+
+| Enum | 설명 |
+|------|------|
+| InventoryCategory | Usage, Growth, Equipment, Guild, Card |
+| InventorySortType | Default, Name, Rarity, Recent |
+
+---
+
+## Editor
+
+### PrefabBuilder
+
+| 파일 | 위치 |
+|------|------|
+| InventoryScreenPrefabBuilder.cs | `Assets/Scripts/Editor/Wizard/Generators/` |
+
+메뉴: `Tools/SC/Prefab Builders/Build InventoryScreen`
+
+---
+
+## Addressables 등록
+
+프리팹 생성 후 Addressables 등록 필요:
+- `Assets/Prefabs/UI/Screens/InventoryScreen.prefab`
+- Address: `Screens/InventoryScreen`
+- Group: `UI_Screens`
