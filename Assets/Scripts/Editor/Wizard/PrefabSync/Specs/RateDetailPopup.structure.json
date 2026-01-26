@@ -1,0 +1,588 @@
+{
+  "metadata": {
+    "prefabName": "RateDetailPopup",
+    "prefabPath": "Assets/Prefabs/UI/Popups/RateDetailPopup.prefab",
+    "componentType": "RateDetailPopup",
+    "componentNamespace": "Sc.Contents.Gacha",
+    "generatedAt": "2026-01-26T21:34:20",
+    "builderPath": "Assets/Scripts/Editor/Wizard/Generators/RateDetailPopupPrefabBuilder.cs"
+  },
+  "hierarchy": {
+    "name": "RateDetailPopup",
+    "path": "RateDetailPopup",
+    "active": true,
+    "rect": {
+      "anchor": "Stretch",
+      "anchorMin": [
+        0.0,
+        0.0
+      ],
+      "anchorMax": [
+        1.0,
+        1.0
+      ],
+      "pivot": [
+        0.5,
+        0.5
+      ],
+      "sizeDelta": [
+        0.0,
+        0.0
+      ],
+      "anchoredPosition": [
+        0.0,
+        0.0
+      ],
+      "offsetMin": [
+        0.0,
+        0.0
+      ],
+      "offsetMax": [
+        0.0,
+        0.0
+      ]
+    },
+    "components": [
+      {
+        "type": "CanvasGroup",
+        "fullType": "UnityEngine.CanvasGroup",
+        "properties": {
+          "alpha": 1.0,
+          "interactable": true,
+          "blocksRaycasts": true
+        }
+      },
+      {
+        "type": "RateDetailPopup",
+        "fullType": "Sc.Contents.Gacha.RateDetailPopup",
+        "isMainComponent": true,
+        "properties": {}
+      }
+    ],
+    "children": [
+      {
+        "name": "Backdrop",
+        "path": "RateDetailPopup/Backdrop",
+        "active": true,
+        "rect": {
+          "anchor": "Stretch",
+          "anchorMin": [
+            0.0,
+            0.0
+          ],
+          "anchorMax": [
+            1.0,
+            1.0
+          ],
+          "pivot": [
+            0.5,
+            0.5
+          ],
+          "sizeDelta": [
+            0.0,
+            0.0
+          ],
+          "anchoredPosition": [
+            0.0,
+            0.0
+          ],
+          "offsetMin": [
+            0.0,
+            0.0
+          ],
+          "offsetMax": [
+            0.0,
+            0.0
+          ]
+        },
+        "components": [
+          {
+            "type": "CanvasRenderer",
+            "fullType": "UnityEngine.CanvasRenderer",
+            "properties": {}
+          },
+          {
+            "type": "Image",
+            "fullType": "UnityEngine.UI.Image",
+            "properties": {
+              "color": "#000000B2",
+              "raycastTarget": true,
+              "type": "Simple"
+            }
+          },
+          {
+            "type": "Button",
+            "fullType": "UnityEngine.UI.Button",
+            "properties": {
+              "interactable": true,
+              "transition": "None"
+            }
+          }
+        ],
+        "children": []
+      },
+      {
+        "name": "Container",
+        "path": "RateDetailPopup/Container",
+        "active": true,
+        "rect": {
+          "anchor": "Center",
+          "anchorMin": [
+            0.5,
+            0.5
+          ],
+          "anchorMax": [
+            0.5,
+            0.5
+          ],
+          "pivot": [
+            0.5,
+            0.5
+          ],
+          "sizeDelta": [
+            600.0,
+            700.0
+          ],
+          "anchoredPosition": [
+            0.0,
+            0.0
+          ],
+          "offsetMin": [
+            -300.0,
+            -350.0
+          ],
+          "offsetMax": [
+            300.0,
+            350.0
+          ]
+        },
+        "components": [
+          {
+            "type": "CanvasRenderer",
+            "fullType": "UnityEngine.CanvasRenderer",
+            "properties": {}
+          },
+          {
+            "type": "Image",
+            "fullType": "UnityEngine.UI.Image",
+            "properties": {
+              "color": "#19192DD9",
+              "raycastTarget": true,
+              "type": "Simple"
+            }
+          }
+        ],
+        "children": [
+          {
+            "name": "Header",
+            "path": "RateDetailPopup/Container/Header",
+            "active": true,
+            "rect": {
+              "anchor": "TopStretch",
+              "anchorMin": [
+                0.0,
+                1.0
+              ],
+              "anchorMax": [
+                1.0,
+                1.0
+              ],
+              "pivot": [
+                0.5,
+                1.0
+              ],
+              "sizeDelta": [
+                0.0,
+                60.0
+              ],
+              "anchoredPosition": [
+                0.0,
+                0.0
+              ],
+              "offsetMin": [
+                0.0,
+                -60.0
+              ],
+              "offsetMax": [
+                0.0,
+                0.0
+              ]
+            },
+            "components": [],
+            "children": [
+              {
+                "name": "TxtTitle",
+                "path": "RateDetailPopup/Container/Header/TxtTitle",
+                "active": true,
+                "rect": {
+                  "anchor": "Stretch",
+                  "anchorMin": [
+                    0.0,
+                    0.0
+                  ],
+                  "anchorMax": [
+                    1.0,
+                    1.0
+                  ],
+                  "pivot": [
+                    0.5,
+                    0.5
+                  ],
+                  "sizeDelta": [
+                    -32.0,
+                    0.0
+                  ],
+                  "anchoredPosition": [
+                    0.0,
+                    0.0
+                  ],
+                  "offsetMin": [
+                    16.0,
+                    0.0
+                  ],
+                  "offsetMax": [
+                    -16.0,
+                    0.0
+                  ]
+                },
+                "components": [
+                  {
+                    "type": "CanvasRenderer",
+                    "fullType": "UnityEngine.CanvasRenderer",
+                    "properties": {}
+                  },
+                  {
+                    "type": "TextMeshProUGUI",
+                    "fullType": "TMPro.TextMeshProUGUI",
+                    "properties": {
+                      "text": "Information",
+                      "fontSize": 24.0,
+                      "color": "#FFFFFFFF",
+                      "alignment": "Center",
+                      "fontStyle": "Bold",
+                      "raycastTarget": false,
+                      "font": "Assets/TextMesh Pro/Resources/Fonts & Materials/PretendardVariable SDF.asset"
+                    }
+                  }
+                ],
+                "children": []
+              },
+              {
+                "name": "BtnClose",
+                "path": "RateDetailPopup/Container/Header/BtnClose",
+                "active": true,
+                "rect": {
+                  "anchor": "TopRight",
+                  "anchorMin": [
+                    1.0,
+                    1.0
+                  ],
+                  "anchorMax": [
+                    1.0,
+                    1.0
+                  ],
+                  "pivot": [
+                    1.0,
+                    1.0
+                  ],
+                  "sizeDelta": [
+                    40.0,
+                    40.0
+                  ],
+                  "anchoredPosition": [
+                    -8.0,
+                    -8.0
+                  ],
+                  "offsetMin": [
+                    -48.0,
+                    -48.0
+                  ],
+                  "offsetMax": [
+                    -8.0,
+                    -8.0
+                  ]
+                },
+                "components": [
+                  {
+                    "type": "CanvasRenderer",
+                    "fullType": "UnityEngine.CanvasRenderer",
+                    "properties": {}
+                  },
+                  {
+                    "type": "Image",
+                    "fullType": "UnityEngine.UI.Image",
+                    "properties": {
+                      "color": "#FFFFFF08",
+                      "raycastTarget": true,
+                      "type": "Simple"
+                    }
+                  },
+                  {
+                    "type": "Button",
+                    "fullType": "UnityEngine.UI.Button",
+                    "properties": {
+                      "interactable": true,
+                      "transition": "ColorTint"
+                    }
+                  }
+                ],
+                "children": [
+                  {
+                    "name": "Text",
+                    "path": "RateDetailPopup/Container/Header/BtnClose/Text",
+                    "active": true,
+                    "rect": {
+                      "anchor": "Stretch",
+                      "anchorMin": [
+                        0.0,
+                        0.0
+                      ],
+                      "anchorMax": [
+                        1.0,
+                        1.0
+                      ],
+                      "pivot": [
+                        0.5,
+                        0.5
+                      ],
+                      "sizeDelta": [
+                        0.0,
+                        0.0
+                      ],
+                      "anchoredPosition": [
+                        0.0,
+                        0.0
+                      ],
+                      "offsetMin": [
+                        0.0,
+                        0.0
+                      ],
+                      "offsetMax": [
+                        0.0,
+                        0.0
+                      ]
+                    },
+                    "components": [
+                      {
+                        "type": "CanvasRenderer",
+                        "fullType": "UnityEngine.CanvasRenderer",
+                        "properties": {}
+                      },
+                      {
+                        "type": "TextMeshProUGUI",
+                        "fullType": "TMPro.TextMeshProUGUI",
+                        "properties": {
+                          "text": "X",
+                          "fontSize": 18.0,
+                          "color": "#FFFFFFFF",
+                          "alignment": "Center",
+                          "fontStyle": "Bold",
+                          "raycastTarget": false,
+                          "font": "Assets/TextMesh Pro/Resources/Fonts & Materials/PretendardVariable SDF.asset"
+                        }
+                      }
+                    ],
+                    "children": []
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "name": "ScrollView",
+            "path": "RateDetailPopup/Container/ScrollView",
+            "active": true,
+            "rect": {
+              "anchor": "Stretch",
+              "anchorMin": [
+                0.0,
+                0.0
+              ],
+              "anchorMax": [
+                1.0,
+                1.0
+              ],
+              "pivot": [
+                0.5,
+                0.5
+              ],
+              "sizeDelta": [
+                0.0,
+                -60.0
+              ],
+              "anchoredPosition": [
+                0.0,
+                -30.0
+              ],
+              "offsetMin": [
+                0.0,
+                0.0
+              ],
+              "offsetMax": [
+                0.0,
+                -60.0
+              ]
+            },
+            "components": [
+              {
+                "type": "ScrollRect",
+                "fullType": "UnityEngine.UI.ScrollRect",
+                "properties": {
+                  "horizontal": false,
+                  "vertical": true,
+                  "movementType": "Elastic",
+                  "viewport": "Viewport",
+                  "content": "Viewport/Content"
+                }
+              }
+            ],
+            "children": [
+              {
+                "name": "Viewport",
+                "path": "RateDetailPopup/Container/ScrollView/Viewport",
+                "active": true,
+                "rect": {
+                  "anchor": "Stretch",
+                  "anchorMin": [
+                    0.0,
+                    0.0
+                  ],
+                  "anchorMax": [
+                    1.0,
+                    1.0
+                  ],
+                  "pivot": [
+                    0.5,
+                    0.5
+                  ],
+                  "sizeDelta": [
+                    0.0,
+                    0.0
+                  ],
+                  "anchoredPosition": [
+                    0.0,
+                    0.0
+                  ],
+                  "offsetMin": [
+                    0.0,
+                    0.0
+                  ],
+                  "offsetMax": [
+                    0.0,
+                    0.0
+                  ]
+                },
+                "components": [
+                  {
+                    "type": "CanvasRenderer",
+                    "fullType": "UnityEngine.CanvasRenderer",
+                    "properties": {}
+                  },
+                  {
+                    "type": "Image",
+                    "fullType": "UnityEngine.UI.Image",
+                    "properties": {
+                      "color": "#00000000",
+                      "raycastTarget": true,
+                      "type": "Simple"
+                    }
+                  },
+                  {
+                    "type": "Mask",
+                    "fullType": "UnityEngine.UI.Mask",
+                    "properties": {
+                      "showMaskGraphic": false
+                    }
+                  }
+                ],
+                "children": [
+                  {
+                    "name": "Content",
+                    "path": "RateDetailPopup/Container/ScrollView/Viewport/Content",
+                    "active": true,
+                    "rect": {
+                      "anchor": "TopStretch",
+                      "anchorMin": [
+                        0.0,
+                        1.0
+                      ],
+                      "anchorMax": [
+                        1.0,
+                        1.0
+                      ],
+                      "pivot": [
+                        0.5,
+                        1.0
+                      ],
+                      "sizeDelta": [
+                        0.0,
+                        0.0
+                      ],
+                      "anchoredPosition": [
+                        0.0,
+                        0.0
+                      ],
+                      "offsetMin": [
+                        0.0,
+                        0.0
+                      ],
+                      "offsetMax": [
+                        0.0,
+                        0.0
+                      ]
+                    },
+                    "components": [
+                      {
+                        "type": "ContentSizeFitter",
+                        "fullType": "UnityEngine.UI.ContentSizeFitter",
+                        "properties": {
+                          "horizontalFit": "Unconstrained",
+                          "verticalFit": "PreferredSize"
+                        }
+                      },
+                      {
+                        "type": "VerticalLayoutGroup",
+                        "fullType": "UnityEngine.UI.VerticalLayoutGroup",
+                        "properties": {
+                          "spacing": 12.0,
+                          "padding": [
+                            16,
+                            16,
+                            16,
+                            16
+                          ],
+                          "childAlignment": "UpperLeft",
+                          "childControlWidth": true,
+                          "childControlHeight": false,
+                          "childForceExpandWidth": true,
+                          "childForceExpandHeight": false
+                        }
+                      }
+                    ],
+                    "children": []
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "serializedFields": [],
+  "theme": {
+    "colors": {
+      "Dark_1F999999": "#000000B2",
+      "Color_DACA2A2D": "#19192DD9",
+      "Light_D1A00000": "#FFFFFFFF",
+      "Transparent_D0E04040": "#FFFFFF08",
+      "Transparent_00000000": "#00000000"
+    },
+    "constants": {
+      "FontSize_24": 24.0,
+      "FontSize_18": 18.0,
+      "Spacing_12": 12.0
+    },
+    "fonts": {}
+  }
+}

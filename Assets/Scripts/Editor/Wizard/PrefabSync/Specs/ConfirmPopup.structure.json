@@ -1,0 +1,702 @@
+{
+  "metadata": {
+    "prefabName": "ConfirmPopup",
+    "prefabPath": "Assets/Prefabs/UI/Popups/ConfirmPopup.prefab",
+    "componentType": "ConfirmPopup",
+    "componentNamespace": "Sc.Common.UI",
+    "generatedAt": "2026-01-26T21:34:18",
+    "builderPath": "Assets/Scripts/Editor/Wizard/Generators/ConfirmPopupPrefabBuilder.cs"
+  },
+  "hierarchy": {
+    "name": "ConfirmPopup",
+    "path": "ConfirmPopup",
+    "active": true,
+    "rect": {
+      "anchor": "Stretch",
+      "anchorMin": [
+        0.0,
+        0.0
+      ],
+      "anchorMax": [
+        1.0,
+        1.0
+      ],
+      "pivot": [
+        0.5,
+        0.5
+      ],
+      "sizeDelta": [
+        0.0,
+        0.0
+      ],
+      "anchoredPosition": [
+        0.0,
+        0.0
+      ],
+      "offsetMin": [
+        0.0,
+        0.0
+      ],
+      "offsetMax": [
+        0.0,
+        0.0
+      ]
+    },
+    "components": [
+      {
+        "type": "CanvasGroup",
+        "fullType": "UnityEngine.CanvasGroup",
+        "properties": {
+          "alpha": 1.0,
+          "interactable": true,
+          "blocksRaycasts": true
+        }
+      },
+      {
+        "type": "ConfirmPopup",
+        "fullType": "Sc.Common.UI.ConfirmPopup",
+        "isMainComponent": true,
+        "properties": {}
+      }
+    ],
+    "children": [
+      {
+        "name": "Backdrop",
+        "path": "ConfirmPopup/Backdrop",
+        "active": true,
+        "rect": {
+          "anchor": "Stretch",
+          "anchorMin": [
+            0.0,
+            0.0
+          ],
+          "anchorMax": [
+            1.0,
+            1.0
+          ],
+          "pivot": [
+            0.5,
+            0.5
+          ],
+          "sizeDelta": [
+            0.0,
+            0.0
+          ],
+          "anchoredPosition": [
+            0.0,
+            0.0
+          ],
+          "offsetMin": [
+            0.0,
+            0.0
+          ],
+          "offsetMax": [
+            0.0,
+            0.0
+          ]
+        },
+        "components": [
+          {
+            "type": "CanvasRenderer",
+            "fullType": "UnityEngine.CanvasRenderer",
+            "properties": {}
+          },
+          {
+            "type": "Image",
+            "fullType": "UnityEngine.UI.Image",
+            "properties": {
+              "color": "#000000B2",
+              "raycastTarget": true,
+              "type": "Simple"
+            }
+          },
+          {
+            "type": "Button",
+            "fullType": "UnityEngine.UI.Button",
+            "properties": {
+              "interactable": true,
+              "transition": "None"
+            }
+          }
+        ],
+        "children": []
+      },
+      {
+        "name": "Container",
+        "path": "ConfirmPopup/Container",
+        "active": true,
+        "rect": {
+          "anchor": "Center",
+          "anchorMin": [
+            0.5,
+            0.5
+          ],
+          "anchorMax": [
+            0.5,
+            0.5
+          ],
+          "pivot": [
+            0.5,
+            0.5
+          ],
+          "sizeDelta": [
+            500.0,
+            300.0
+          ],
+          "anchoredPosition": [
+            0.0,
+            0.0
+          ],
+          "offsetMin": [
+            -250.0,
+            -150.0
+          ],
+          "offsetMax": [
+            250.0,
+            150.0
+          ]
+        },
+        "components": [
+          {
+            "type": "CanvasRenderer",
+            "fullType": "UnityEngine.CanvasRenderer",
+            "properties": {}
+          },
+          {
+            "type": "Image",
+            "fullType": "UnityEngine.UI.Image",
+            "properties": {
+              "color": "#19192DD9",
+              "raycastTarget": true,
+              "type": "Simple"
+            }
+          }
+        ],
+        "children": [
+          {
+            "name": "Header",
+            "path": "ConfirmPopup/Container/Header",
+            "active": true,
+            "rect": {
+              "anchor": "TopStretch",
+              "anchorMin": [
+                0.0,
+                1.0
+              ],
+              "anchorMax": [
+                1.0,
+                1.0
+              ],
+              "pivot": [
+                0.5,
+                1.0
+              ],
+              "sizeDelta": [
+                0.0,
+                50.0
+              ],
+              "anchoredPosition": [
+                0.0,
+                0.0
+              ],
+              "offsetMin": [
+                0.0,
+                -50.0
+              ],
+              "offsetMax": [
+                0.0,
+                0.0
+              ]
+            },
+            "components": [],
+            "children": [
+              {
+                "name": "TxtTitle",
+                "path": "ConfirmPopup/Container/Header/TxtTitle",
+                "active": true,
+                "rect": {
+                  "anchor": "Stretch",
+                  "anchorMin": [
+                    0.0,
+                    0.0
+                  ],
+                  "anchorMax": [
+                    1.0,
+                    1.0
+                  ],
+                  "pivot": [
+                    0.5,
+                    0.5
+                  ],
+                  "sizeDelta": [
+                    -32.0,
+                    0.0
+                  ],
+                  "anchoredPosition": [
+                    0.0,
+                    0.0
+                  ],
+                  "offsetMin": [
+                    16.0,
+                    0.0
+                  ],
+                  "offsetMax": [
+                    -16.0,
+                    0.0
+                  ]
+                },
+                "components": [
+                  {
+                    "type": "CanvasRenderer",
+                    "fullType": "UnityEngine.CanvasRenderer",
+                    "properties": {}
+                  },
+                  {
+                    "type": "TextMeshProUGUI",
+                    "fullType": "TMPro.TextMeshProUGUI",
+                    "properties": {
+                      "text": "Title",
+                      "fontSize": 24.0,
+                      "color": "#FFFFFFFF",
+                      "alignment": "Center",
+                      "fontStyle": "Bold",
+                      "raycastTarget": false,
+                      "font": "Assets/TextMesh Pro/Resources/Fonts & Materials/PretendardVariable SDF.asset"
+                    }
+                  }
+                ],
+                "children": []
+              }
+            ]
+          },
+          {
+            "name": "Body",
+            "path": "ConfirmPopup/Container/Body",
+            "active": true,
+            "rect": {
+              "anchor": "Stretch",
+              "anchorMin": [
+                0.0,
+                0.0
+              ],
+              "anchorMax": [
+                1.0,
+                1.0
+              ],
+              "pivot": [
+                0.5,
+                0.5
+              ],
+              "sizeDelta": [
+                -32.0,
+                -110.0
+              ],
+              "anchoredPosition": [
+                0.0,
+                5.0
+              ],
+              "offsetMin": [
+                16.0,
+                60.0
+              ],
+              "offsetMax": [
+                -16.0,
+                -50.0
+              ]
+            },
+            "components": [],
+            "children": [
+              {
+                "name": "TxtMessage",
+                "path": "ConfirmPopup/Container/Body/TxtMessage",
+                "active": true,
+                "rect": {
+                  "anchor": "Stretch",
+                  "anchorMin": [
+                    0.0,
+                    0.0
+                  ],
+                  "anchorMax": [
+                    1.0,
+                    1.0
+                  ],
+                  "pivot": [
+                    0.5,
+                    0.5
+                  ],
+                  "sizeDelta": [
+                    0.0,
+                    0.0
+                  ],
+                  "anchoredPosition": [
+                    0.0,
+                    0.0
+                  ],
+                  "offsetMin": [
+                    0.0,
+                    0.0
+                  ],
+                  "offsetMax": [
+                    0.0,
+                    0.0
+                  ]
+                },
+                "components": [
+                  {
+                    "type": "CanvasRenderer",
+                    "fullType": "UnityEngine.CanvasRenderer",
+                    "properties": {}
+                  },
+                  {
+                    "type": "TextMeshProUGUI",
+                    "fullType": "TMPro.TextMeshProUGUI",
+                    "properties": {
+                      "text": "Message placeholder",
+                      "fontSize": 14.0,
+                      "color": "#FFFFFFB2",
+                      "alignment": "Center",
+                      "fontStyle": "Normal",
+                      "raycastTarget": false,
+                      "font": "Assets/TextMesh Pro/Resources/Fonts & Materials/PretendardVariable SDF.asset"
+                    }
+                  }
+                ],
+                "children": []
+              }
+            ]
+          },
+          {
+            "name": "Footer",
+            "path": "ConfirmPopup/Container/Footer",
+            "active": true,
+            "rect": {
+              "anchor": "BottomStretch",
+              "anchorMin": [
+                0.0,
+                0.0
+              ],
+              "anchorMax": [
+                1.0,
+                0.0
+              ],
+              "pivot": [
+                0.5,
+                0.0
+              ],
+              "sizeDelta": [
+                0.0,
+                60.0
+              ],
+              "anchoredPosition": [
+                0.0,
+                0.0
+              ],
+              "offsetMin": [
+                0.0,
+                0.0
+              ],
+              "offsetMax": [
+                0.0,
+                60.0
+              ]
+            },
+            "components": [
+              {
+                "type": "HorizontalLayoutGroup",
+                "fullType": "UnityEngine.UI.HorizontalLayoutGroup",
+                "properties": {
+                  "spacing": 12.0,
+                  "padding": [
+                    16,
+                    16,
+                    8,
+                    8
+                  ],
+                  "childAlignment": "MiddleCenter",
+                  "childControlWidth": true,
+                  "childControlHeight": true,
+                  "childForceExpandWidth": true,
+                  "childForceExpandHeight": false
+                }
+              }
+            ],
+            "children": [
+              {
+                "name": "BtnCancel",
+                "path": "ConfirmPopup/Container/Footer/BtnCancel",
+                "active": true,
+                "rect": {
+                  "anchor": "Center",
+                  "anchorMin": [
+                    0.5,
+                    0.5
+                  ],
+                  "anchorMax": [
+                    0.5,
+                    0.5
+                  ],
+                  "pivot": [
+                    0.5,
+                    0.5
+                  ],
+                  "sizeDelta": [
+                    100.0,
+                    100.0
+                  ],
+                  "anchoredPosition": [
+                    0.0,
+                    0.0
+                  ],
+                  "offsetMin": [
+                    -50.0,
+                    -50.0
+                  ],
+                  "offsetMax": [
+                    50.0,
+                    50.0
+                  ]
+                },
+                "components": [
+                  {
+                    "type": "LayoutElement",
+                    "fullType": "UnityEngine.UI.LayoutElement",
+                    "properties": {
+                      "minHeight": 44.0,
+                      "preferredHeight": 44.0
+                    }
+                  },
+                  {
+                    "type": "CanvasRenderer",
+                    "fullType": "UnityEngine.CanvasRenderer",
+                    "properties": {}
+                  },
+                  {
+                    "type": "Image",
+                    "fullType": "UnityEngine.UI.Image",
+                    "properties": {
+                      "color": "#FFFFFF08",
+                      "raycastTarget": true,
+                      "type": "Simple"
+                    }
+                  },
+                  {
+                    "type": "Button",
+                    "fullType": "UnityEngine.UI.Button",
+                    "properties": {
+                      "interactable": true,
+                      "transition": "ColorTint"
+                    }
+                  }
+                ],
+                "children": [
+                  {
+                    "name": "Text",
+                    "path": "ConfirmPopup/Container/Footer/BtnCancel/Text",
+                    "active": true,
+                    "rect": {
+                      "anchor": "Stretch",
+                      "anchorMin": [
+                        0.0,
+                        0.0
+                      ],
+                      "anchorMax": [
+                        1.0,
+                        1.0
+                      ],
+                      "pivot": [
+                        0.5,
+                        0.5
+                      ],
+                      "sizeDelta": [
+                        0.0,
+                        0.0
+                      ],
+                      "anchoredPosition": [
+                        0.0,
+                        0.0
+                      ],
+                      "offsetMin": [
+                        0.0,
+                        0.0
+                      ],
+                      "offsetMax": [
+                        0.0,
+                        0.0
+                      ]
+                    },
+                    "components": [
+                      {
+                        "type": "CanvasRenderer",
+                        "fullType": "UnityEngine.CanvasRenderer",
+                        "properties": {}
+                      },
+                      {
+                        "type": "TextMeshProUGUI",
+                        "fullType": "TMPro.TextMeshProUGUI",
+                        "properties": {
+                          "text": "Cancel",
+                          "fontSize": 14.0,
+                          "color": "#FFFFFFFF",
+                          "alignment": "Center",
+                          "fontStyle": "Bold",
+                          "raycastTarget": false,
+                          "font": "Assets/TextMesh Pro/Resources/Fonts & Materials/PretendardVariable SDF.asset"
+                        }
+                      }
+                    ],
+                    "children": []
+                  }
+                ]
+              },
+              {
+                "name": "BtnConfirm",
+                "path": "ConfirmPopup/Container/Footer/BtnConfirm",
+                "active": true,
+                "rect": {
+                  "anchor": "Center",
+                  "anchorMin": [
+                    0.5,
+                    0.5
+                  ],
+                  "anchorMax": [
+                    0.5,
+                    0.5
+                  ],
+                  "pivot": [
+                    0.5,
+                    0.5
+                  ],
+                  "sizeDelta": [
+                    100.0,
+                    100.0
+                  ],
+                  "anchoredPosition": [
+                    0.0,
+                    0.0
+                  ],
+                  "offsetMin": [
+                    -50.0,
+                    -50.0
+                  ],
+                  "offsetMax": [
+                    50.0,
+                    50.0
+                  ]
+                },
+                "components": [
+                  {
+                    "type": "LayoutElement",
+                    "fullType": "UnityEngine.UI.LayoutElement",
+                    "properties": {
+                      "minHeight": 44.0,
+                      "preferredHeight": 44.0
+                    }
+                  },
+                  {
+                    "type": "CanvasRenderer",
+                    "fullType": "UnityEngine.CanvasRenderer",
+                    "properties": {}
+                  },
+                  {
+                    "type": "Image",
+                    "fullType": "UnityEngine.UI.Image",
+                    "properties": {
+                      "color": "#00D4FFFF",
+                      "raycastTarget": true,
+                      "type": "Simple"
+                    }
+                  },
+                  {
+                    "type": "Button",
+                    "fullType": "UnityEngine.UI.Button",
+                    "properties": {
+                      "interactable": true,
+                      "transition": "ColorTint"
+                    }
+                  }
+                ],
+                "children": [
+                  {
+                    "name": "Text",
+                    "path": "ConfirmPopup/Container/Footer/BtnConfirm/Text",
+                    "active": true,
+                    "rect": {
+                      "anchor": "Stretch",
+                      "anchorMin": [
+                        0.0,
+                        0.0
+                      ],
+                      "anchorMax": [
+                        1.0,
+                        1.0
+                      ],
+                      "pivot": [
+                        0.5,
+                        0.5
+                      ],
+                      "sizeDelta": [
+                        0.0,
+                        0.0
+                      ],
+                      "anchoredPosition": [
+                        0.0,
+                        0.0
+                      ],
+                      "offsetMin": [
+                        0.0,
+                        0.0
+                      ],
+                      "offsetMax": [
+                        0.0,
+                        0.0
+                      ]
+                    },
+                    "components": [
+                      {
+                        "type": "CanvasRenderer",
+                        "fullType": "UnityEngine.CanvasRenderer",
+                        "properties": {}
+                      },
+                      {
+                        "type": "TextMeshProUGUI",
+                        "fullType": "TMPro.TextMeshProUGUI",
+                        "properties": {
+                          "text": "Confirm",
+                          "fontSize": 14.0,
+                          "color": "#0A0A12FF",
+                          "alignment": "Center",
+                          "fontStyle": "Bold",
+                          "raycastTarget": false,
+                          "font": "Assets/TextMesh Pro/Resources/Fonts & Materials/PretendardVariable SDF.asset"
+                        }
+                      }
+                    ],
+                    "children": []
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "serializedFields": [],
+  "theme": {
+    "colors": {
+      "Dark_1F999999": "#000000B2",
+      "Color_DACA2A2D": "#19192DD9",
+      "Light_D1A00000": "#FFFFFFFF",
+      "Light_D1F99999": "#FFFFFFB2",
+      "Transparent_D0E04040": "#FFFFFF08",
+      "Color_ED735354": "#00D4FFFF",
+      "Dark_D9060601": "#0A0A12FF"
+    },
+    "constants": {
+      "FontSize_24": 24.0,
+      "FontSize_14": 14.0,
+      "Spacing_12": 12.0
+    },
+    "fonts": {}
+  }
+}

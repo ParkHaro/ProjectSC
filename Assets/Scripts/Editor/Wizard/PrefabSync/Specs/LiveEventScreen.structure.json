@@ -1,0 +1,241 @@
+{
+  "metadata": {
+    "prefabName": "LiveEventScreen",
+    "prefabPath": "Assets/Prefabs/UI/Screens/LiveEventScreen.prefab",
+    "componentType": "LiveEventScreen",
+    "componentNamespace": "Sc.Contents.Event",
+    "generatedAt": "2026-01-26T21:34:13",
+    "builderPath": "Assets/Scripts/Editor/Wizard/Generators/LiveEventScreenPrefabBuilder.cs"
+  },
+  "hierarchy": {
+    "name": "LiveEventScreen",
+    "path": "LiveEventScreen",
+    "active": true,
+    "rect": {
+      "anchor": "Stretch",
+      "anchorMin": [
+        0.0,
+        0.0
+      ],
+      "anchorMax": [
+        1.0,
+        1.0
+      ],
+      "pivot": [
+        0.5,
+        0.5
+      ],
+      "sizeDelta": [
+        0.0,
+        0.0
+      ],
+      "anchoredPosition": [
+        0.0,
+        0.0
+      ],
+      "offsetMin": [
+        0.0,
+        0.0
+      ],
+      "offsetMax": [
+        0.0,
+        0.0
+      ]
+    },
+    "components": [
+      {
+        "type": "CanvasGroup",
+        "fullType": "UnityEngine.CanvasGroup",
+        "properties": {
+          "alpha": 1.0,
+          "interactable": true,
+          "blocksRaycasts": true
+        }
+      },
+      {
+        "type": "LiveEventScreen",
+        "fullType": "Sc.Contents.Event.LiveEventScreen",
+        "isMainComponent": true,
+        "properties": {}
+      }
+    ],
+    "children": [
+      {
+        "name": "Background",
+        "path": "LiveEventScreen/Background",
+        "active": true,
+        "rect": {
+          "anchor": "Stretch",
+          "anchorMin": [
+            0.0,
+            0.0
+          ],
+          "anchorMax": [
+            1.0,
+            1.0
+          ],
+          "pivot": [
+            0.5,
+            0.5
+          ],
+          "sizeDelta": [
+            0.0,
+            0.0
+          ],
+          "anchoredPosition": [
+            0.0,
+            0.0
+          ],
+          "offsetMin": [
+            0.0,
+            0.0
+          ],
+          "offsetMax": [
+            0.0,
+            0.0
+          ]
+        },
+        "components": [
+          {
+            "type": "CanvasRenderer",
+            "fullType": "UnityEngine.CanvasRenderer",
+            "properties": {}
+          },
+          {
+            "type": "Image",
+            "fullType": "UnityEngine.UI.Image",
+            "properties": {
+              "color": "#0A0A12FF",
+              "raycastTarget": true,
+              "type": "Simple"
+            }
+          }
+        ],
+        "children": []
+      },
+      {
+        "name": "SafeArea",
+        "path": "LiveEventScreen/SafeArea",
+        "active": true,
+        "rect": {
+          "anchor": "Stretch",
+          "anchorMin": [
+            0.0,
+            0.0
+          ],
+          "anchorMax": [
+            1.0,
+            1.0
+          ],
+          "pivot": [
+            0.5,
+            0.5
+          ],
+          "sizeDelta": [
+            0.0,
+            0.0
+          ],
+          "anchoredPosition": [
+            0.0,
+            0.0
+          ],
+          "offsetMin": [
+            0.0,
+            0.0
+          ],
+          "offsetMax": [
+            0.0,
+            0.0
+          ]
+        },
+        "components": [],
+        "children": [
+          {
+            "name": "Header",
+            "path": "LiveEventScreen/SafeArea/Header",
+            "active": true,
+            "rect": {
+              "anchor": "TopStretch",
+              "anchorMin": [
+                0.0,
+                1.0
+              ],
+              "anchorMax": [
+                1.0,
+                1.0
+              ],
+              "pivot": [
+                0.5,
+                1.0
+              ],
+              "sizeDelta": [
+                0.0,
+                80.0
+              ],
+              "anchoredPosition": [
+                0.0,
+                0.0
+              ],
+              "offsetMin": [
+                0.0,
+                -80.0
+              ],
+              "offsetMax": [
+                0.0,
+                0.0
+              ]
+            },
+            "components": [],
+            "children": []
+          },
+          {
+            "name": "Content",
+            "path": "LiveEventScreen/SafeArea/Content",
+            "active": true,
+            "rect": {
+              "anchor": "Stretch",
+              "anchorMin": [
+                0.0,
+                0.0
+              ],
+              "anchorMax": [
+                1.0,
+                1.0
+              ],
+              "pivot": [
+                0.5,
+                0.5
+              ],
+              "sizeDelta": [
+                0.0,
+                -80.0
+              ],
+              "anchoredPosition": [
+                0.0,
+                -40.0
+              ],
+              "offsetMin": [
+                0.0,
+                0.0
+              ],
+              "offsetMax": [
+                0.0,
+                -80.0
+              ]
+            },
+            "components": [],
+            "children": []
+          }
+        ]
+      }
+    ]
+  },
+  "serializedFields": [],
+  "theme": {
+    "colors": {
+      "Dark_D9060601": "#0A0A12FF"
+    },
+    "constants": {},
+    "fonts": {}
+  }
+}

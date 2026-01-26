@@ -1,0 +1,520 @@
+{
+  "metadata": {
+    "prefabName": "EventDetailScreen",
+    "prefabPath": "Assets/Prefabs/UI/Screens/EventDetailScreen.prefab",
+    "componentType": "EventDetailScreen",
+    "componentNamespace": "Sc.Contents.Event",
+    "generatedAt": "2026-01-26T21:34:11",
+    "builderPath": "Assets/Scripts/Editor/Wizard/Generators/EventDetailScreenPrefabBuilder.cs"
+  },
+  "hierarchy": {
+    "name": "EventDetailScreen",
+    "path": "EventDetailScreen",
+    "active": true,
+    "rect": {
+      "anchor": "Stretch",
+      "anchorMin": [
+        0.0,
+        0.0
+      ],
+      "anchorMax": [
+        1.0,
+        1.0
+      ],
+      "pivot": [
+        0.5,
+        0.5
+      ],
+      "sizeDelta": [
+        0.0,
+        0.0
+      ],
+      "anchoredPosition": [
+        0.0,
+        0.0
+      ],
+      "offsetMin": [
+        0.0,
+        0.0
+      ],
+      "offsetMax": [
+        0.0,
+        0.0
+      ]
+    },
+    "components": [
+      {
+        "type": "CanvasGroup",
+        "fullType": "UnityEngine.CanvasGroup",
+        "properties": {
+          "alpha": 1.0,
+          "interactable": true,
+          "blocksRaycasts": true
+        }
+      },
+      {
+        "type": "EventDetailScreen",
+        "fullType": "Sc.Contents.Event.EventDetailScreen",
+        "isMainComponent": true,
+        "properties": {}
+      }
+    ],
+    "children": [
+      {
+        "name": "Background",
+        "path": "EventDetailScreen/Background",
+        "active": true,
+        "rect": {
+          "anchor": "Stretch",
+          "anchorMin": [
+            0.0,
+            0.0
+          ],
+          "anchorMax": [
+            1.0,
+            1.0
+          ],
+          "pivot": [
+            0.5,
+            0.5
+          ],
+          "sizeDelta": [
+            0.0,
+            0.0
+          ],
+          "anchoredPosition": [
+            0.0,
+            0.0
+          ],
+          "offsetMin": [
+            0.0,
+            0.0
+          ],
+          "offsetMax": [
+            0.0,
+            0.0
+          ]
+        },
+        "components": [
+          {
+            "type": "CanvasRenderer",
+            "fullType": "UnityEngine.CanvasRenderer",
+            "properties": {}
+          },
+          {
+            "type": "Image",
+            "fullType": "UnityEngine.UI.Image",
+            "properties": {
+              "color": "#0A0A12FF",
+              "raycastTarget": true,
+              "type": "Simple"
+            }
+          }
+        ],
+        "children": []
+      },
+      {
+        "name": "SafeArea",
+        "path": "EventDetailScreen/SafeArea",
+        "active": true,
+        "rect": {
+          "anchor": "Stretch",
+          "anchorMin": [
+            0.0,
+            0.0
+          ],
+          "anchorMax": [
+            1.0,
+            1.0
+          ],
+          "pivot": [
+            0.5,
+            0.5
+          ],
+          "sizeDelta": [
+            0.0,
+            0.0
+          ],
+          "anchoredPosition": [
+            0.0,
+            0.0
+          ],
+          "offsetMin": [
+            0.0,
+            0.0
+          ],
+          "offsetMax": [
+            0.0,
+            0.0
+          ]
+        },
+        "components": [],
+        "children": [
+          {
+            "name": "BackHeader",
+            "path": "EventDetailScreen/SafeArea/BackHeader",
+            "active": true,
+            "rect": {
+              "anchor": "TopStretch",
+              "anchorMin": [
+                0.0,
+                1.0
+              ],
+              "anchorMax": [
+                1.0,
+                1.0
+              ],
+              "pivot": [
+                0.5,
+                1.0
+              ],
+              "sizeDelta": [
+                0.0,
+                60.0
+              ],
+              "anchoredPosition": [
+                0.0,
+                0.0
+              ],
+              "offsetMin": [
+                0.0,
+                -60.0
+              ],
+              "offsetMax": [
+                0.0,
+                0.0
+              ]
+            },
+            "components": [
+              {
+                "type": "HorizontalLayoutGroup",
+                "fullType": "UnityEngine.UI.HorizontalLayoutGroup",
+                "properties": {
+                  "spacing": 8.0,
+                  "padding": [
+                    16,
+                    16,
+                    0,
+                    0
+                  ],
+                  "childAlignment": "MiddleLeft",
+                  "childControlWidth": false,
+                  "childControlHeight": true,
+                  "childForceExpandWidth": false,
+                  "childForceExpandHeight": true
+                }
+              }
+            ],
+            "children": [
+              {
+                "name": "BackButton",
+                "path": "EventDetailScreen/SafeArea/BackHeader/BackButton",
+                "active": true,
+                "rect": {
+                  "anchor": "Center",
+                  "anchorMin": [
+                    0.5,
+                    0.5
+                  ],
+                  "anchorMax": [
+                    0.5,
+                    0.5
+                  ],
+                  "pivot": [
+                    0.5,
+                    0.5
+                  ],
+                  "sizeDelta": [
+                    44.0,
+                    44.0
+                  ],
+                  "anchoredPosition": [
+                    0.0,
+                    0.0
+                  ],
+                  "offsetMin": [
+                    -22.0,
+                    -22.0
+                  ],
+                  "offsetMax": [
+                    22.0,
+                    22.0
+                  ]
+                },
+                "components": [
+                  {
+                    "type": "CanvasRenderer",
+                    "fullType": "UnityEngine.CanvasRenderer",
+                    "properties": {}
+                  },
+                  {
+                    "type": "Image",
+                    "fullType": "UnityEngine.UI.Image",
+                    "properties": {
+                      "color": "#FFFFFF08",
+                      "raycastTarget": true,
+                      "type": "Simple"
+                    }
+                  },
+                  {
+                    "type": "Button",
+                    "fullType": "UnityEngine.UI.Button",
+                    "properties": {
+                      "interactable": true,
+                      "transition": "ColorTint"
+                    }
+                  },
+                  {
+                    "type": "LayoutElement",
+                    "fullType": "UnityEngine.UI.LayoutElement",
+                    "properties": {
+                      "minWidth": 44.0,
+                      "preferredWidth": 44.0
+                    }
+                  }
+                ],
+                "children": []
+              },
+              {
+                "name": "Title",
+                "path": "EventDetailScreen/SafeArea/BackHeader/Title",
+                "active": true,
+                "rect": {
+                  "anchor": "Center",
+                  "anchorMin": [
+                    0.5,
+                    0.5
+                  ],
+                  "anchorMax": [
+                    0.5,
+                    0.5
+                  ],
+                  "pivot": [
+                    0.5,
+                    0.5
+                  ],
+                  "sizeDelta": [
+                    100.0,
+                    100.0
+                  ],
+                  "anchoredPosition": [
+                    0.0,
+                    0.0
+                  ],
+                  "offsetMin": [
+                    -50.0,
+                    -50.0
+                  ],
+                  "offsetMax": [
+                    50.0,
+                    50.0
+                  ]
+                },
+                "components": [
+                  {
+                    "type": "LayoutElement",
+                    "fullType": "UnityEngine.UI.LayoutElement",
+                    "properties": {
+                      "flexibleWidth": 1.0
+                    }
+                  }
+                ],
+                "children": []
+              }
+            ]
+          },
+          {
+            "name": "ScrollView",
+            "path": "EventDetailScreen/SafeArea/ScrollView",
+            "active": true,
+            "rect": {
+              "anchor": "Stretch",
+              "anchorMin": [
+                0.0,
+                0.0
+              ],
+              "anchorMax": [
+                1.0,
+                1.0
+              ],
+              "pivot": [
+                0.5,
+                0.5
+              ],
+              "sizeDelta": [
+                0.0,
+                -60.0
+              ],
+              "anchoredPosition": [
+                0.0,
+                -30.0
+              ],
+              "offsetMin": [
+                0.0,
+                0.0
+              ],
+              "offsetMax": [
+                0.0,
+                -60.0
+              ]
+            },
+            "components": [
+              {
+                "type": "ScrollRect",
+                "fullType": "UnityEngine.UI.ScrollRect",
+                "properties": {
+                  "horizontal": false,
+                  "vertical": true,
+                  "movementType": "Elastic",
+                  "viewport": "Viewport",
+                  "content": "Viewport/Content"
+                }
+              }
+            ],
+            "children": [
+              {
+                "name": "Viewport",
+                "path": "EventDetailScreen/SafeArea/ScrollView/Viewport",
+                "active": true,
+                "rect": {
+                  "anchor": "Stretch",
+                  "anchorMin": [
+                    0.0,
+                    0.0
+                  ],
+                  "anchorMax": [
+                    1.0,
+                    1.0
+                  ],
+                  "pivot": [
+                    0.5,
+                    0.5
+                  ],
+                  "sizeDelta": [
+                    0.0,
+                    0.0
+                  ],
+                  "anchoredPosition": [
+                    0.0,
+                    0.0
+                  ],
+                  "offsetMin": [
+                    0.0,
+                    0.0
+                  ],
+                  "offsetMax": [
+                    0.0,
+                    0.0
+                  ]
+                },
+                "components": [
+                  {
+                    "type": "CanvasRenderer",
+                    "fullType": "UnityEngine.CanvasRenderer",
+                    "properties": {}
+                  },
+                  {
+                    "type": "Image",
+                    "fullType": "UnityEngine.UI.Image",
+                    "properties": {
+                      "color": "#00000000",
+                      "raycastTarget": true,
+                      "type": "Simple"
+                    }
+                  },
+                  {
+                    "type": "Mask",
+                    "fullType": "UnityEngine.UI.Mask",
+                    "properties": {
+                      "showMaskGraphic": false
+                    }
+                  }
+                ],
+                "children": [
+                  {
+                    "name": "Content",
+                    "path": "EventDetailScreen/SafeArea/ScrollView/Viewport/Content",
+                    "active": true,
+                    "rect": {
+                      "anchor": "TopStretch",
+                      "anchorMin": [
+                        0.0,
+                        1.0
+                      ],
+                      "anchorMax": [
+                        1.0,
+                        1.0
+                      ],
+                      "pivot": [
+                        0.5,
+                        1.0
+                      ],
+                      "sizeDelta": [
+                        0.0,
+                        0.0
+                      ],
+                      "anchoredPosition": [
+                        0.0,
+                        0.0
+                      ],
+                      "offsetMin": [
+                        0.0,
+                        0.0
+                      ],
+                      "offsetMax": [
+                        0.0,
+                        0.0
+                      ]
+                    },
+                    "components": [
+                      {
+                        "type": "ContentSizeFitter",
+                        "fullType": "UnityEngine.UI.ContentSizeFitter",
+                        "properties": {
+                          "horizontalFit": "Unconstrained",
+                          "verticalFit": "PreferredSize"
+                        }
+                      },
+                      {
+                        "type": "VerticalLayoutGroup",
+                        "fullType": "UnityEngine.UI.VerticalLayoutGroup",
+                        "properties": {
+                          "spacing": 12.0,
+                          "padding": [
+                            16,
+                            16,
+                            16,
+                            16
+                          ],
+                          "childAlignment": "UpperLeft",
+                          "childControlWidth": true,
+                          "childControlHeight": false,
+                          "childForceExpandWidth": true,
+                          "childForceExpandHeight": false
+                        }
+                      }
+                    ],
+                    "children": []
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "serializedFields": [],
+  "theme": {
+    "colors": {
+      "Dark_D9060601": "#0A0A12FF",
+      "Transparent_D0E04040": "#FFFFFF08",
+      "Transparent_00000000": "#00000000"
+    },
+    "constants": {
+      "Spacing_8": 8.0,
+      "Spacing_12": 12.0
+    },
+    "fonts": {}
+  }
+}

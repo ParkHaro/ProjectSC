@@ -1,0 +1,287 @@
+{
+  "metadata": {
+    "prefabName": "GachaResultPopup",
+    "prefabPath": "Assets/Prefabs/UI/Popups/GachaResultPopup.prefab",
+    "componentType": "GachaResultPopup",
+    "componentNamespace": "Sc.Contents.Gacha",
+    "generatedAt": "2026-01-26T21:34:19",
+    "builderPath": "Assets/Scripts/Editor/Wizard/Generators/GachaResultPopupPrefabBuilder.cs"
+  },
+  "hierarchy": {
+    "name": "GachaResultPopup",
+    "path": "GachaResultPopup",
+    "active": true,
+    "rect": {
+      "anchor": "Stretch",
+      "anchorMin": [
+        0.0,
+        0.0
+      ],
+      "anchorMax": [
+        1.0,
+        1.0
+      ],
+      "pivot": [
+        0.5,
+        0.5
+      ],
+      "sizeDelta": [
+        0.0,
+        0.0
+      ],
+      "anchoredPosition": [
+        0.0,
+        0.0
+      ],
+      "offsetMin": [
+        0.0,
+        0.0
+      ],
+      "offsetMax": [
+        0.0,
+        0.0
+      ]
+    },
+    "components": [
+      {
+        "type": "CanvasGroup",
+        "fullType": "UnityEngine.CanvasGroup",
+        "properties": {
+          "alpha": 1.0,
+          "interactable": true,
+          "blocksRaycasts": true
+        }
+      },
+      {
+        "type": "GachaResultPopup",
+        "fullType": "Sc.Contents.Gacha.GachaResultPopup",
+        "isMainComponent": true,
+        "properties": {}
+      }
+    ],
+    "children": [
+      {
+        "name": "Background",
+        "path": "GachaResultPopup/Background",
+        "active": true,
+        "rect": {
+          "anchor": "Stretch",
+          "anchorMin": [
+            0.0,
+            0.0
+          ],
+          "anchorMax": [
+            1.0,
+            1.0
+          ],
+          "pivot": [
+            0.5,
+            0.5
+          ],
+          "sizeDelta": [
+            0.0,
+            0.0
+          ],
+          "anchoredPosition": [
+            0.0,
+            0.0
+          ],
+          "offsetMin": [
+            0.0,
+            0.0
+          ],
+          "offsetMax": [
+            0.0,
+            0.0
+          ]
+        },
+        "components": [
+          {
+            "type": "CanvasRenderer",
+            "fullType": "UnityEngine.CanvasRenderer",
+            "properties": {}
+          },
+          {
+            "type": "Image",
+            "fullType": "UnityEngine.UI.Image",
+            "properties": {
+              "color": "#0A0A12FF",
+              "raycastTarget": true,
+              "type": "Simple"
+            }
+          }
+        ],
+        "children": []
+      },
+      {
+        "name": "Content",
+        "path": "GachaResultPopup/Content",
+        "active": true,
+        "rect": {
+          "anchor": "Stretch",
+          "anchorMin": [
+            0.0,
+            0.0
+          ],
+          "anchorMax": [
+            1.0,
+            1.0
+          ],
+          "pivot": [
+            0.5,
+            0.5
+          ],
+          "sizeDelta": [
+            0.0,
+            0.0
+          ],
+          "anchoredPosition": [
+            0.0,
+            0.0
+          ],
+          "offsetMin": [
+            0.0,
+            0.0
+          ],
+          "offsetMax": [
+            0.0,
+            0.0
+          ]
+        },
+        "components": [],
+        "children": []
+      },
+      {
+        "name": "BtnClose",
+        "path": "GachaResultPopup/BtnClose",
+        "active": true,
+        "rect": {
+          "anchor": "TopRight",
+          "anchorMin": [
+            1.0,
+            1.0
+          ],
+          "anchorMax": [
+            1.0,
+            1.0
+          ],
+          "pivot": [
+            1.0,
+            1.0
+          ],
+          "sizeDelta": [
+            48.0,
+            48.0
+          ],
+          "anchoredPosition": [
+            -16.0,
+            -16.0
+          ],
+          "offsetMin": [
+            -64.0,
+            -64.0
+          ],
+          "offsetMax": [
+            -16.0,
+            -16.0
+          ]
+        },
+        "components": [
+          {
+            "type": "CanvasRenderer",
+            "fullType": "UnityEngine.CanvasRenderer",
+            "properties": {}
+          },
+          {
+            "type": "Image",
+            "fullType": "UnityEngine.UI.Image",
+            "properties": {
+              "color": "#19192DD9",
+              "raycastTarget": true,
+              "type": "Simple"
+            }
+          },
+          {
+            "type": "Button",
+            "fullType": "UnityEngine.UI.Button",
+            "properties": {
+              "interactable": true,
+              "transition": "ColorTint"
+            }
+          }
+        ],
+        "children": [
+          {
+            "name": "Text",
+            "path": "GachaResultPopup/BtnClose/Text",
+            "active": true,
+            "rect": {
+              "anchor": "Stretch",
+              "anchorMin": [
+                0.0,
+                0.0
+              ],
+              "anchorMax": [
+                1.0,
+                1.0
+              ],
+              "pivot": [
+                0.5,
+                0.5
+              ],
+              "sizeDelta": [
+                0.0,
+                0.0
+              ],
+              "anchoredPosition": [
+                0.0,
+                0.0
+              ],
+              "offsetMin": [
+                0.0,
+                0.0
+              ],
+              "offsetMax": [
+                0.0,
+                0.0
+              ]
+            },
+            "components": [
+              {
+                "type": "CanvasRenderer",
+                "fullType": "UnityEngine.CanvasRenderer",
+                "properties": {}
+              },
+              {
+                "type": "TextMeshProUGUI",
+                "fullType": "TMPro.TextMeshProUGUI",
+                "properties": {
+                  "text": "X",
+                  "fontSize": 24.0,
+                  "color": "#FFFFFFFF",
+                  "alignment": "Center",
+                  "fontStyle": "Bold",
+                  "raycastTarget": false,
+                  "font": "Assets/TextMesh Pro/Resources/Fonts & Materials/PretendardVariable SDF.asset"
+                }
+              }
+            ],
+            "children": []
+          }
+        ]
+      }
+    ]
+  },
+  "serializedFields": [],
+  "theme": {
+    "colors": {
+      "Dark_D9060601": "#0A0A12FF",
+      "Color_DACA2A2D": "#19192DD9",
+      "Light_D1A00000": "#FFFFFFFF"
+    },
+    "constants": {
+      "FontSize_24": 24.0
+    },
+    "fonts": {}
+  }
+}
