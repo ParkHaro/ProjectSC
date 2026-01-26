@@ -15,7 +15,7 @@ MonoBehaviour:
   m_GroupName: UI_Widgets
   m_Data:
     m_SerializedData: []
-  m_GUID: fe336b058f388bb44b97942a10a0a502
+  m_GUID: 88456df3b2e6a92498c2934fa3847332
   m_SerializeEntries:
   - m_GUID: 1e354c43c56bcb44d98d13bd8b655235
     m_Address: UI/Widgets/LoadingWidget

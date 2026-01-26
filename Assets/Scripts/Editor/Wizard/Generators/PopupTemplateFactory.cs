@@ -1,6 +1,8 @@
 using System;
 using System.Reflection;
 using Sc.Common.UI.Attributes;
+using Sc.Editor.AI;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -264,13 +266,16 @@ namespace Sc.Editor.Wizard.Generators
             rect.offsetMin = new Vector2(UITheme.Padding, 0);
             rect.offsetMax = new Vector2(-UITheme.Padding, 0);
 
-            var text = go.AddComponent<Text>();
-            text.text = defaultText;
-            text.fontSize = (int)UITheme.FontSizeTitle;
-            text.color = UITheme.TextPrimary;
-            text.alignment = TextAnchor.MiddleCenter;
-            text.fontStyle = FontStyle.Bold;
-            text.raycastTarget = false;
+            var tmp = go.AddComponent<TextMeshProUGUI>();
+            tmp.text = defaultText;
+            tmp.fontSize = UITheme.FontSizeTitle;
+            tmp.color = UITheme.TextPrimary;
+            tmp.alignment = TextAlignmentOptions.Center;
+            tmp.fontStyle = FontStyles.Bold;
+            tmp.raycastTarget = false;
+
+            var font = EditorUIHelpers.GetProjectFont();
+            if (font != null) tmp.font = font;
         }
 
         /// <summary>
@@ -281,12 +286,15 @@ namespace Sc.Editor.Wizard.Generators
             var go = UIComponentBuilder.CreateChild(parent, "TxtMessage");
             var rect = UIComponentBuilder.SetStretch(go);
 
-            var text = go.AddComponent<Text>();
-            text.text = "Message placeholder";
-            text.fontSize = (int)UITheme.FontSizeBody;
-            text.color = UITheme.TextSecondary;
-            text.alignment = TextAnchor.MiddleCenter;
-            text.raycastTarget = false;
+            var tmp = go.AddComponent<TextMeshProUGUI>();
+            tmp.text = "Message placeholder";
+            tmp.fontSize = UITheme.FontSizeBody;
+            tmp.color = UITheme.TextSecondary;
+            tmp.alignment = TextAlignmentOptions.Center;
+            tmp.raycastTarget = false;
+
+            var font = EditorUIHelpers.GetProjectFont();
+            if (font != null) tmp.font = font;
         }
 
         /// <summary>
@@ -336,13 +344,16 @@ namespace Sc.Editor.Wizard.Generators
             var textGo = UIComponentBuilder.CreateChild(go, "Text");
             UIComponentBuilder.SetStretch(textGo);
 
-            var buttonText = textGo.AddComponent<Text>();
-            buttonText.text = text;
-            buttonText.fontSize = (int)UITheme.FontSizeBody;
-            buttonText.color = textColor;
-            buttonText.alignment = TextAnchor.MiddleCenter;
-            buttonText.fontStyle = FontStyle.Bold;
-            buttonText.raycastTarget = false;
+            var tmp = textGo.AddComponent<TextMeshProUGUI>();
+            tmp.text = text;
+            tmp.fontSize = UITheme.FontSizeBody;
+            tmp.color = textColor;
+            tmp.alignment = TextAlignmentOptions.Center;
+            tmp.fontStyle = FontStyles.Bold;
+            tmp.raycastTarget = false;
+
+            var font = EditorUIHelpers.GetProjectFont();
+            if (font != null) tmp.font = font;
         }
 
         /// <summary>
@@ -394,13 +405,16 @@ namespace Sc.Editor.Wizard.Generators
             var textGo = UIComponentBuilder.CreateChild(go, "Text");
             UIComponentBuilder.SetStretch(textGo);
 
-            var text = textGo.AddComponent<Text>();
-            text.text = "X";
-            text.fontSize = (int)UITheme.FontSizeSubtitle;
-            text.color = UITheme.TextPrimary;
-            text.alignment = TextAnchor.MiddleCenter;
-            text.fontStyle = FontStyle.Bold;
-            text.raycastTarget = false;
+            var tmp = textGo.AddComponent<TextMeshProUGUI>();
+            tmp.text = "X";
+            tmp.fontSize = UITheme.FontSizeSubtitle;
+            tmp.color = UITheme.TextPrimary;
+            tmp.alignment = TextAlignmentOptions.Center;
+            tmp.fontStyle = FontStyles.Bold;
+            tmp.raycastTarget = false;
+
+            var font = EditorUIHelpers.GetProjectFont();
+            if (font != null) tmp.font = font;
         }
 
         /// <summary>
@@ -431,13 +445,16 @@ namespace Sc.Editor.Wizard.Generators
             var textGo = UIComponentBuilder.CreateChild(go, "Text");
             UIComponentBuilder.SetStretch(textGo);
 
-            var text = textGo.AddComponent<Text>();
-            text.text = "X";
-            text.fontSize = (int)UITheme.FontSizeTitle;
-            text.color = UITheme.TextPrimary;
-            text.alignment = TextAnchor.MiddleCenter;
-            text.fontStyle = FontStyle.Bold;
-            text.raycastTarget = false;
+            var tmp = textGo.AddComponent<TextMeshProUGUI>();
+            tmp.text = "X";
+            tmp.fontSize = UITheme.FontSizeTitle;
+            tmp.color = UITheme.TextPrimary;
+            tmp.alignment = TextAlignmentOptions.Center;
+            tmp.fontStyle = FontStyles.Bold;
+            tmp.raycastTarget = false;
+
+            var font = EditorUIHelpers.GetProjectFont();
+            if (font != null) tmp.font = font;
         }
 
         #endregion

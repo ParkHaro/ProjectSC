@@ -37,14 +37,13 @@ namespace Sc.Editor.Wizard
             var popupsGroup = CreateOrGetGroup(settings, "UI_Popups");
             var widgetsGroup = CreateOrGetGroup(settings, "UI_Widgets");
 
-            // 3. Screen 프리팹 등록 (*Screen.prefab)
-            RegisterPrefabsByPattern(settings, screensGroup, $"{UI_PREFAB_ROOT}/MVP", "*Screen", "UI/Screens");
+            // 3. Screen 프리팹 등록 (Screens 폴더)
+            RegisterPrefabsByPattern(settings, screensGroup, $"{UI_PREFAB_ROOT}/Screens", "*Screen", "UI/Screens");
 
-            // 4. Popup 프리팹 등록 (*Popup.prefab)
-            RegisterPrefabsByPattern(settings, popupsGroup, $"{UI_PREFAB_ROOT}/MVP", "*Popup", "UI/Popups");
-            RegisterPrefabsByPattern(settings, popupsGroup, $"{UI_PREFAB_ROOT}/Dialog", "*Popup", "UI/Popups");
+            // 4. Popup 프리팹 등록 (Popups 폴더)
+            RegisterPrefabsByPattern(settings, popupsGroup, $"{UI_PREFAB_ROOT}/Popups", "*Popup", "UI/Popups");
 
-            // 5. Widget 프리팹 등록 (특정 파일들)
+            // 5. Widget 프리팹 등록 (MVP 폴더 - ScreenHeader, CurrencyHUD)
             RegisterSpecificPrefabs(settings, widgetsGroup, $"{UI_PREFAB_ROOT}/MVP",
                 new[] { "ScreenHeader", "CurrencyHUD" }, "UI/Widgets");
             RegisterSpecificPrefabs(settings, widgetsGroup, UI_PREFAB_ROOT,

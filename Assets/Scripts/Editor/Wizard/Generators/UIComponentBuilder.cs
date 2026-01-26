@@ -67,7 +67,11 @@ namespace Sc.Editor.Wizard.Generators
         public static RectTransform CreateHeader(GameObject parent, float height = UITheme.HeaderHeight)
         {
             var go = CreateChild(parent, "Header");
-            var rect = go.GetComponent<RectTransform>() ?? go.AddComponent<RectTransform>();
+            var rect = go.GetComponent<RectTransform>();
+            if (rect == null)
+            {
+                rect = go.AddComponent<RectTransform>();
+            }
 
             // Top anchored, stretch horizontal
             rect.anchorMin = new Vector2(0, 1);
@@ -137,7 +141,11 @@ namespace Sc.Editor.Wizard.Generators
 
             // Content
             var contentGo = CreateChild(viewportGo, "Content");
-            var contentRect = contentGo.GetComponent<RectTransform>() ?? contentGo.AddComponent<RectTransform>();
+            var contentRect = contentGo.GetComponent<RectTransform>();
+            if (contentRect == null)
+            {
+                contentRect = contentGo.AddComponent<RectTransform>();
+            }
 
             // Top-stretched, height will expand based on content
             contentRect.anchorMin = new Vector2(0, 1);
@@ -179,7 +187,11 @@ namespace Sc.Editor.Wizard.Generators
         public static RectTransform CreateFooter(GameObject parent, float height = UITheme.FooterHeight)
         {
             var go = CreateChild(parent, "Footer");
-            var rect = go.GetComponent<RectTransform>() ?? go.AddComponent<RectTransform>();
+            var rect = go.GetComponent<RectTransform>();
+            if (rect == null)
+            {
+                rect = go.AddComponent<RectTransform>();
+            }
 
             // Bottom anchored, stretch horizontal
             rect.anchorMin = new Vector2(0, 0);
@@ -229,7 +241,11 @@ namespace Sc.Editor.Wizard.Generators
         public static RectTransform CreateContainer(GameObject parent, Vector2 size)
         {
             var go = CreateChild(parent, "Container");
-            var rect = go.GetComponent<RectTransform>() ?? go.AddComponent<RectTransform>();
+            var rect = go.GetComponent<RectTransform>();
+            if (rect == null)
+            {
+                rect = go.AddComponent<RectTransform>();
+            }
 
             // Center anchored
             rect.anchorMin = new Vector2(0.5f, 0.5f);
@@ -270,7 +286,11 @@ namespace Sc.Editor.Wizard.Generators
         /// <returns>설정된 RectTransform</returns>
         public static RectTransform SetStretch(GameObject go)
         {
-            var rect = go.GetComponent<RectTransform>() ?? go.AddComponent<RectTransform>();
+            var rect = go.GetComponent<RectTransform>();
+            if (rect == null)
+            {
+                rect = go.AddComponent<RectTransform>();
+            }
 
             rect.anchorMin = Vector2.zero;
             rect.anchorMax = Vector2.one;

@@ -60,6 +60,20 @@ namespace Sc.Editor.Wizard
             }
             GUI.backgroundColor = Color.white;
 
+            // 재생성 버튼 (기존 프리팹 삭제 후 재생성)
+            GUI.backgroundColor = new Color(1f, 0.8f, 0.5f);
+            if (GUILayout.Button("🔄 Regenerate All UI Prefabs", GUILayout.Height(30)))
+            {
+                if (EditorUtility.DisplayDialog("프리팹 재생성",
+                    "기존 Screen/Popup 프리팹을 모두 삭제하고 재생성합니다.\n계속하시겠습니까?", "재생성", "취소"))
+                {
+                    var (screens, popups) = PrefabGenerator.RegenerateAllPrefabs();
+                    EditorUtility.DisplayDialog("완료",
+                        $"Screen 프리팹 {screens}개\nPopup 프리팹 {popups}개 재생성됨", "확인");
+                }
+            }
+            GUI.backgroundColor = Color.white;
+
             // 개별 생성 버튼
             EditorGUILayout.BeginHorizontal();
             if (GUILayout.Button("Screens Only", GUILayout.Height(22)))

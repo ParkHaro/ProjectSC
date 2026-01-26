@@ -17,11 +17,6 @@ MonoBehaviour:
     m_SerializedData: []
   m_GUID: d1cb53aa2faa6ee4a909a98ebbafde29
   m_SerializeEntries:
-  - m_GUID: 016fcf4ad0aad4e8680f2fe0b955a889
-    m_Address: UI/Screens/SimpleTestScreenA
-    m_ReadOnly: 0
-    m_SerializedLabels: []
-    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 01dc621c018714fc39e90eff37ce762c
     m_Address: UI/Screens/TitleScreen
     m_ReadOnly: 0
@@ -32,18 +27,8 @@ MonoBehaviour:
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
-  - m_GUID: 0bf2a21a8a419403d8aec74c2417523b
-    m_Address: UI/Screens/SimpleTestScreenB
-    m_ReadOnly: 0
-    m_SerializedLabels: []
-    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 409b70a6c0db143e9acf3a7db2cd8981
     m_Address: UI/Screens/LobbyScreen
-    m_ReadOnly: 0
-    m_SerializedLabels: []
-    FlaggedDuringContentUpdateRestriction: 0
-  - m_GUID: 4a30ec4fc2d93244fac46c604c246e9a
-    m_Address: UI/Popups/RewardPopup
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
@@ -52,33 +37,13 @@ MonoBehaviour:
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
-  - m_GUID: 588500bfdceeb4288ba338108116a165
-    m_Address: UI/Screens/SimpleTestScreenC
-    m_ReadOnly: 0
-    m_SerializedLabels: []
-    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 5a03fdc631f9e4cc2a288e6dc33dc122
     m_Address: UI/Screens/StageSelectScreen
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
-  - m_GUID: 5d9ed085861714b1ab2031fc862bb0bd
-    m_Address: UI/Popups/RateDetailPopup
-    m_ReadOnly: 0
-    m_SerializedLabels: []
-    FlaggedDuringContentUpdateRestriction: 0
-  - m_GUID: 5e7bb1890fa454f819464ebeefad9302
-    m_Address: UI/Popups/StageInfoPopup
-    m_ReadOnly: 0
-    m_SerializedLabels: []
-    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 68a14984b2c3947528447ffff61c71f1
     m_Address: UI/Screens/CharacterListScreen
-    m_ReadOnly: 0
-    m_SerializedLabels: []
-    FlaggedDuringContentUpdateRestriction: 0
-  - m_GUID: 751c6416034c54649ab114ce430f1f98
-    m_Address: UI/Popups/CharacterLevelUpPopup
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
@@ -92,33 +57,8 @@ MonoBehaviour:
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
-  - m_GUID: 8f670d91b7a43454d9f1ebd1d983fc30
-    m_Address: UI/Screens/SimpleTestScreen
-    m_ReadOnly: 0
-    m_SerializedLabels: []
-    FlaggedDuringContentUpdateRestriction: 0
-  - m_GUID: c419fd4cd0fb26241a9061c78254e7f5
-    m_Address: UI/Popups/TestPopup
-    m_ReadOnly: 0
-    m_SerializedLabels: []
-    FlaggedDuringContentUpdateRestriction: 0
-  - m_GUID: c68d146a3383f485997a67dd0fb0ab6b
-    m_Address: UI/Screens/TestScreen
-    m_ReadOnly: 0
-    m_SerializedLabels: []
-    FlaggedDuringContentUpdateRestriction: 0
-  - m_GUID: c84689e29589ad34298a5e23cc795bd2
-    m_Address: UI/Popups/ConfirmPopup
-    m_ReadOnly: 0
-    m_SerializedLabels: []
-    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: c93000bd697d54470a2ed71854a573e7
     m_Address: UI/Screens/LiveEventScreen
-    m_ReadOnly: 0
-    m_SerializedLabels: []
-    FlaggedDuringContentUpdateRestriction: 0
-  - m_GUID: cba035aa404004003a933bcb3f6ae0d4
-    m_Address: UI/Popups/CharacterAscensionPopup
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
@@ -132,16 +72,6 @@ MonoBehaviour:
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
-  - m_GUID: dc756949df870be4ca1d3ee41fe5c8d8
-    m_Address: UI/Popups/CostConfirmPopup
-    m_ReadOnly: 0
-    m_SerializedLabels: []
-    FlaggedDuringContentUpdateRestriction: 0
-  - m_GUID: e65f37e4b406d03459046c0a6b7d00f4
-    m_Address: UI/Popups/SimpleTestPopup
-    m_ReadOnly: 0
-    m_SerializedLabels: []
-    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: f2e91644a866d4145938188ff18097c2
     m_Address: UI/Screens/GachaScreen
     m_ReadOnly: 0
@@ -149,11 +79,6 @@ MonoBehaviour:
     FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: fd0c40d0446ff4e7aab039ffa356396c
     m_Address: UI/Screens/PartySelectScreen
-    m_ReadOnly: 0
-    m_SerializedLabels: []
-    FlaggedDuringContentUpdateRestriction: 0
-  - m_GUID: fd9c76842647db245bfbbe7d870e23a5
-    m_Address: UI/Popups/GachaResultPopup
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0

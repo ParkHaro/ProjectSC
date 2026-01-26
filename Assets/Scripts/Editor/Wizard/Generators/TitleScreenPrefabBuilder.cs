@@ -1,4 +1,5 @@
 using Sc.Contents.Title;
+using Sc.Editor.AI;
 using TMPro;
 using UnityEditor;
 using UnityEngine;
@@ -44,6 +45,19 @@ namespace Sc.Editor.Wizard.Generators
         private const float TOUCH_TEXT_BOTTOM_OFFSET = 200f;
         private const float RESET_BUTTON_SIZE = 40f;
         private const float RESET_BUTTON_MARGIN = 20f;
+
+        #endregion
+
+        #region Font Helper
+
+        /// <summary>
+        /// TextMeshProUGUI에 프로젝트 폰트 적용.
+        /// </summary>
+        private static void ApplyFont(TextMeshProUGUI tmp)
+        {
+            var font = EditorUIHelpers.GetProjectFont();
+            if (font != null) tmp.font = font;
+        }
 
         #endregion
 
@@ -243,6 +257,7 @@ namespace Sc.Editor.Wizard.Generators
             titleTmp.color = TextPrimary;
             titleTmp.alignment = TextAlignmentOptions.Center;
             titleTmp.enableWordWrapping = false;
+            ApplyFont(titleTmp);
 
             // Subtitle
             var subtitle = CreateChild(logoArea, "Subtitle");
@@ -259,6 +274,7 @@ namespace Sc.Editor.Wizard.Generators
             subTmp.characterSpacing = 8;
             subTmp.color = TextMuted;
             subTmp.alignment = TextAlignmentOptions.Center;
+            ApplyFont(subTmp);
 
             // Decorative lines
             CreateDecorativeLine(logoArea, true);
@@ -340,6 +356,7 @@ namespace Sc.Editor.Wizard.Generators
             tmp.color = AccentCyan;
             tmp.alignment = TextAlignmentOptions.Center;
             tmp.fontStyle = FontStyles.Bold;
+            ApplyFont(tmp);
 
             // Decorative brackets
             CreateTextBracket(container, true);
@@ -364,6 +381,7 @@ namespace Sc.Editor.Wizard.Generators
             tmp.fontSize = 28;
             tmp.color = new Color(AccentCyan.r, AccentCyan.g, AccentCyan.b, 0.5f);
             tmp.alignment = TextAlignmentOptions.Center;
+            ApplyFont(tmp);
         }
 
         #endregion
@@ -404,6 +422,7 @@ namespace Sc.Editor.Wizard.Generators
             iconTmp.color = TextDim;
             iconTmp.alignment = TextAlignmentOptions.Center;
             iconTmp.fontStyle = FontStyles.Bold;
+            ApplyFont(iconTmp);
 
             return button;
         }
@@ -429,6 +448,7 @@ namespace Sc.Editor.Wizard.Generators
             tmp.fontSize = 12;
             tmp.color = TextDim;
             tmp.alignment = TextAlignmentOptions.BottomRight;
+            ApplyFont(tmp);
         }
 
         #endregion

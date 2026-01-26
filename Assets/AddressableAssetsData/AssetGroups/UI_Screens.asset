@@ -15,7 +15,7 @@ MonoBehaviour:
   m_GroupName: UI_Screens
   m_Data:
     m_SerializedData: []
-  m_GUID: 9f91bfb6583ec8749ae4ce8a41c64ed0
+  m_GUID: b6767aab6288bf947abc0d0e34fedb4f
   m_SerializeEntries: []
   m_ReadOnly: 0
   m_Settings: {fileID: 11400000, guid: a07cc9c31bf893141bff7fbbc6d761b9, type: 2}
