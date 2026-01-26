@@ -69,7 +69,7 @@ namespace Sc.Contents.Title
             Debug.Log("[TitleScreen] Touch to Start!");
 
             // LobbyScreen으로 전환
-            LobbyScreen.Open(new LobbyState());
+            LobbyScreen.Open(new());
         }
 
         private void OnResetAccountClicked()

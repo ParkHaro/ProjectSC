@@ -103,7 +103,7 @@ namespace Sc.DebugTools
             var screens = new List<(string label, Action action)>
             {
                 ("Title", () => TitleScreen.Open(new TitleState())),
-                ("Lobby", () => LobbyScreen.Open(new LobbyState())),
+                ("Lobby", () => LobbyScreen.Open(new ())),
                 ("Gacha", () => GachaScreen.Open(new GachaState())),
                 ("GachaHistory", () => GachaHistoryScreen.Open(new GachaHistoryState())),
                 ("CharacterList", () => CharacterListScreen.Open(new CharacterListState())),

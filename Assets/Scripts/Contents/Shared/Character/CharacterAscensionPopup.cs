@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using Sc.Common.UI;
+using Sc.Common.UI.Attributes;
 using Sc.Core;
 using Sc.Data;
 using TMPro;
@@ -31,6 +32,7 @@ namespace Sc.Contents.Character
     /// <summary>
     /// 캐릭터 돌파 팝업
     /// </summary>
+    [PopupTemplate(PopupTemplateType.Confirm, 500f, 400f)]
     public class CharacterAscensionPopup : PopupWidget<CharacterAscensionPopup, CharacterAscensionState>
     {
         [Header("Header")]

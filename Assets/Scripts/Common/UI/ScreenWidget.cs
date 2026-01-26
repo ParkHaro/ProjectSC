@@ -68,7 +68,6 @@ namespace Sc.Common.UI
         public virtual TState GetState() => default;
 
         #endregion
-
         #region Context
 
         /// <summary>
@@ -262,13 +261,6 @@ namespace Sc.Common.UI
 
             NavigationManager.Instance?.Push(builder);
         }
-
-        /// <summary>
-        /// Screen 열기 (Push) - 별칭.
-        /// </summary>
-        public static void Push(TState state = default, Transition transition = null)
-            => Open(state, transition);
-
         #endregion
     }
 }

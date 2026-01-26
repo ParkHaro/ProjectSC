@@ -16,20 +16,11 @@ using UnityEngine.UI;
 namespace Sc.Contents.Lobby
 {
     /// <summary>
-    /// 로비 화면 상태.
-    /// </summary>
-    public class LobbyState : IScreenState
-    {
-        public int SelectedCharacterIndex { get; set; }
-        public int CurrentBannerIndex { get; set; }
-    }
-
-    /// <summary>
     /// 로비 메인 화면.
     /// 스펙: Docs/Specs/Lobby.md
     /// </summary>
     [ScreenTemplate(ScreenTemplateType.Tabbed)]
-    public class LobbyScreen : ScreenWidget<LobbyScreen, LobbyState>
+    public class LobbyScreen : ScreenWidget<LobbyScreen, EmptyScreenState>
     {
         #region SerializeFields
 
@@ -62,9 +53,9 @@ namespace Sc.Contents.Lobby
 
         #region Private Fields
 
-        private LobbyState _currentState;
         private LobbyEntryTaskRunner _taskRunner;
         private bool _isTaskRunning;
+        private int _currentCharacterIndex;
 
         #endregion
 
@@ -75,20 +66,17 @@ namespace Sc.Contents.Lobby
             Debug.Log("[LobbyScreen] OnInitialize");
 
             InitializeEventBanner();
-            InitializePassButtons();
-            InitializeQuickMenu();
-            InitializeCharacterDisplay();
-            InitializeInGameDashboard();
-            InitializeBottomNav();
-            InitializeTaskRunner();
-            RegisterBadgeProviders();
+            // InitializePassButtons();
+            // InitializeQuickMenu();
+            // InitializeCharacterDisplay();
+            // InitializeInGameDashboard();
+            // InitializeBottomNav();
+            // InitializeTaskRunner();
+            // RegisterBadgeProviders();
         }
 
-        protected override void OnBind(LobbyState state)
+        protected override void OnBind(EmptyScreenState state)
         {
-            _currentState = state ?? new LobbyState();
-            Debug.Log($"[LobbyScreen] OnBind - CharacterIndex: {_currentState.SelectedCharacterIndex}");
-
             // Header 설정
             ScreenHeader.Instance?.Configure("lobby_default");
 
@@ -134,12 +122,7 @@ namespace Sc.Contents.Lobby
 
             CleanupEventHandlers();
         }
-
-        public override LobbyState GetState()
-        {
-            return _currentState;
-        }
-
+        
         #endregion
 
         #region Initialization
@@ -327,10 +310,8 @@ namespace Sc.Contents.Lobby
 
         private void OnCharacterChanged(int index)
         {
-            if (_currentState != null)
-            {
-                _currentState.SelectedCharacterIndex = index;
-            }
+            Debug.Log($"[LobbyScreen] Character changed: {index}");
+            _currentCharacterIndex = index;
         }
 
         private void OnStageShortcutClicked()
