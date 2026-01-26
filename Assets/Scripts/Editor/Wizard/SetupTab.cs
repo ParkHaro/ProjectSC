@@ -58,6 +58,7 @@ namespace Sc.Editor.Wizard
                 EditorUtility.DisplayDialog("완료",
                     $"Screen 프리팹 {screenCount}개\nPopup 프리팹 {popupCount}개 생성됨", "확인");
             }
+
             GUI.backgroundColor = Color.white;
 
             // 재생성 버튼 (기존 프리팹 삭제 후 재생성)
@@ -65,13 +66,14 @@ namespace Sc.Editor.Wizard
             if (GUILayout.Button("🔄 Regenerate All UI Prefabs", GUILayout.Height(30)))
             {
                 if (EditorUtility.DisplayDialog("프리팹 재생성",
-                    "기존 Screen/Popup 프리팹을 모두 삭제하고 재생성합니다.\n계속하시겠습니까?", "재생성", "취소"))
+                        "기존 Screen/Popup 프리팹을 모두 삭제하고 재생성합니다.\n계속하시겠습니까?", "재생성", "취소"))
                 {
                     var (screens, popups) = PrefabGenerator.RegenerateAllPrefabs();
                     EditorUtility.DisplayDialog("완료",
                         $"Screen 프리팹 {screens}개\nPopup 프리팹 {popups}개 재생성됨", "확인");
                 }
             }
+
             GUI.backgroundColor = Color.white;
 
             // 개별 생성 버튼
@@ -81,11 +83,13 @@ namespace Sc.Editor.Wizard
                 var count = PrefabGenerator.GenerateAllScreenPrefabs();
                 EditorUtility.DisplayDialog("완료", $"Screen 프리팹 {count}개 생성됨", "확인");
             }
+
             if (GUILayout.Button("Popups Only", GUILayout.Height(22)))
             {
                 var count = PrefabGenerator.GenerateAllPopupPrefabs();
                 EditorUtility.DisplayDialog("완료", $"Popup 프리팹 {count}개 생성됨", "확인");
             }
+
             EditorGUILayout.EndHorizontal();
 
             EditorGUILayout.EndVertical();
@@ -106,6 +110,7 @@ namespace Sc.Editor.Wizard
                 AddressableSetupTool.SetupUIGroups();
                 EditorUtility.DisplayDialog("완료", "Addressables UI Groups 설정 완료", "확인");
             }
+
             GUI.backgroundColor = Color.white;
 
             EditorGUILayout.BeginHorizontal();
@@ -113,6 +118,7 @@ namespace Sc.Editor.Wizard
             {
                 AddressableSetupTool.ValidateUIGroups();
             }
+
             if (GUILayout.Button("Clear", GUILayout.Height(22)))
             {
                 if (EditorUtility.DisplayDialog("확인", "UI Groups를 제거하시겠습니까?", "제거", "취소"))
@@ -120,6 +126,7 @@ namespace Sc.Editor.Wizard
                     AddressableSetupTool.ClearUIGroups();
                 }
             }
+
             EditorGUILayout.EndHorizontal();
 
             EditorGUILayout.EndVertical();
@@ -139,6 +146,7 @@ namespace Sc.Editor.Wizard
             {
                 MainSceneSetup.SetupMainScene();
             }
+
             GUI.backgroundColor = Color.white;
 
             if (GUILayout.Button("Clear Scene Objects", GUILayout.Height(22)))
@@ -167,6 +175,7 @@ namespace Sc.Editor.Wizard
             {
                 DebugPanelSetup.AddDebugNavigationPanel();
             }
+
             GUI.backgroundColor = Color.white;
 
             EditorGUILayout.EndVertical();
