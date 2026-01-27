@@ -12,7 +12,7 @@ namespace Sc.Editor.Wizard.Generators
     /// <summary>
     /// LobbyScreen 프리팹 빌더 (자동 생성됨).
     /// Generated from: Assets/Prefabs/UI/Screens/LobbyScreen.prefab
-    /// Generated at: 2026-01-27 12:40:29
+    /// Generated at: 2026-01-27 14:42:50
     /// </summary>
     public static class LobbyScreenPrefabBuilder_Generated
     {

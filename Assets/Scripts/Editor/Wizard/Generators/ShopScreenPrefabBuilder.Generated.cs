@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Sc.Common.UI.Widgets;
 using Sc.Editor.AI;
 using TMPro;
 using UnityEditor;
@@ -12,7 +13,7 @@ namespace Sc.Editor.Wizard.Generators
     /// <summary>
     /// ShopScreen 프리팹 빌더 (자동 생성됨).
     /// Generated from: Assets/Prefabs/UI/Screens/ShopScreen.prefab
-    /// Generated at: 2026-01-27 11:55:24
+    /// Generated at: 2026-01-27 14:47:31
     /// </summary>
     public static class ShopScreenPrefabBuilder_Generated
     {

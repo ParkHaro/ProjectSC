@@ -11,7 +11,7 @@ namespace Sc.Editor.Wizard.Generators
     /// <summary>
     /// TitleScreen 프리팹 빌더 (자동 생성됨).
     /// Generated from: Assets/Prefabs/UI/Screens/TitleScreen.prefab
-    /// Generated at: 2026-01-27 11:55:24
+    /// Generated at: 2026-01-27 14:42:52
     /// </summary>
     public static class TitleScreenPrefabBuilder_Generated
     {

@@ -5,13 +5,14 @@ using UnityEditor;
 using UnityEngine;
 using UnityEngine.UI;
 using Sc.Contents.Character;
+using Sc.Contents.Character.Widgets;
 
 namespace Sc.Editor.Wizard.Generators
 {
     /// <summary>
-    /// CharacterAscensionPopup ?�리??빌더 (?�동 ?�성??.
+    /// CharacterAscensionPopup 프리팹 빌더 (자동 생성됨).
     /// Generated from: Assets/Prefabs/UI/Popups/CharacterAscensionPopup.prefab
-    /// Generated at: 2026-01-26 21:34:17
+    /// Generated at: 2026-01-27 14:43:08
     /// </summary>
     public static class CharacterAscensionPopupPrefabBuilder_Generated
     {
@@ -28,6 +29,7 @@ namespace Sc.Editor.Wizard.Generators
         private static readonly Color Transparent = Color.clear;
 
         // Extracted from prefab
+        private static readonly Color Blue = new Color32(100, 200, 255, 255);
         private static readonly Color Color = new Color32(25, 25, 45, 217);
 
         #endregion
@@ -57,7 +59,7 @@ namespace Sc.Editor.Wizard.Generators
         #endregion
 
         /// <summary>
-        /// CharacterAscensionPopup ?�리?�용 GameObject ?�성.
+        /// CharacterAscensionPopup 프리팹용 GameObject 생성.
         /// </summary>
         public static GameObject Build()
         {
@@ -307,7 +309,7 @@ namespace Sc.Editor.Wizard.Generators
 
 
             var image = go.AddComponent<Image>();
-            image.color = AccentPrimary;
+            image.color = new Color32(100, 200, 255, 255);
             image.raycastTarget = true;
 
             var button = go.AddComponent<Button>();

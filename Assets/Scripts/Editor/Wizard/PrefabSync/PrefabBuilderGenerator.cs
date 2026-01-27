@@ -120,6 +120,7 @@ namespace Sc.Editor.Wizard.PrefabSync
 
             // Usings
             sb.AppendLine("using System.Collections.Generic;");
+            sb.AppendLine("using Sc.Common.UI.Widgets;");
             sb.AppendLine("using Sc.Editor.AI;");
             sb.AppendLine("using TMPro;");
             sb.AppendLine("using UnityEditor;");

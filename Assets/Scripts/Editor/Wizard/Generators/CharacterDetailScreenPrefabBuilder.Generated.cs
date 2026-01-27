@@ -12,7 +12,7 @@ namespace Sc.Editor.Wizard.Generators
     /// <summary>
     /// CharacterDetailScreen 프리팹 빌더 (자동 생성됨).
     /// Generated from: Assets/Prefabs/UI/Screens/CharacterDetailScreen.prefab
-    /// Generated at: 2026-01-27 11:55:23
+    /// Generated at: 2026-01-27 14:42:49
     /// </summary>
     public static class CharacterDetailScreenPrefabBuilder_Generated
     {
