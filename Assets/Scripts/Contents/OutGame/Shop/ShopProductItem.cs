@@ -13,30 +13,27 @@ namespace Sc.Contents.Shop
     /// </summary>
     public class ShopProductItem : Widget
     {
-        [Header("Product Info")]
-        [SerializeField] private Image _iconImage;
+        [Header("Product Info")] [SerializeField]
+        private Image _iconImage;
+
         [SerializeField] private TMP_Text _nameText;
         [SerializeField] private TMP_Text _descriptionText;
 
-        [Header("Price")]
-        [SerializeField] private Image _costTypeIcon;
+        [Header("Price")] [SerializeField] private Image _costTypeIcon;
         [SerializeField] private TMP_Text _priceText;
         [SerializeField] private GameObject _originalPriceObject;
         [SerializeField] private TMP_Text _originalPriceText;
 
-        [Header("Limit")]
-        [SerializeField] private GameObject _limitObject;
+        [Header("Limit")] [SerializeField] private GameObject _limitObject;
         [SerializeField] private TMP_Text _limitText;
         [SerializeField] private TMP_Text _resetTimeText;
 
-        [Header("State")]
-        [SerializeField] private GameObject _soldOutObject;
+        [Header("State")] [SerializeField] private GameObject _soldOutObject;
         [SerializeField] private GameObject _discountBadge;
         [SerializeField] private TMP_Text _discountText;
 
-        [Header("Interaction")]
-        [SerializeField] private Button _button;
-        [SerializeField] private CanvasGroup _canvasGroup;
+        [Header("Interaction")] [SerializeField]
+        private Button _button;
 
         private ShopProductData _productData;
         private ShopPurchaseRecord? _purchaseRecord;
@@ -53,7 +50,8 @@ namespace Sc.Contents.Shop
         /// <summary>
         /// 상품 설정
         /// </summary>
-        public void Setup(ShopProductData productData, ShopPurchaseRecord? record, Action<ShopProductData> onClickCallback)
+        public void Setup(ShopProductData productData, ShopPurchaseRecord? record,
+            Action<ShopProductData> onClickCallback)
         {
             _productData = productData;
             _purchaseRecord = record;
@@ -65,17 +63,16 @@ namespace Sc.Contents.Shop
         /// <summary>
         /// 상호작용 가능 여부 설정
         /// </summary>
-        public void SetInteractable(bool interactable)
+        public override void SetInteractable(bool interactable)
         {
+            base.SetInteractable(interactable);
+
             if (_button != null)
             {
                 _button.interactable = interactable;
             }
 
-            if (_canvasGroup != null)
-            {
-                _canvasGroup.alpha = interactable ? 1f : 0.5f;
-            }
+            GetOrAddCanvasGroup().alpha = interactable ? 1f : 0.5f;
         }
 
         private void RefreshUI()
@@ -222,10 +219,7 @@ namespace Sc.Contents.Shop
                 _button.interactable = !isSoldOut;
             }
 
-            if (_canvasGroup != null)
-            {
-                _canvasGroup.alpha = isSoldOut ? 0.5f : 1f;
-            }
+            GetOrAddCanvasGroup().alpha = isSoldOut ? 0.5f : 1f;
         }
 
         private bool IsSoldOut()
