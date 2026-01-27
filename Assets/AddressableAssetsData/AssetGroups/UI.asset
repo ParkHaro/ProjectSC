@@ -67,6 +67,11 @@ MonoBehaviour:
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 796e99296f66371439d15c8327bc7b91
+    m_Address: UI/Screens/InventoryScreen
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 80ac2f8f57c874b18ace5949579fe925
     m_Address: UI/Screens/GachaHistoryScreen
     m_ReadOnly: 0
