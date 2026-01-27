@@ -4,7 +4,7 @@
     "prefabPath": "Assets/Prefabs/UI/Screens/ShopScreen.prefab",
     "componentType": "ShopScreen",
     "componentNamespace": "Sc.Contents.Shop",
-    "generatedAt": "2026-01-27T11:55:24",
+    "generatedAt": "2026-01-27T14:47:31",
     "builderPath": "Assets/Scripts/Editor/Wizard/Generators/ShopScreenPrefabBuilder.cs"
   },
   "hierarchy": {

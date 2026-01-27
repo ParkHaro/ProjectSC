@@ -43,9 +43,10 @@ namespace Sc.Editor.Wizard
             // 4. Popup 프리팹 등록 (Popups 폴더)
             RegisterPrefabsByPattern(settings, popupsGroup, $"{UI_PREFAB_ROOT}/Popups", "*Popup", "UI/Popups");
 
-            // 5. Widget 프리팹 등록 (MVP 폴더 - ScreenHeader, CurrencyHUD)
+            // 5. Widget 프리팹 등록 (MVP 폴더 - ScreenHeader)
+            // CurrencyHUD는 ScreenHeader 내부에 포함되어 있으므로 별도 등록 불필요
             RegisterSpecificPrefabs(settings, widgetsGroup, $"{UI_PREFAB_ROOT}/MVP",
-                new[] { "ScreenHeader", "CurrencyHUD" }, "UI/Widgets");
+                new[] { "ScreenHeader" }, "UI/Widgets");
             RegisterSpecificPrefabs(settings, widgetsGroup, UI_PREFAB_ROOT,
                 new[] { "LoadingWidget" }, "UI/Widgets");
 

@@ -4,7 +4,7 @@
     "prefabPath": "Assets/Prefabs/UI/Screens/InventoryScreen.prefab",
     "componentType": "InventoryScreen",
     "componentNamespace": "Sc.Contents.Inventory",
-    "generatedAt": "2026-01-27T12:23:03",
+    "generatedAt": "2026-01-27T14:42:50",
     "builderPath": "Assets/Scripts/Editor/Wizard/Generators/InventoryScreenPrefabBuilder.cs"
   },
   "hierarchy": {

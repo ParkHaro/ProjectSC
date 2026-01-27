@@ -4,7 +4,7 @@
     "prefabPath": "Assets/Prefabs/UI/Screens/LobbyScreen.prefab",
     "componentType": "LobbyScreen",
     "componentNamespace": "Sc.Contents.Lobby",
-    "generatedAt": "2026-01-27T12:40:28",
+    "generatedAt": "2026-01-27T14:42:50",
     "builderPath": "Assets/Scripts/Editor/Wizard/Generators/LobbyScreenPrefabBuilder.cs"
   },
   "hierarchy": {

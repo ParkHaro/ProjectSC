@@ -1,6 +1,6 @@
-using UnityEngine;
-using UnityEditor;
 using Sc.Editor.Wizard.Generators;
+using UnityEditor;
+using UnityEngine;
 
 namespace Sc.Editor.Wizard
 {
@@ -91,6 +91,14 @@ namespace Sc.Editor.Wizard
             }
 
             EditorGUILayout.EndHorizontal();
+
+            // Widget 프리팹 생성
+            EditorGUILayout.Space(5);
+            if (GUILayout.Button("Generate Widgets (ScreenHeader)", GUILayout.Height(22)))
+            {
+                var count = WidgetPrefabGenerator.GenerateAllWidgetPrefabs();
+                EditorUtility.DisplayDialog("완료", $"Widget 프리팹 {count}개 생성됨", "확인");
+            }
 
             EditorGUILayout.EndVertical();
         }
