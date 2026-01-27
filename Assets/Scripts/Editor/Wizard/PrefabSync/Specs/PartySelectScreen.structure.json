@@ -4,7 +4,7 @@
     "prefabPath": "Assets/Prefabs/UI/Screens/PartySelectScreen.prefab",
     "componentType": "PartySelectScreen",
     "componentNamespace": "Sc.Contents.Stage",
-    "generatedAt": "2026-01-27T00:56:08",
+    "generatedAt": "2026-01-27T11:55:24",
     "builderPath": "Assets/Scripts/Editor/Wizard/Generators/PartySelectScreenPrefabBuilder.cs"
   },
   "hierarchy": {
@@ -105,8 +105,8 @@
             "type": "Image",
             "fullType": "UnityEngine.UI.Image",
             "properties": {
-              "color": "#0A0A12FF",
-              "raycastTarget": true,
+              "color": "#080A12FF",
+              "raycastTarget": false,
               "type": "Simple"
             }
           }
@@ -185,8 +185,453 @@
                 0.0
               ]
             },
-            "components": [],
-            "children": []
+            "components": [
+              {
+                "type": "CanvasRenderer",
+                "fullType": "UnityEngine.CanvasRenderer",
+                "properties": {}
+              },
+              {
+                "type": "Image",
+                "fullType": "UnityEngine.UI.Image",
+                "properties": {
+                  "color": "#0F121CF2",
+                  "raycastTarget": true,
+                  "type": "Simple"
+                }
+              }
+            ],
+            "children": [
+              {
+                "name": "BackButton",
+                "path": "PartySelectScreen/SafeArea/Header/BackButton",
+                "active": true,
+                "rect": {
+                  "anchor": "LeftCenter",
+                  "anchorMin": [
+                    0.0,
+                    0.5
+                  ],
+                  "anchorMax": [
+                    0.0,
+                    0.5
+                  ],
+                  "pivot": [
+                    0.0,
+                    0.5
+                  ],
+                  "sizeDelta": [
+                    60.0,
+                    60.0
+                  ],
+                  "anchoredPosition": [
+                    20.0,
+                    0.0
+                  ],
+                  "offsetMin": [
+                    20.0,
+                    -30.0
+                  ],
+                  "offsetMax": [
+                    80.0,
+                    30.0
+                  ]
+                },
+                "components": [
+                  {
+                    "type": "CanvasRenderer",
+                    "fullType": "UnityEngine.CanvasRenderer",
+                    "properties": {}
+                  },
+                  {
+                    "type": "Image",
+                    "fullType": "UnityEngine.UI.Image",
+                    "properties": {
+                      "color": "#FFFFFF1A",
+                      "raycastTarget": true,
+                      "type": "Simple"
+                    }
+                  },
+                  {
+                    "type": "Button",
+                    "fullType": "UnityEngine.UI.Button",
+                    "properties": {
+                      "interactable": true,
+                      "transition": "ColorTint"
+                    }
+                  }
+                ],
+                "children": [
+                  {
+                    "name": "Text",
+                    "path": "PartySelectScreen/SafeArea/Header/BackButton/Text",
+                    "active": true,
+                    "rect": {
+                      "anchor": "Stretch",
+                      "anchorMin": [
+                        0.0,
+                        0.0
+                      ],
+                      "anchorMax": [
+                        1.0,
+                        1.0
+                      ],
+                      "pivot": [
+                        0.5,
+                        0.5
+                      ],
+                      "sizeDelta": [
+                        0.0,
+                        0.0
+                      ],
+                      "anchoredPosition": [
+                        0.0,
+                        0.0
+                      ],
+                      "offsetMin": [
+                        0.0,
+                        0.0
+                      ],
+                      "offsetMax": [
+                        0.0,
+                        0.0
+                      ]
+                    },
+                    "components": [
+                      {
+                        "type": "CanvasRenderer",
+                        "fullType": "UnityEngine.CanvasRenderer",
+                        "properties": {}
+                      },
+                      {
+                        "type": "TextMeshProUGUI",
+                        "fullType": "TMPro.TextMeshProUGUI",
+                        "properties": {
+                          "text": "<",
+                          "fontSize": 20.0,
+                          "color": "#FFFFFFFF",
+                          "alignment": "Center",
+                          "fontStyle": "Normal",
+                          "raycastTarget": true,
+                          "font": "Assets/TextMesh Pro/Resources/Fonts & Materials/PretendardVariable SDF.asset"
+                        }
+                      }
+                    ],
+                    "children": []
+                  }
+                ]
+              },
+              {
+                "name": "HomeButton",
+                "path": "PartySelectScreen/SafeArea/Header/HomeButton",
+                "active": true,
+                "rect": {
+                  "anchor": "RightCenter",
+                  "anchorMin": [
+                    1.0,
+                    0.5
+                  ],
+                  "anchorMax": [
+                    1.0,
+                    0.5
+                  ],
+                  "pivot": [
+                    1.0,
+                    0.5
+                  ],
+                  "sizeDelta": [
+                    60.0,
+                    60.0
+                  ],
+                  "anchoredPosition": [
+                    -20.0,
+                    0.0
+                  ],
+                  "offsetMin": [
+                    -80.0,
+                    -30.0
+                  ],
+                  "offsetMax": [
+                    -20.0,
+                    30.0
+                  ]
+                },
+                "components": [
+                  {
+                    "type": "CanvasRenderer",
+                    "fullType": "UnityEngine.CanvasRenderer",
+                    "properties": {}
+                  },
+                  {
+                    "type": "Image",
+                    "fullType": "UnityEngine.UI.Image",
+                    "properties": {
+                      "color": "#FFFFFF1A",
+                      "raycastTarget": true,
+                      "type": "Simple"
+                    }
+                  },
+                  {
+                    "type": "Button",
+                    "fullType": "UnityEngine.UI.Button",
+                    "properties": {
+                      "interactable": true,
+                      "transition": "ColorTint"
+                    }
+                  }
+                ],
+                "children": [
+                  {
+                    "name": "Text",
+                    "path": "PartySelectScreen/SafeArea/Header/HomeButton/Text",
+                    "active": true,
+                    "rect": {
+                      "anchor": "Stretch",
+                      "anchorMin": [
+                        0.0,
+                        0.0
+                      ],
+                      "anchorMax": [
+                        1.0,
+                        1.0
+                      ],
+                      "pivot": [
+                        0.5,
+                        0.5
+                      ],
+                      "sizeDelta": [
+                        0.0,
+                        0.0
+                      ],
+                      "anchoredPosition": [
+                        0.0,
+                        0.0
+                      ],
+                      "offsetMin": [
+                        0.0,
+                        0.0
+                      ],
+                      "offsetMax": [
+                        0.0,
+                        0.0
+                      ]
+                    },
+                    "components": [
+                      {
+                        "type": "CanvasRenderer",
+                        "fullType": "UnityEngine.CanvasRenderer",
+                        "properties": {}
+                      },
+                      {
+                        "type": "TextMeshProUGUI",
+                        "fullType": "TMPro.TextMeshProUGUI",
+                        "properties": {
+                          "text": "H",
+                          "fontSize": 20.0,
+                          "color": "#FFFFFFFF",
+                          "alignment": "Center",
+                          "fontStyle": "Normal",
+                          "raycastTarget": true,
+                          "font": "Assets/TextMesh Pro/Resources/Fonts & Materials/PretendardVariable SDF.asset"
+                        }
+                      }
+                    ],
+                    "children": []
+                  }
+                ]
+              },
+              {
+                "name": "StageInfoContainer",
+                "path": "PartySelectScreen/SafeArea/Header/StageInfoContainer",
+                "active": true,
+                "rect": {
+                  "anchor": "Center",
+                  "anchorMin": [
+                    0.5,
+                    0.5
+                  ],
+                  "anchorMax": [
+                    0.5,
+                    0.5
+                  ],
+                  "pivot": [
+                    0.5,
+                    0.5
+                  ],
+                  "sizeDelta": [
+                    400.0,
+                    60.0
+                  ],
+                  "anchoredPosition": [
+                    0.0,
+                    0.0
+                  ],
+                  "offsetMin": [
+                    -200.0,
+                    -30.0
+                  ],
+                  "offsetMax": [
+                    200.0,
+                    30.0
+                  ]
+                },
+                "components": [],
+                "children": [
+                  {
+                    "name": "StageNameText",
+                    "path": "PartySelectScreen/SafeArea/Header/StageInfoContainer/StageNameText",
+                    "active": true,
+                    "rect": {
+                      "anchor": "Center",
+                      "anchorMin": [
+                        0.5,
+                        0.5
+                      ],
+                      "anchorMax": [
+                        0.5,
+                        0.5
+                      ],
+                      "pivot": [
+                        0.5,
+                        0.5
+                      ],
+                      "sizeDelta": [
+                        400.0,
+                        30.0
+                      ],
+                      "anchoredPosition": [
+                        0.0,
+                        5.0
+                      ],
+                      "offsetMin": [
+                        -200.0,
+                        -10.0
+                      ],
+                      "offsetMax": [
+                        200.0,
+                        20.0
+                      ]
+                    },
+                    "components": [
+                      {
+                        "type": "CanvasRenderer",
+                        "fullType": "UnityEngine.CanvasRenderer",
+                        "properties": {}
+                      },
+                      {
+                        "type": "TextMeshProUGUI",
+                        "fullType": "TMPro.TextMeshProUGUI",
+                        "properties": {
+                          "text": "10-7. 깜빡이는 터널!",
+                          "fontSize": 20.0,
+                          "color": "#FFFFFFFF",
+                          "alignment": "Center",
+                          "fontStyle": "Bold",
+                          "raycastTarget": true,
+                          "font": "Assets/TextMesh Pro/Resources/Fonts & Materials/PretendardVariable SDF.asset"
+                        }
+                      }
+                    ],
+                    "children": []
+                  },
+                  {
+                    "name": "StageDifficultyText",
+                    "path": "PartySelectScreen/SafeArea/Header/StageInfoContainer/StageDifficultyText",
+                    "active": true,
+                    "rect": {
+                      "anchor": "Center",
+                      "anchorMin": [
+                        0.5,
+                        0.5
+                      ],
+                      "anchorMax": [
+                        0.5,
+                        0.5
+                      ],
+                      "pivot": [
+                        0.5,
+                        0.5
+                      ],
+                      "sizeDelta": [
+                        400.0,
+                        30.0
+                      ],
+                      "anchoredPosition": [
+                        0.0,
+                        -15.0
+                      ],
+                      "offsetMin": [
+                        -200.0,
+                        -30.0
+                      ],
+                      "offsetMax": [
+                        200.0,
+                        0.0
+                      ]
+                    },
+                    "components": [
+                      {
+                        "type": "CanvasRenderer",
+                        "fullType": "UnityEngine.CanvasRenderer",
+                        "properties": {}
+                      },
+                      {
+                        "type": "TextMeshProUGUI",
+                        "fullType": "TMPro.TextMeshProUGUI",
+                        "properties": {
+                          "text": "Hard",
+                          "fontSize": 14.0,
+                          "color": "#FFA03CFF",
+                          "alignment": "Center",
+                          "fontStyle": "Normal",
+                          "raycastTarget": true,
+                          "font": "Assets/TextMesh Pro/Resources/Fonts & Materials/PretendardVariable SDF.asset"
+                        }
+                      }
+                    ],
+                    "children": []
+                  }
+                ]
+              },
+              {
+                "name": "CurrencyHUD",
+                "path": "PartySelectScreen/SafeArea/Header/CurrencyHUD",
+                "active": true,
+                "rect": {
+                  "anchor": "RightCenter",
+                  "anchorMin": [
+                    1.0,
+                    0.5
+                  ],
+                  "anchorMax": [
+                    1.0,
+                    0.5
+                  ],
+                  "pivot": [
+                    1.0,
+                    0.5
+                  ],
+                  "sizeDelta": [
+                    200.0,
+                    40.0
+                  ],
+                  "anchoredPosition": [
+                    -80.0,
+                    0.0
+                  ],
+                  "offsetMin": [
+                    -280.0,
+                    -20.0
+                  ],
+                  "offsetMax": [
+                    -80.0,
+                    20.0
+                  ]
+                },
+                "components": [],
+                "children": []
+              }
+            ]
           },
           {
             "name": "Content",
@@ -224,18 +669,4198 @@
               ]
             },
             "components": [],
+            "children": [
+              {
+                "name": "LeftArea",
+                "path": "PartySelectScreen/SafeArea/Content/LeftArea",
+                "active": true,
+                "rect": {
+                  "anchor": "HStretch(0.00-0.60)",
+                  "anchorMin": [
+                    0.0,
+                    0.0
+                  ],
+                  "anchorMax": [
+                    0.6,
+                    1.0
+                  ],
+                  "pivot": [
+                    0.5,
+                    0.5
+                  ],
+                  "sizeDelta": [
+                    0.0,
+                    0.0
+                  ],
+                  "anchoredPosition": [
+                    0.0,
+                    0.0
+                  ],
+                  "offsetMin": [
+                    0.0,
+                    0.0
+                  ],
+                  "offsetMax": [
+                    0.0,
+                    0.0
+                  ]
+                },
+                "components": [],
+                "children": [
+                  {
+                    "name": "BattlePreviewArea",
+                    "path": "PartySelectScreen/SafeArea/Content/LeftArea/BattlePreviewArea",
+                    "active": true,
+                    "rect": {
+                      "anchor": "Center",
+                      "anchorMin": [
+                        0.5,
+                        0.5
+                      ],
+                      "anchorMax": [
+                        0.5,
+                        0.5
+                      ],
+                      "pivot": [
+                        0.5,
+                        0.5
+                      ],
+                      "sizeDelta": [
+                        600.0,
+                        400.0
+                      ],
+                      "anchoredPosition": [
+                        0.0,
+                        0.0
+                      ],
+                      "offsetMin": [
+                        -300.0,
+                        -200.0
+                      ],
+                      "offsetMax": [
+                        300.0,
+                        200.0
+                      ]
+                    },
+                    "components": [],
+                    "children": [
+                      {
+                        "name": "FrontLineContainer",
+                        "path": "PartySelectScreen/SafeArea/Content/LeftArea/BattlePreviewArea/FrontLineContainer",
+                        "active": true,
+                        "rect": {
+                          "anchor": "Center",
+                          "anchorMin": [
+                            0.5,
+                            0.5
+                          ],
+                          "anchorMax": [
+                            0.5,
+                            0.5
+                          ],
+                          "pivot": [
+                            0.5,
+                            0.5
+                          ],
+                          "sizeDelta": [
+                            300.0,
+                            90.0
+                          ],
+                          "anchoredPosition": [
+                            0.0,
+                            50.0
+                          ],
+                          "offsetMin": [
+                            -150.0,
+                            5.0
+                          ],
+                          "offsetMax": [
+                            150.0,
+                            95.0
+                          ]
+                        },
+                        "components": [
+                          {
+                            "type": "HorizontalLayoutGroup",
+                            "fullType": "UnityEngine.UI.HorizontalLayoutGroup",
+                            "properties": {
+                              "spacing": 10.0,
+                              "padding": [
+                                0,
+                                0,
+                                0,
+                                0
+                              ],
+                              "childAlignment": "UpperLeft",
+                              "childControlWidth": false,
+                              "childControlHeight": false,
+                              "childForceExpandWidth": false,
+                              "childForceExpandHeight": false
+                            }
+                          }
+                        ],
+                        "children": [
+                          {
+                            "name": "Slot0",
+                            "path": "PartySelectScreen/SafeArea/Content/LeftArea/BattlePreviewArea/FrontLineContainer/Slot0",
+                            "active": true,
+                            "rect": {
+                              "anchor": "Center",
+                              "anchorMin": [
+                                0.5,
+                                0.5
+                              ],
+                              "anchorMax": [
+                                0.5,
+                                0.5
+                              ],
+                              "pivot": [
+                                0.5,
+                                0.5
+                              ],
+                              "sizeDelta": [
+                                90.0,
+                                90.0
+                              ],
+                              "anchoredPosition": [
+                                0.0,
+                                0.0
+                              ],
+                              "offsetMin": [
+                                -45.0,
+                                -45.0
+                              ],
+                              "offsetMax": [
+                                45.0,
+                                45.0
+                              ]
+                            },
+                            "components": [
+                              {
+                                "type": "CanvasRenderer",
+                                "fullType": "UnityEngine.CanvasRenderer",
+                                "properties": {}
+                              },
+                              {
+                                "type": "Image",
+                                "fullType": "UnityEngine.UI.Image",
+                                "properties": {
+                                  "color": "#282D3CB4",
+                                  "raycastTarget": true,
+                                  "type": "Simple"
+                                }
+                              }
+                            ],
+                            "children": []
+                          },
+                          {
+                            "name": "Slot1",
+                            "path": "PartySelectScreen/SafeArea/Content/LeftArea/BattlePreviewArea/FrontLineContainer/Slot1",
+                            "active": true,
+                            "rect": {
+                              "anchor": "Center",
+                              "anchorMin": [
+                                0.5,
+                                0.5
+                              ],
+                              "anchorMax": [
+                                0.5,
+                                0.5
+                              ],
+                              "pivot": [
+                                0.5,
+                                0.5
+                              ],
+                              "sizeDelta": [
+                                90.0,
+                                90.0
+                              ],
+                              "anchoredPosition": [
+                                0.0,
+                                0.0
+                              ],
+                              "offsetMin": [
+                                -45.0,
+                                -45.0
+                              ],
+                              "offsetMax": [
+                                45.0,
+                                45.0
+                              ]
+                            },
+                            "components": [
+                              {
+                                "type": "CanvasRenderer",
+                                "fullType": "UnityEngine.CanvasRenderer",
+                                "properties": {}
+                              },
+                              {
+                                "type": "Image",
+                                "fullType": "UnityEngine.UI.Image",
+                                "properties": {
+                                  "color": "#282D3CB4",
+                                  "raycastTarget": true,
+                                  "type": "Simple"
+                                }
+                              }
+                            ],
+                            "children": []
+                          },
+                          {
+                            "name": "Slot2",
+                            "path": "PartySelectScreen/SafeArea/Content/LeftArea/BattlePreviewArea/FrontLineContainer/Slot2",
+                            "active": true,
+                            "rect": {
+                              "anchor": "Center",
+                              "anchorMin": [
+                                0.5,
+                                0.5
+                              ],
+                              "anchorMax": [
+                                0.5,
+                                0.5
+                              ],
+                              "pivot": [
+                                0.5,
+                                0.5
+                              ],
+                              "sizeDelta": [
+                                90.0,
+                                90.0
+                              ],
+                              "anchoredPosition": [
+                                0.0,
+                                0.0
+                              ],
+                              "offsetMin": [
+                                -45.0,
+                                -45.0
+                              ],
+                              "offsetMax": [
+                                45.0,
+                                45.0
+                              ]
+                            },
+                            "components": [
+                              {
+                                "type": "CanvasRenderer",
+                                "fullType": "UnityEngine.CanvasRenderer",
+                                "properties": {}
+                              },
+                              {
+                                "type": "Image",
+                                "fullType": "UnityEngine.UI.Image",
+                                "properties": {
+                                  "color": "#282D3CB4",
+                                  "raycastTarget": true,
+                                  "type": "Simple"
+                                }
+                              }
+                            ],
+                            "children": []
+                          }
+                        ]
+                      },
+                      {
+                        "name": "BackLineContainer",
+                        "path": "PartySelectScreen/SafeArea/Content/LeftArea/BattlePreviewArea/BackLineContainer",
+                        "active": true,
+                        "rect": {
+                          "anchor": "Center",
+                          "anchorMin": [
+                            0.5,
+                            0.5
+                          ],
+                          "anchorMax": [
+                            0.5,
+                            0.5
+                          ],
+                          "pivot": [
+                            0.5,
+                            0.5
+                          ],
+                          "sizeDelta": [
+                            300.0,
+                            90.0
+                          ],
+                          "anchoredPosition": [
+                            0.0,
+                            -50.0
+                          ],
+                          "offsetMin": [
+                            -150.0,
+                            -95.0
+                          ],
+                          "offsetMax": [
+                            150.0,
+                            -5.0
+                          ]
+                        },
+                        "components": [
+                          {
+                            "type": "HorizontalLayoutGroup",
+                            "fullType": "UnityEngine.UI.HorizontalLayoutGroup",
+                            "properties": {
+                              "spacing": 10.0,
+                              "padding": [
+                                0,
+                                0,
+                                0,
+                                0
+                              ],
+                              "childAlignment": "UpperLeft",
+                              "childControlWidth": false,
+                              "childControlHeight": false,
+                              "childForceExpandWidth": false,
+                              "childForceExpandHeight": false
+                            }
+                          }
+                        ],
+                        "children": [
+                          {
+                            "name": "Slot0",
+                            "path": "PartySelectScreen/SafeArea/Content/LeftArea/BattlePreviewArea/BackLineContainer/Slot0",
+                            "active": true,
+                            "rect": {
+                              "anchor": "Center",
+                              "anchorMin": [
+                                0.5,
+                                0.5
+                              ],
+                              "anchorMax": [
+                                0.5,
+                                0.5
+                              ],
+                              "pivot": [
+                                0.5,
+                                0.5
+                              ],
+                              "sizeDelta": [
+                                90.0,
+                                90.0
+                              ],
+                              "anchoredPosition": [
+                                0.0,
+                                0.0
+                              ],
+                              "offsetMin": [
+                                -45.0,
+                                -45.0
+                              ],
+                              "offsetMax": [
+                                45.0,
+                                45.0
+                              ]
+                            },
+                            "components": [
+                              {
+                                "type": "CanvasRenderer",
+                                "fullType": "UnityEngine.CanvasRenderer",
+                                "properties": {}
+                              },
+                              {
+                                "type": "Image",
+                                "fullType": "UnityEngine.UI.Image",
+                                "properties": {
+                                  "color": "#282D3CB4",
+                                  "raycastTarget": true,
+                                  "type": "Simple"
+                                }
+                              }
+                            ],
+                            "children": []
+                          },
+                          {
+                            "name": "Slot1",
+                            "path": "PartySelectScreen/SafeArea/Content/LeftArea/BattlePreviewArea/BackLineContainer/Slot1",
+                            "active": true,
+                            "rect": {
+                              "anchor": "Center",
+                              "anchorMin": [
+                                0.5,
+                                0.5
+                              ],
+                              "anchorMax": [
+                                0.5,
+                                0.5
+                              ],
+                              "pivot": [
+                                0.5,
+                                0.5
+                              ],
+                              "sizeDelta": [
+                                90.0,
+                                90.0
+                              ],
+                              "anchoredPosition": [
+                                0.0,
+                                0.0
+                              ],
+                              "offsetMin": [
+                                -45.0,
+                                -45.0
+                              ],
+                              "offsetMax": [
+                                45.0,
+                                45.0
+                              ]
+                            },
+                            "components": [
+                              {
+                                "type": "CanvasRenderer",
+                                "fullType": "UnityEngine.CanvasRenderer",
+                                "properties": {}
+                              },
+                              {
+                                "type": "Image",
+                                "fullType": "UnityEngine.UI.Image",
+                                "properties": {
+                                  "color": "#282D3CB4",
+                                  "raycastTarget": true,
+                                  "type": "Simple"
+                                }
+                              }
+                            ],
+                            "children": []
+                          },
+                          {
+                            "name": "Slot2",
+                            "path": "PartySelectScreen/SafeArea/Content/LeftArea/BattlePreviewArea/BackLineContainer/Slot2",
+                            "active": true,
+                            "rect": {
+                              "anchor": "Center",
+                              "anchorMin": [
+                                0.5,
+                                0.5
+                              ],
+                              "anchorMax": [
+                                0.5,
+                                0.5
+                              ],
+                              "pivot": [
+                                0.5,
+                                0.5
+                              ],
+                              "sizeDelta": [
+                                90.0,
+                                90.0
+                              ],
+                              "anchoredPosition": [
+                                0.0,
+                                0.0
+                              ],
+                              "offsetMin": [
+                                -45.0,
+                                -45.0
+                              ],
+                              "offsetMax": [
+                                45.0,
+                                45.0
+                              ]
+                            },
+                            "components": [
+                              {
+                                "type": "CanvasRenderer",
+                                "fullType": "UnityEngine.CanvasRenderer",
+                                "properties": {}
+                              },
+                              {
+                                "type": "Image",
+                                "fullType": "UnityEngine.UI.Image",
+                                "properties": {
+                                  "color": "#282D3CB4",
+                                  "raycastTarget": true,
+                                  "type": "Simple"
+                                }
+                              }
+                            ],
+                            "children": []
+                          }
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "name": "BattlePreviewVisual",
+                    "path": "PartySelectScreen/SafeArea/Content/LeftArea/BattlePreviewVisual",
+                    "active": true,
+                    "rect": {
+                      "anchor": "Custom",
+                      "anchorMin": [
+                        0.5,
+                        0.6
+                      ],
+                      "anchorMax": [
+                        0.5,
+                        0.6
+                      ],
+                      "pivot": [
+                        0.5,
+                        0.5
+                      ],
+                      "sizeDelta": [
+                        600.0,
+                        300.0
+                      ],
+                      "anchoredPosition": [
+                        0.0,
+                        0.0
+                      ],
+                      "offsetMin": [
+                        -300.0,
+                        -150.0
+                      ],
+                      "offsetMax": [
+                        300.0,
+                        150.0
+                      ]
+                    },
+                    "components": [],
+                    "children": [
+                      {
+                        "name": "PartyFormation",
+                        "path": "PartySelectScreen/SafeArea/Content/LeftArea/BattlePreviewVisual/PartyFormation",
+                        "active": true,
+                        "rect": {
+                          "anchor": "LeftCenter",
+                          "anchorMin": [
+                            0.0,
+                            0.5
+                          ],
+                          "anchorMax": [
+                            0.0,
+                            0.5
+                          ],
+                          "pivot": [
+                            0.0,
+                            0.5
+                          ],
+                          "sizeDelta": [
+                            250.0,
+                            200.0
+                          ],
+                          "anchoredPosition": [
+                            50.0,
+                            0.0
+                          ],
+                          "offsetMin": [
+                            50.0,
+                            -100.0
+                          ],
+                          "offsetMax": [
+                            300.0,
+                            100.0
+                          ]
+                        },
+                        "components": [],
+                        "children": []
+                      },
+                      {
+                        "name": "EnemyFormation",
+                        "path": "PartySelectScreen/SafeArea/Content/LeftArea/BattlePreviewVisual/EnemyFormation",
+                        "active": true,
+                        "rect": {
+                          "anchor": "RightCenter",
+                          "anchorMin": [
+                            1.0,
+                            0.5
+                          ],
+                          "anchorMax": [
+                            1.0,
+                            0.5
+                          ],
+                          "pivot": [
+                            1.0,
+                            0.5
+                          ],
+                          "sizeDelta": [
+                            200.0,
+                            200.0
+                          ],
+                          "anchoredPosition": [
+                            -50.0,
+                            0.0
+                          ],
+                          "offsetMin": [
+                            -250.0,
+                            -100.0
+                          ],
+                          "offsetMax": [
+                            -50.0,
+                            100.0
+                          ]
+                        },
+                        "components": [
+                          {
+                            "type": "CanvasRenderer",
+                            "fullType": "UnityEngine.CanvasRenderer",
+                            "properties": {}
+                          },
+                          {
+                            "type": "Image",
+                            "fullType": "UnityEngine.UI.Image",
+                            "properties": {
+                              "color": "#FF5A5A4C",
+                              "raycastTarget": true,
+                              "type": "Simple"
+                            }
+                          }
+                        ],
+                        "children": []
+                      }
+                    ]
+                  },
+                  {
+                    "name": "QuickActionBar",
+                    "path": "PartySelectScreen/SafeArea/Content/LeftArea/QuickActionBar",
+                    "active": true,
+                    "rect": {
+                      "anchor": "BottomStretch",
+                      "anchorMin": [
+                        0.0,
+                        0.0
+                      ],
+                      "anchorMax": [
+                        1.0,
+                        0.0
+                      ],
+                      "pivot": [
+                        0.5,
+                        0.0
+                      ],
+                      "sizeDelta": [
+                        0.0,
+                        60.0
+                      ],
+                      "anchoredPosition": [
+                        0.0,
+                        20.0
+                      ],
+                      "offsetMin": [
+                        0.0,
+                        20.0
+                      ],
+                      "offsetMax": [
+                        0.0,
+                        80.0
+                      ]
+                    },
+                    "components": [
+                      {
+                        "type": "HorizontalLayoutGroup",
+                        "fullType": "UnityEngine.UI.HorizontalLayoutGroup",
+                        "properties": {
+                          "spacing": 10.0,
+                          "padding": [
+                            20,
+                            20,
+                            0,
+                            0
+                          ],
+                          "childAlignment": "UpperLeft",
+                          "childControlWidth": true,
+                          "childControlHeight": true,
+                          "childForceExpandWidth": true,
+                          "childForceExpandHeight": false
+                        }
+                      }
+                    ],
+                    "children": [
+                      {
+                        "name": "AutoFormButton",
+                        "path": "PartySelectScreen/SafeArea/Content/LeftArea/QuickActionBar/AutoFormButton",
+                        "active": true,
+                        "rect": {
+                          "anchor": "Center",
+                          "anchorMin": [
+                            0.5,
+                            0.5
+                          ],
+                          "anchorMax": [
+                            0.5,
+                            0.5
+                          ],
+                          "pivot": [
+                            0.5,
+                            0.5
+                          ],
+                          "sizeDelta": [
+                            100.0,
+                            100.0
+                          ],
+                          "anchoredPosition": [
+                            0.0,
+                            0.0
+                          ],
+                          "offsetMin": [
+                            -50.0,
+                            -50.0
+                          ],
+                          "offsetMax": [
+                            50.0,
+                            50.0
+                          ]
+                        },
+                        "components": [
+                          {
+                            "type": "CanvasRenderer",
+                            "fullType": "UnityEngine.CanvasRenderer",
+                            "properties": {}
+                          },
+                          {
+                            "type": "Image",
+                            "fullType": "UnityEngine.UI.Image",
+                            "properties": {
+                              "color": "#4C6680FF",
+                              "raycastTarget": true,
+                              "type": "Simple"
+                            }
+                          },
+                          {
+                            "type": "Button",
+                            "fullType": "UnityEngine.UI.Button",
+                            "properties": {
+                              "interactable": true,
+                              "transition": "ColorTint"
+                            }
+                          }
+                        ],
+                        "children": [
+                          {
+                            "name": "Text",
+                            "path": "PartySelectScreen/SafeArea/Content/LeftArea/QuickActionBar/AutoFormButton/Text",
+                            "active": true,
+                            "rect": {
+                              "anchor": "Stretch",
+                              "anchorMin": [
+                                0.0,
+                                0.0
+                              ],
+                              "anchorMax": [
+                                1.0,
+                                1.0
+                              ],
+                              "pivot": [
+                                0.5,
+                                0.5
+                              ],
+                              "sizeDelta": [
+                                0.0,
+                                0.0
+                              ],
+                              "anchoredPosition": [
+                                0.0,
+                                0.0
+                              ],
+                              "offsetMin": [
+                                0.0,
+                                0.0
+                              ],
+                              "offsetMax": [
+                                0.0,
+                                0.0
+                              ]
+                            },
+                            "components": [
+                              {
+                                "type": "CanvasRenderer",
+                                "fullType": "UnityEngine.CanvasRenderer",
+                                "properties": {}
+                              },
+                              {
+                                "type": "TextMeshProUGUI",
+                                "fullType": "TMPro.TextMeshProUGUI",
+                                "properties": {
+                                  "text": "일괄 해제",
+                                  "fontSize": 16.0,
+                                  "color": "#FFFFFFFF",
+                                  "alignment": "Center",
+                                  "fontStyle": "Bold",
+                                  "raycastTarget": true,
+                                  "font": "Assets/TextMesh Pro/Resources/Fonts & Materials/PretendardVariable SDF.asset"
+                                }
+                              }
+                            ],
+                            "children": []
+                          }
+                        ]
+                      },
+                      {
+                        "name": "StageInfoButton",
+                        "path": "PartySelectScreen/SafeArea/Content/LeftArea/QuickActionBar/StageInfoButton",
+                        "active": true,
+                        "rect": {
+                          "anchor": "Center",
+                          "anchorMin": [
+                            0.5,
+                            0.5
+                          ],
+                          "anchorMax": [
+                            0.5,
+                            0.5
+                          ],
+                          "pivot": [
+                            0.5,
+                            0.5
+                          ],
+                          "sizeDelta": [
+                            100.0,
+                            100.0
+                          ],
+                          "anchoredPosition": [
+                            0.0,
+                            0.0
+                          ],
+                          "offsetMin": [
+                            -50.0,
+                            -50.0
+                          ],
+                          "offsetMax": [
+                            50.0,
+                            50.0
+                          ]
+                        },
+                        "components": [
+                          {
+                            "type": "CanvasRenderer",
+                            "fullType": "UnityEngine.CanvasRenderer",
+                            "properties": {}
+                          },
+                          {
+                            "type": "Image",
+                            "fullType": "UnityEngine.UI.Image",
+                            "properties": {
+                              "color": "#4C6680FF",
+                              "raycastTarget": true,
+                              "type": "Simple"
+                            }
+                          },
+                          {
+                            "type": "Button",
+                            "fullType": "UnityEngine.UI.Button",
+                            "properties": {
+                              "interactable": true,
+                              "transition": "ColorTint"
+                            }
+                          }
+                        ],
+                        "children": [
+                          {
+                            "name": "Text",
+                            "path": "PartySelectScreen/SafeArea/Content/LeftArea/QuickActionBar/StageInfoButton/Text",
+                            "active": true,
+                            "rect": {
+                              "anchor": "Stretch",
+                              "anchorMin": [
+                                0.0,
+                                0.0
+                              ],
+                              "anchorMax": [
+                                1.0,
+                                1.0
+                              ],
+                              "pivot": [
+                                0.5,
+                                0.5
+                              ],
+                              "sizeDelta": [
+                                0.0,
+                                0.0
+                              ],
+                              "anchoredPosition": [
+                                0.0,
+                                0.0
+                              ],
+                              "offsetMin": [
+                                0.0,
+                                0.0
+                              ],
+                              "offsetMax": [
+                                0.0,
+                                0.0
+                              ]
+                            },
+                            "components": [
+                              {
+                                "type": "CanvasRenderer",
+                                "fullType": "UnityEngine.CanvasRenderer",
+                                "properties": {}
+                              },
+                              {
+                                "type": "TextMeshProUGUI",
+                                "fullType": "TMPro.TextMeshProUGUI",
+                                "properties": {
+                                  "text": "스테이지 정보",
+                                  "fontSize": 16.0,
+                                  "color": "#FFFFFFFF",
+                                  "alignment": "Center",
+                                  "fontStyle": "Bold",
+                                  "raycastTarget": true,
+                                  "font": "Assets/TextMesh Pro/Resources/Fonts & Materials/PretendardVariable SDF.asset"
+                                }
+                              }
+                            ],
+                            "children": []
+                          }
+                        ]
+                      },
+                      {
+                        "name": "FormationSettingButton",
+                        "path": "PartySelectScreen/SafeArea/Content/LeftArea/QuickActionBar/FormationSettingButton",
+                        "active": true,
+                        "rect": {
+                          "anchor": "Center",
+                          "anchorMin": [
+                            0.5,
+                            0.5
+                          ],
+                          "anchorMax": [
+                            0.5,
+                            0.5
+                          ],
+                          "pivot": [
+                            0.5,
+                            0.5
+                          ],
+                          "sizeDelta": [
+                            100.0,
+                            100.0
+                          ],
+                          "anchoredPosition": [
+                            0.0,
+                            0.0
+                          ],
+                          "offsetMin": [
+                            -50.0,
+                            -50.0
+                          ],
+                          "offsetMax": [
+                            50.0,
+                            50.0
+                          ]
+                        },
+                        "components": [
+                          {
+                            "type": "CanvasRenderer",
+                            "fullType": "UnityEngine.CanvasRenderer",
+                            "properties": {}
+                          },
+                          {
+                            "type": "Image",
+                            "fullType": "UnityEngine.UI.Image",
+                            "properties": {
+                              "color": "#4C6680FF",
+                              "raycastTarget": true,
+                              "type": "Simple"
+                            }
+                          },
+                          {
+                            "type": "Button",
+                            "fullType": "UnityEngine.UI.Button",
+                            "properties": {
+                              "interactable": true,
+                              "transition": "ColorTint"
+                            }
+                          }
+                        ],
+                        "children": [
+                          {
+                            "name": "Text",
+                            "path": "PartySelectScreen/SafeArea/Content/LeftArea/QuickActionBar/FormationSettingButton/Text",
+                            "active": true,
+                            "rect": {
+                              "anchor": "Stretch",
+                              "anchorMin": [
+                                0.0,
+                                0.0
+                              ],
+                              "anchorMax": [
+                                1.0,
+                                1.0
+                              ],
+                              "pivot": [
+                                0.5,
+                                0.5
+                              ],
+                              "sizeDelta": [
+                                0.0,
+                                0.0
+                              ],
+                              "anchoredPosition": [
+                                0.0,
+                                0.0
+                              ],
+                              "offsetMin": [
+                                0.0,
+                                0.0
+                              ],
+                              "offsetMax": [
+                                0.0,
+                                0.0
+                              ]
+                            },
+                            "components": [
+                              {
+                                "type": "CanvasRenderer",
+                                "fullType": "UnityEngine.CanvasRenderer",
+                                "properties": {}
+                              },
+                              {
+                                "type": "TextMeshProUGUI",
+                                "fullType": "TMPro.TextMeshProUGUI",
+                                "properties": {
+                                  "text": "덱 설정",
+                                  "fontSize": 16.0,
+                                  "color": "#FFFFFFFF",
+                                  "alignment": "Center",
+                                  "fontStyle": "Bold",
+                                  "raycastTarget": true,
+                                  "font": "Assets/TextMesh Pro/Resources/Fonts & Materials/PretendardVariable SDF.asset"
+                                }
+                              }
+                            ],
+                            "children": []
+                          }
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "name": "PartySlotContainer",
+                    "path": "PartySelectScreen/SafeArea/Content/LeftArea/PartySlotContainer",
+                    "active": true,
+                    "rect": {
+                      "anchor": "Custom",
+                      "anchorMin": [
+                        0.5,
+                        0.4
+                      ],
+                      "anchorMax": [
+                        0.5,
+                        0.4
+                      ],
+                      "pivot": [
+                        0.5,
+                        0.5
+                      ],
+                      "sizeDelta": [
+                        600.0,
+                        100.0
+                      ],
+                      "anchoredPosition": [
+                        0.0,
+                        0.0
+                      ],
+                      "offsetMin": [
+                        -300.0,
+                        -50.0
+                      ],
+                      "offsetMax": [
+                        300.0,
+                        50.0
+                      ]
+                    },
+                    "components": [],
+                    "children": []
+                  }
+                ]
+              },
+              {
+                "name": "RightPanel",
+                "path": "PartySelectScreen/SafeArea/Content/RightPanel",
+                "active": true,
+                "rect": {
+                  "anchor": "HStretch(0.60-1.00)",
+                  "anchorMin": [
+                    0.6,
+                    0.0
+                  ],
+                  "anchorMax": [
+                    1.0,
+                    1.0
+                  ],
+                  "pivot": [
+                    0.5,
+                    0.5
+                  ],
+                  "sizeDelta": [
+                    0.0,
+                    0.0
+                  ],
+                  "anchoredPosition": [
+                    0.0,
+                    0.0
+                  ],
+                  "offsetMin": [
+                    0.0,
+                    0.0
+                  ],
+                  "offsetMax": [
+                    0.0,
+                    0.0
+                  ]
+                },
+                "components": [
+                  {
+                    "type": "CanvasRenderer",
+                    "fullType": "UnityEngine.CanvasRenderer",
+                    "properties": {}
+                  },
+                  {
+                    "type": "Image",
+                    "fullType": "UnityEngine.UI.Image",
+                    "properties": {
+                      "color": "#0F121C80",
+                      "raycastTarget": true,
+                      "type": "Simple"
+                    }
+                  }
+                ],
+                "children": [
+                  {
+                    "name": "TabBar",
+                    "path": "PartySelectScreen/SafeArea/Content/RightPanel/TabBar",
+                    "active": true,
+                    "rect": {
+                      "anchor": "TopStretch",
+                      "anchorMin": [
+                        0.0,
+                        1.0
+                      ],
+                      "anchorMax": [
+                        1.0,
+                        1.0
+                      ],
+                      "pivot": [
+                        0.5,
+                        1.0
+                      ],
+                      "sizeDelta": [
+                        0.0,
+                        50.0
+                      ],
+                      "anchoredPosition": [
+                        0.0,
+                        0.0
+                      ],
+                      "offsetMin": [
+                        0.0,
+                        -50.0
+                      ],
+                      "offsetMax": [
+                        0.0,
+                        0.0
+                      ]
+                    },
+                    "components": [
+                      {
+                        "type": "HorizontalLayoutGroup",
+                        "fullType": "UnityEngine.UI.HorizontalLayoutGroup",
+                        "properties": {
+                          "spacing": 5.0,
+                          "padding": [
+                            10,
+                            10,
+                            5,
+                            5
+                          ],
+                          "childAlignment": "UpperLeft",
+                          "childControlWidth": true,
+                          "childControlHeight": true,
+                          "childForceExpandWidth": true,
+                          "childForceExpandHeight": true
+                        }
+                      }
+                    ],
+                    "children": [
+                      {
+                        "name": "RentalTab",
+                        "path": "PartySelectScreen/SafeArea/Content/RightPanel/TabBar/RentalTab",
+                        "active": true,
+                        "rect": {
+                          "anchor": "Center",
+                          "anchorMin": [
+                            0.5,
+                            0.5
+                          ],
+                          "anchorMax": [
+                            0.5,
+                            0.5
+                          ],
+                          "pivot": [
+                            0.5,
+                            0.5
+                          ],
+                          "sizeDelta": [
+                            100.0,
+                            100.0
+                          ],
+                          "anchoredPosition": [
+                            0.0,
+                            0.0
+                          ],
+                          "offsetMin": [
+                            -50.0,
+                            -50.0
+                          ],
+                          "offsetMax": [
+                            50.0,
+                            50.0
+                          ]
+                        },
+                        "components": [
+                          {
+                            "type": "CanvasRenderer",
+                            "fullType": "UnityEngine.CanvasRenderer",
+                            "properties": {}
+                          },
+                          {
+                            "type": "Image",
+                            "fullType": "UnityEngine.UI.Image",
+                            "properties": {
+                              "color": "#FFFFFF1A",
+                              "raycastTarget": true,
+                              "type": "Simple"
+                            }
+                          },
+                          {
+                            "type": "Button",
+                            "fullType": "UnityEngine.UI.Button",
+                            "properties": {
+                              "interactable": true,
+                              "transition": "ColorTint"
+                            }
+                          }
+                        ],
+                        "children": [
+                          {
+                            "name": "Text",
+                            "path": "PartySelectScreen/SafeArea/Content/RightPanel/TabBar/RentalTab/Text",
+                            "active": true,
+                            "rect": {
+                              "anchor": "Stretch",
+                              "anchorMin": [
+                                0.0,
+                                0.0
+                              ],
+                              "anchorMax": [
+                                1.0,
+                                1.0
+                              ],
+                              "pivot": [
+                                0.5,
+                                0.5
+                              ],
+                              "sizeDelta": [
+                                0.0,
+                                0.0
+                              ],
+                              "anchoredPosition": [
+                                0.0,
+                                0.0
+                              ],
+                              "offsetMin": [
+                                0.0,
+                                0.0
+                              ],
+                              "offsetMax": [
+                                0.0,
+                                0.0
+                              ]
+                            },
+                            "components": [
+                              {
+                                "type": "CanvasRenderer",
+                                "fullType": "UnityEngine.CanvasRenderer",
+                                "properties": {}
+                              },
+                              {
+                                "type": "TextMeshProUGUI",
+                                "fullType": "TMPro.TextMeshProUGUI",
+                                "properties": {
+                                  "text": "대여",
+                                  "fontSize": 14.0,
+                                  "color": "#FFFFFF80",
+                                  "alignment": "Center",
+                                  "fontStyle": "Normal",
+                                  "raycastTarget": true,
+                                  "font": "Assets/TextMesh Pro/Resources/Fonts & Materials/PretendardVariable SDF.asset"
+                                }
+                              }
+                            ],
+                            "children": []
+                          }
+                        ]
+                      },
+                      {
+                        "name": "FilterTab",
+                        "path": "PartySelectScreen/SafeArea/Content/RightPanel/TabBar/FilterTab",
+                        "active": true,
+                        "rect": {
+                          "anchor": "Center",
+                          "anchorMin": [
+                            0.5,
+                            0.5
+                          ],
+                          "anchorMax": [
+                            0.5,
+                            0.5
+                          ],
+                          "pivot": [
+                            0.5,
+                            0.5
+                          ],
+                          "sizeDelta": [
+                            100.0,
+                            100.0
+                          ],
+                          "anchoredPosition": [
+                            0.0,
+                            0.0
+                          ],
+                          "offsetMin": [
+                            -50.0,
+                            -50.0
+                          ],
+                          "offsetMax": [
+                            50.0,
+                            50.0
+                          ]
+                        },
+                        "components": [
+                          {
+                            "type": "CanvasRenderer",
+                            "fullType": "UnityEngine.CanvasRenderer",
+                            "properties": {}
+                          },
+                          {
+                            "type": "Image",
+                            "fullType": "UnityEngine.UI.Image",
+                            "properties": {
+                              "color": "#FFFFFF1A",
+                              "raycastTarget": true,
+                              "type": "Simple"
+                            }
+                          },
+                          {
+                            "type": "Button",
+                            "fullType": "UnityEngine.UI.Button",
+                            "properties": {
+                              "interactable": true,
+                              "transition": "ColorTint"
+                            }
+                          }
+                        ],
+                        "children": [
+                          {
+                            "name": "Text",
+                            "path": "PartySelectScreen/SafeArea/Content/RightPanel/TabBar/FilterTab/Text",
+                            "active": true,
+                            "rect": {
+                              "anchor": "Stretch",
+                              "anchorMin": [
+                                0.0,
+                                0.0
+                              ],
+                              "anchorMax": [
+                                1.0,
+                                1.0
+                              ],
+                              "pivot": [
+                                0.5,
+                                0.5
+                              ],
+                              "sizeDelta": [
+                                0.0,
+                                0.0
+                              ],
+                              "anchoredPosition": [
+                                0.0,
+                                0.0
+                              ],
+                              "offsetMin": [
+                                0.0,
+                                0.0
+                              ],
+                              "offsetMax": [
+                                0.0,
+                                0.0
+                              ]
+                            },
+                            "components": [
+                              {
+                                "type": "CanvasRenderer",
+                                "fullType": "UnityEngine.CanvasRenderer",
+                                "properties": {}
+                              },
+                              {
+                                "type": "TextMeshProUGUI",
+                                "fullType": "TMPro.TextMeshProUGUI",
+                                "properties": {
+                                  "text": "필터OFF",
+                                  "fontSize": 14.0,
+                                  "color": "#FFFFFF80",
+                                  "alignment": "Center",
+                                  "fontStyle": "Normal",
+                                  "raycastTarget": true,
+                                  "font": "Assets/TextMesh Pro/Resources/Fonts & Materials/PretendardVariable SDF.asset"
+                                }
+                              }
+                            ],
+                            "children": []
+                          }
+                        ]
+                      },
+                      {
+                        "name": "PowerTab",
+                        "path": "PartySelectScreen/SafeArea/Content/RightPanel/TabBar/PowerTab",
+                        "active": true,
+                        "rect": {
+                          "anchor": "Center",
+                          "anchorMin": [
+                            0.5,
+                            0.5
+                          ],
+                          "anchorMax": [
+                            0.5,
+                            0.5
+                          ],
+                          "pivot": [
+                            0.5,
+                            0.5
+                          ],
+                          "sizeDelta": [
+                            100.0,
+                            100.0
+                          ],
+                          "anchoredPosition": [
+                            0.0,
+                            0.0
+                          ],
+                          "offsetMin": [
+                            -50.0,
+                            -50.0
+                          ],
+                          "offsetMax": [
+                            50.0,
+                            50.0
+                          ]
+                        },
+                        "components": [
+                          {
+                            "type": "CanvasRenderer",
+                            "fullType": "UnityEngine.CanvasRenderer",
+                            "properties": {}
+                          },
+                          {
+                            "type": "Image",
+                            "fullType": "UnityEngine.UI.Image",
+                            "properties": {
+                              "color": "#FFFFFF1A",
+                              "raycastTarget": true,
+                              "type": "Simple"
+                            }
+                          },
+                          {
+                            "type": "Button",
+                            "fullType": "UnityEngine.UI.Button",
+                            "properties": {
+                              "interactable": true,
+                              "transition": "ColorTint"
+                            }
+                          }
+                        ],
+                        "children": [
+                          {
+                            "name": "Text",
+                            "path": "PartySelectScreen/SafeArea/Content/RightPanel/TabBar/PowerTab/Text",
+                            "active": true,
+                            "rect": {
+                              "anchor": "Stretch",
+                              "anchorMin": [
+                                0.0,
+                                0.0
+                              ],
+                              "anchorMax": [
+                                1.0,
+                                1.0
+                              ],
+                              "pivot": [
+                                0.5,
+                                0.5
+                              ],
+                              "sizeDelta": [
+                                0.0,
+                                0.0
+                              ],
+                              "anchoredPosition": [
+                                0.0,
+                                0.0
+                              ],
+                              "offsetMin": [
+                                0.0,
+                                0.0
+                              ],
+                              "offsetMax": [
+                                0.0,
+                                0.0
+                              ]
+                            },
+                            "components": [
+                              {
+                                "type": "CanvasRenderer",
+                                "fullType": "UnityEngine.CanvasRenderer",
+                                "properties": {}
+                              },
+                              {
+                                "type": "TextMeshProUGUI",
+                                "fullType": "TMPro.TextMeshProUGUI",
+                                "properties": {
+                                  "text": "전투력",
+                                  "fontSize": 14.0,
+                                  "color": "#FFFFFF80",
+                                  "alignment": "Center",
+                                  "fontStyle": "Normal",
+                                  "raycastTarget": true,
+                                  "font": "Assets/TextMesh Pro/Resources/Fonts & Materials/PretendardVariable SDF.asset"
+                                }
+                              }
+                            ],
+                            "children": []
+                          }
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "name": "CharacterScrollView",
+                    "path": "PartySelectScreen/SafeArea/Content/RightPanel/CharacterScrollView",
+                    "active": true,
+                    "rect": {
+                      "anchor": "Stretch",
+                      "anchorMin": [
+                        0.0,
+                        0.0
+                      ],
+                      "anchorMax": [
+                        1.0,
+                        1.0
+                      ],
+                      "pivot": [
+                        0.5,
+                        0.5
+                      ],
+                      "sizeDelta": [
+                        0.0,
+                        -130.0
+                      ],
+                      "anchoredPosition": [
+                        0.0,
+                        15.0
+                      ],
+                      "offsetMin": [
+                        0.0,
+                        80.0
+                      ],
+                      "offsetMax": [
+                        0.0,
+                        -50.0
+                      ]
+                    },
+                    "components": [
+                      {
+                        "type": "ScrollRect",
+                        "fullType": "UnityEngine.UI.ScrollRect",
+                        "properties": {
+                          "horizontal": false,
+                          "vertical": true,
+                          "movementType": "Elastic",
+                          "viewport": "Viewport",
+                          "content": "Viewport/CharacterListContainer"
+                        }
+                      }
+                    ],
+                    "children": [
+                      {
+                        "name": "Viewport",
+                        "path": "PartySelectScreen/SafeArea/Content/RightPanel/CharacterScrollView/Viewport",
+                        "active": true,
+                        "rect": {
+                          "anchor": "Stretch",
+                          "anchorMin": [
+                            0.0,
+                            0.0
+                          ],
+                          "anchorMax": [
+                            1.0,
+                            1.0
+                          ],
+                          "pivot": [
+                            0.5,
+                            0.5
+                          ],
+                          "sizeDelta": [
+                            0.0,
+                            0.0
+                          ],
+                          "anchoredPosition": [
+                            0.0,
+                            0.0
+                          ],
+                          "offsetMin": [
+                            0.0,
+                            0.0
+                          ],
+                          "offsetMax": [
+                            0.0,
+                            0.0
+                          ]
+                        },
+                        "components": [
+                          {
+                            "type": "RectMask2D",
+                            "fullType": "UnityEngine.UI.RectMask2D",
+                            "properties": {}
+                          }
+                        ],
+                        "children": [
+                          {
+                            "name": "CharacterListContainer",
+                            "path": "PartySelectScreen/SafeArea/Content/RightPanel/CharacterScrollView/Viewport/CharacterListContainer",
+                            "active": true,
+                            "rect": {
+                              "anchor": "TopStretch",
+                              "anchorMin": [
+                                0.0,
+                                1.0
+                              ],
+                              "anchorMax": [
+                                1.0,
+                                1.0
+                              ],
+                              "pivot": [
+                                0.5,
+                                1.0
+                              ],
+                              "sizeDelta": [
+                                0.0,
+                                600.0
+                              ],
+                              "anchoredPosition": [
+                                0.0,
+                                0.0
+                              ],
+                              "offsetMin": [
+                                0.0,
+                                -600.0
+                              ],
+                              "offsetMax": [
+                                0.0,
+                                0.0
+                              ]
+                            },
+                            "components": [
+                              {
+                                "type": "GridLayoutGroup",
+                                "fullType": "UnityEngine.UI.GridLayoutGroup",
+                                "properties": {
+                                  "cellSize": [
+                                    100.0,
+                                    130.0
+                                  ],
+                                  "spacing": [
+                                    10.0,
+                                    10.0
+                                  ],
+                                  "startCorner": "UpperLeft",
+                                  "startAxis": "Horizontal",
+                                  "childAlignment": "UpperLeft",
+                                  "constraint": "FixedColumnCount",
+                                  "constraintCount": 3,
+                                  "padding": [
+                                    10,
+                                    10,
+                                    10,
+                                    10
+                                  ]
+                                }
+                              },
+                              {
+                                "type": "ContentSizeFitter",
+                                "fullType": "UnityEngine.UI.ContentSizeFitter",
+                                "properties": {
+                                  "horizontalFit": "Unconstrained",
+                                  "verticalFit": "PreferredSize"
+                                }
+                              }
+                            ],
+                            "children": [
+                              {
+                                "name": "CharacterSlot0",
+                                "path": "PartySelectScreen/SafeArea/Content/RightPanel/CharacterScrollView/Viewport/CharacterListContainer/CharacterSlot0",
+                                "active": true,
+                                "rect": {
+                                  "anchor": "Center",
+                                  "anchorMin": [
+                                    0.5,
+                                    0.5
+                                  ],
+                                  "anchorMax": [
+                                    0.5,
+                                    0.5
+                                  ],
+                                  "pivot": [
+                                    0.5,
+                                    0.5
+                                  ],
+                                  "sizeDelta": [
+                                    100.0,
+                                    130.0
+                                  ],
+                                  "anchoredPosition": [
+                                    0.0,
+                                    0.0
+                                  ],
+                                  "offsetMin": [
+                                    -50.0,
+                                    -65.0
+                                  ],
+                                  "offsetMax": [
+                                    50.0,
+                                    65.0
+                                  ]
+                                },
+                                "components": [
+                                  {
+                                    "type": "CanvasRenderer",
+                                    "fullType": "UnityEngine.CanvasRenderer",
+                                    "properties": {}
+                                  },
+                                  {
+                                    "type": "Image",
+                                    "fullType": "UnityEngine.UI.Image",
+                                    "properties": {
+                                      "color": "#282D3CB4",
+                                      "raycastTarget": true,
+                                      "type": "Simple"
+                                    }
+                                  }
+                                ],
+                                "children": [
+                                  {
+                                    "name": "Portrait",
+                                    "path": "PartySelectScreen/SafeArea/Content/RightPanel/CharacterScrollView/Viewport/CharacterListContainer/CharacterSlot0/Portrait",
+                                    "active": true,
+                                    "rect": {
+                                      "anchor": "TopCenter",
+                                      "anchorMin": [
+                                        0.5,
+                                        1.0
+                                      ],
+                                      "anchorMax": [
+                                        0.5,
+                                        1.0
+                                      ],
+                                      "pivot": [
+                                        0.5,
+                                        1.0
+                                      ],
+                                      "sizeDelta": [
+                                        90.0,
+                                        90.0
+                                      ],
+                                      "anchoredPosition": [
+                                        0.0,
+                                        -5.0
+                                      ],
+                                      "offsetMin": [
+                                        -45.0,
+                                        -95.0
+                                      ],
+                                      "offsetMax": [
+                                        45.0,
+                                        -5.0
+                                      ]
+                                    },
+                                    "components": [
+                                      {
+                                        "type": "CanvasRenderer",
+                                        "fullType": "UnityEngine.CanvasRenderer",
+                                        "properties": {}
+                                      },
+                                      {
+                                        "type": "Image",
+                                        "fullType": "UnityEngine.UI.Image",
+                                        "properties": {
+                                          "color": "#4C4C6680",
+                                          "raycastTarget": true,
+                                          "type": "Simple"
+                                        }
+                                      }
+                                    ],
+                                    "children": []
+                                  },
+                                  {
+                                    "name": "InfoBar",
+                                    "path": "PartySelectScreen/SafeArea/Content/RightPanel/CharacterScrollView/Viewport/CharacterListContainer/CharacterSlot0/InfoBar",
+                                    "active": true,
+                                    "rect": {
+                                      "anchor": "BottomStretch",
+                                      "anchorMin": [
+                                        0.0,
+                                        0.0
+                                      ],
+                                      "anchorMax": [
+                                        1.0,
+                                        0.0
+                                      ],
+                                      "pivot": [
+                                        0.5,
+                                        0.0
+                                      ],
+                                      "sizeDelta": [
+                                        0.0,
+                                        25.0
+                                      ],
+                                      "anchoredPosition": [
+                                        0.0,
+                                        0.0
+                                      ],
+                                      "offsetMin": [
+                                        0.0,
+                                        0.0
+                                      ],
+                                      "offsetMax": [
+                                        0.0,
+                                        25.0
+                                      ]
+                                    },
+                                    "components": [
+                                      {
+                                        "type": "CanvasRenderer",
+                                        "fullType": "UnityEngine.CanvasRenderer",
+                                        "properties": {}
+                                      },
+                                      {
+                                        "type": "TextMeshProUGUI",
+                                        "fullType": "TMPro.TextMeshProUGUI",
+                                        "properties": {
+                                          "text": "Lv.1",
+                                          "fontSize": 10.0,
+                                          "color": "#FFFFFF80",
+                                          "alignment": "Center",
+                                          "fontStyle": "Normal",
+                                          "raycastTarget": true,
+                                          "font": "Assets/TextMesh Pro/Resources/Fonts & Materials/PretendardVariable SDF.asset"
+                                        }
+                                      }
+                                    ],
+                                    "children": []
+                                  }
+                                ]
+                              },
+                              {
+                                "name": "CharacterSlot1",
+                                "path": "PartySelectScreen/SafeArea/Content/RightPanel/CharacterScrollView/Viewport/CharacterListContainer/CharacterSlot1",
+                                "active": true,
+                                "rect": {
+                                  "anchor": "Center",
+                                  "anchorMin": [
+                                    0.5,
+                                    0.5
+                                  ],
+                                  "anchorMax": [
+                                    0.5,
+                                    0.5
+                                  ],
+                                  "pivot": [
+                                    0.5,
+                                    0.5
+                                  ],
+                                  "sizeDelta": [
+                                    100.0,
+                                    130.0
+                                  ],
+                                  "anchoredPosition": [
+                                    0.0,
+                                    0.0
+                                  ],
+                                  "offsetMin": [
+                                    -50.0,
+                                    -65.0
+                                  ],
+                                  "offsetMax": [
+                                    50.0,
+                                    65.0
+                                  ]
+                                },
+                                "components": [
+                                  {
+                                    "type": "CanvasRenderer",
+                                    "fullType": "UnityEngine.CanvasRenderer",
+                                    "properties": {}
+                                  },
+                                  {
+                                    "type": "Image",
+                                    "fullType": "UnityEngine.UI.Image",
+                                    "properties": {
+                                      "color": "#282D3CB4",
+                                      "raycastTarget": true,
+                                      "type": "Simple"
+                                    }
+                                  }
+                                ],
+                                "children": [
+                                  {
+                                    "name": "Portrait",
+                                    "path": "PartySelectScreen/SafeArea/Content/RightPanel/CharacterScrollView/Viewport/CharacterListContainer/CharacterSlot1/Portrait",
+                                    "active": true,
+                                    "rect": {
+                                      "anchor": "TopCenter",
+                                      "anchorMin": [
+                                        0.5,
+                                        1.0
+                                      ],
+                                      "anchorMax": [
+                                        0.5,
+                                        1.0
+                                      ],
+                                      "pivot": [
+                                        0.5,
+                                        1.0
+                                      ],
+                                      "sizeDelta": [
+                                        90.0,
+                                        90.0
+                                      ],
+                                      "anchoredPosition": [
+                                        0.0,
+                                        -5.0
+                                      ],
+                                      "offsetMin": [
+                                        -45.0,
+                                        -95.0
+                                      ],
+                                      "offsetMax": [
+                                        45.0,
+                                        -5.0
+                                      ]
+                                    },
+                                    "components": [
+                                      {
+                                        "type": "CanvasRenderer",
+                                        "fullType": "UnityEngine.CanvasRenderer",
+                                        "properties": {}
+                                      },
+                                      {
+                                        "type": "Image",
+                                        "fullType": "UnityEngine.UI.Image",
+                                        "properties": {
+                                          "color": "#4C4C6680",
+                                          "raycastTarget": true,
+                                          "type": "Simple"
+                                        }
+                                      }
+                                    ],
+                                    "children": []
+                                  },
+                                  {
+                                    "name": "InfoBar",
+                                    "path": "PartySelectScreen/SafeArea/Content/RightPanel/CharacterScrollView/Viewport/CharacterListContainer/CharacterSlot1/InfoBar",
+                                    "active": true,
+                                    "rect": {
+                                      "anchor": "BottomStretch",
+                                      "anchorMin": [
+                                        0.0,
+                                        0.0
+                                      ],
+                                      "anchorMax": [
+                                        1.0,
+                                        0.0
+                                      ],
+                                      "pivot": [
+                                        0.5,
+                                        0.0
+                                      ],
+                                      "sizeDelta": [
+                                        0.0,
+                                        25.0
+                                      ],
+                                      "anchoredPosition": [
+                                        0.0,
+                                        0.0
+                                      ],
+                                      "offsetMin": [
+                                        0.0,
+                                        0.0
+                                      ],
+                                      "offsetMax": [
+                                        0.0,
+                                        25.0
+                                      ]
+                                    },
+                                    "components": [
+                                      {
+                                        "type": "CanvasRenderer",
+                                        "fullType": "UnityEngine.CanvasRenderer",
+                                        "properties": {}
+                                      },
+                                      {
+                                        "type": "TextMeshProUGUI",
+                                        "fullType": "TMPro.TextMeshProUGUI",
+                                        "properties": {
+                                          "text": "Lv.1",
+                                          "fontSize": 10.0,
+                                          "color": "#FFFFFF80",
+                                          "alignment": "Center",
+                                          "fontStyle": "Normal",
+                                          "raycastTarget": true,
+                                          "font": "Assets/TextMesh Pro/Resources/Fonts & Materials/PretendardVariable SDF.asset"
+                                        }
+                                      }
+                                    ],
+                                    "children": []
+                                  }
+                                ]
+                              },
+                              {
+                                "name": "CharacterSlot2",
+                                "path": "PartySelectScreen/SafeArea/Content/RightPanel/CharacterScrollView/Viewport/CharacterListContainer/CharacterSlot2",
+                                "active": true,
+                                "rect": {
+                                  "anchor": "Center",
+                                  "anchorMin": [
+                                    0.5,
+                                    0.5
+                                  ],
+                                  "anchorMax": [
+                                    0.5,
+                                    0.5
+                                  ],
+                                  "pivot": [
+                                    0.5,
+                                    0.5
+                                  ],
+                                  "sizeDelta": [
+                                    100.0,
+                                    130.0
+                                  ],
+                                  "anchoredPosition": [
+                                    0.0,
+                                    0.0
+                                  ],
+                                  "offsetMin": [
+                                    -50.0,
+                                    -65.0
+                                  ],
+                                  "offsetMax": [
+                                    50.0,
+                                    65.0
+                                  ]
+                                },
+                                "components": [
+                                  {
+                                    "type": "CanvasRenderer",
+                                    "fullType": "UnityEngine.CanvasRenderer",
+                                    "properties": {}
+                                  },
+                                  {
+                                    "type": "Image",
+                                    "fullType": "UnityEngine.UI.Image",
+                                    "properties": {
+                                      "color": "#282D3CB4",
+                                      "raycastTarget": true,
+                                      "type": "Simple"
+                                    }
+                                  }
+                                ],
+                                "children": [
+                                  {
+                                    "name": "Portrait",
+                                    "path": "PartySelectScreen/SafeArea/Content/RightPanel/CharacterScrollView/Viewport/CharacterListContainer/CharacterSlot2/Portrait",
+                                    "active": true,
+                                    "rect": {
+                                      "anchor": "TopCenter",
+                                      "anchorMin": [
+                                        0.5,
+                                        1.0
+                                      ],
+                                      "anchorMax": [
+                                        0.5,
+                                        1.0
+                                      ],
+                                      "pivot": [
+                                        0.5,
+                                        1.0
+                                      ],
+                                      "sizeDelta": [
+                                        90.0,
+                                        90.0
+                                      ],
+                                      "anchoredPosition": [
+                                        0.0,
+                                        -5.0
+                                      ],
+                                      "offsetMin": [
+                                        -45.0,
+                                        -95.0
+                                      ],
+                                      "offsetMax": [
+                                        45.0,
+                                        -5.0
+                                      ]
+                                    },
+                                    "components": [
+                                      {
+                                        "type": "CanvasRenderer",
+                                        "fullType": "UnityEngine.CanvasRenderer",
+                                        "properties": {}
+                                      },
+                                      {
+                                        "type": "Image",
+                                        "fullType": "UnityEngine.UI.Image",
+                                        "properties": {
+                                          "color": "#4C4C6680",
+                                          "raycastTarget": true,
+                                          "type": "Simple"
+                                        }
+                                      }
+                                    ],
+                                    "children": []
+                                  },
+                                  {
+                                    "name": "InfoBar",
+                                    "path": "PartySelectScreen/SafeArea/Content/RightPanel/CharacterScrollView/Viewport/CharacterListContainer/CharacterSlot2/InfoBar",
+                                    "active": true,
+                                    "rect": {
+                                      "anchor": "BottomStretch",
+                                      "anchorMin": [
+                                        0.0,
+                                        0.0
+                                      ],
+                                      "anchorMax": [
+                                        1.0,
+                                        0.0
+                                      ],
+                                      "pivot": [
+                                        0.5,
+                                        0.0
+                                      ],
+                                      "sizeDelta": [
+                                        0.0,
+                                        25.0
+                                      ],
+                                      "anchoredPosition": [
+                                        0.0,
+                                        0.0
+                                      ],
+                                      "offsetMin": [
+                                        0.0,
+                                        0.0
+                                      ],
+                                      "offsetMax": [
+                                        0.0,
+                                        25.0
+                                      ]
+                                    },
+                                    "components": [
+                                      {
+                                        "type": "CanvasRenderer",
+                                        "fullType": "UnityEngine.CanvasRenderer",
+                                        "properties": {}
+                                      },
+                                      {
+                                        "type": "TextMeshProUGUI",
+                                        "fullType": "TMPro.TextMeshProUGUI",
+                                        "properties": {
+                                          "text": "Lv.1",
+                                          "fontSize": 10.0,
+                                          "color": "#FFFFFF80",
+                                          "alignment": "Center",
+                                          "fontStyle": "Normal",
+                                          "raycastTarget": true,
+                                          "font": "Assets/TextMesh Pro/Resources/Fonts & Materials/PretendardVariable SDF.asset"
+                                        }
+                                      }
+                                    ],
+                                    "children": []
+                                  }
+                                ]
+                              },
+                              {
+                                "name": "CharacterSlot3",
+                                "path": "PartySelectScreen/SafeArea/Content/RightPanel/CharacterScrollView/Viewport/CharacterListContainer/CharacterSlot3",
+                                "active": true,
+                                "rect": {
+                                  "anchor": "Center",
+                                  "anchorMin": [
+                                    0.5,
+                                    0.5
+                                  ],
+                                  "anchorMax": [
+                                    0.5,
+                                    0.5
+                                  ],
+                                  "pivot": [
+                                    0.5,
+                                    0.5
+                                  ],
+                                  "sizeDelta": [
+                                    100.0,
+                                    130.0
+                                  ],
+                                  "anchoredPosition": [
+                                    0.0,
+                                    0.0
+                                  ],
+                                  "offsetMin": [
+                                    -50.0,
+                                    -65.0
+                                  ],
+                                  "offsetMax": [
+                                    50.0,
+                                    65.0
+                                  ]
+                                },
+                                "components": [
+                                  {
+                                    "type": "CanvasRenderer",
+                                    "fullType": "UnityEngine.CanvasRenderer",
+                                    "properties": {}
+                                  },
+                                  {
+                                    "type": "Image",
+                                    "fullType": "UnityEngine.UI.Image",
+                                    "properties": {
+                                      "color": "#282D3CB4",
+                                      "raycastTarget": true,
+                                      "type": "Simple"
+                                    }
+                                  }
+                                ],
+                                "children": [
+                                  {
+                                    "name": "Portrait",
+                                    "path": "PartySelectScreen/SafeArea/Content/RightPanel/CharacterScrollView/Viewport/CharacterListContainer/CharacterSlot3/Portrait",
+                                    "active": true,
+                                    "rect": {
+                                      "anchor": "TopCenter",
+                                      "anchorMin": [
+                                        0.5,
+                                        1.0
+                                      ],
+                                      "anchorMax": [
+                                        0.5,
+                                        1.0
+                                      ],
+                                      "pivot": [
+                                        0.5,
+                                        1.0
+                                      ],
+                                      "sizeDelta": [
+                                        90.0,
+                                        90.0
+                                      ],
+                                      "anchoredPosition": [
+                                        0.0,
+                                        -5.0
+                                      ],
+                                      "offsetMin": [
+                                        -45.0,
+                                        -95.0
+                                      ],
+                                      "offsetMax": [
+                                        45.0,
+                                        -5.0
+                                      ]
+                                    },
+                                    "components": [
+                                      {
+                                        "type": "CanvasRenderer",
+                                        "fullType": "UnityEngine.CanvasRenderer",
+                                        "properties": {}
+                                      },
+                                      {
+                                        "type": "Image",
+                                        "fullType": "UnityEngine.UI.Image",
+                                        "properties": {
+                                          "color": "#4C4C6680",
+                                          "raycastTarget": true,
+                                          "type": "Simple"
+                                        }
+                                      }
+                                    ],
+                                    "children": []
+                                  },
+                                  {
+                                    "name": "InfoBar",
+                                    "path": "PartySelectScreen/SafeArea/Content/RightPanel/CharacterScrollView/Viewport/CharacterListContainer/CharacterSlot3/InfoBar",
+                                    "active": true,
+                                    "rect": {
+                                      "anchor": "BottomStretch",
+                                      "anchorMin": [
+                                        0.0,
+                                        0.0
+                                      ],
+                                      "anchorMax": [
+                                        1.0,
+                                        0.0
+                                      ],
+                                      "pivot": [
+                                        0.5,
+                                        0.0
+                                      ],
+                                      "sizeDelta": [
+                                        0.0,
+                                        25.0
+                                      ],
+                                      "anchoredPosition": [
+                                        0.0,
+                                        0.0
+                                      ],
+                                      "offsetMin": [
+                                        0.0,
+                                        0.0
+                                      ],
+                                      "offsetMax": [
+                                        0.0,
+                                        25.0
+                                      ]
+                                    },
+                                    "components": [
+                                      {
+                                        "type": "CanvasRenderer",
+                                        "fullType": "UnityEngine.CanvasRenderer",
+                                        "properties": {}
+                                      },
+                                      {
+                                        "type": "TextMeshProUGUI",
+                                        "fullType": "TMPro.TextMeshProUGUI",
+                                        "properties": {
+                                          "text": "Lv.1",
+                                          "fontSize": 10.0,
+                                          "color": "#FFFFFF80",
+                                          "alignment": "Center",
+                                          "fontStyle": "Normal",
+                                          "raycastTarget": true,
+                                          "font": "Assets/TextMesh Pro/Resources/Fonts & Materials/PretendardVariable SDF.asset"
+                                        }
+                                      }
+                                    ],
+                                    "children": []
+                                  }
+                                ]
+                              },
+                              {
+                                "name": "CharacterSlot4",
+                                "path": "PartySelectScreen/SafeArea/Content/RightPanel/CharacterScrollView/Viewport/CharacterListContainer/CharacterSlot4",
+                                "active": true,
+                                "rect": {
+                                  "anchor": "Center",
+                                  "anchorMin": [
+                                    0.5,
+                                    0.5
+                                  ],
+                                  "anchorMax": [
+                                    0.5,
+                                    0.5
+                                  ],
+                                  "pivot": [
+                                    0.5,
+                                    0.5
+                                  ],
+                                  "sizeDelta": [
+                                    100.0,
+                                    130.0
+                                  ],
+                                  "anchoredPosition": [
+                                    0.0,
+                                    0.0
+                                  ],
+                                  "offsetMin": [
+                                    -50.0,
+                                    -65.0
+                                  ],
+                                  "offsetMax": [
+                                    50.0,
+                                    65.0
+                                  ]
+                                },
+                                "components": [
+                                  {
+                                    "type": "CanvasRenderer",
+                                    "fullType": "UnityEngine.CanvasRenderer",
+                                    "properties": {}
+                                  },
+                                  {
+                                    "type": "Image",
+                                    "fullType": "UnityEngine.UI.Image",
+                                    "properties": {
+                                      "color": "#282D3CB4",
+                                      "raycastTarget": true,
+                                      "type": "Simple"
+                                    }
+                                  }
+                                ],
+                                "children": [
+                                  {
+                                    "name": "Portrait",
+                                    "path": "PartySelectScreen/SafeArea/Content/RightPanel/CharacterScrollView/Viewport/CharacterListContainer/CharacterSlot4/Portrait",
+                                    "active": true,
+                                    "rect": {
+                                      "anchor": "TopCenter",
+                                      "anchorMin": [
+                                        0.5,
+                                        1.0
+                                      ],
+                                      "anchorMax": [
+                                        0.5,
+                                        1.0
+                                      ],
+                                      "pivot": [
+                                        0.5,
+                                        1.0
+                                      ],
+                                      "sizeDelta": [
+                                        90.0,
+                                        90.0
+                                      ],
+                                      "anchoredPosition": [
+                                        0.0,
+                                        -5.0
+                                      ],
+                                      "offsetMin": [
+                                        -45.0,
+                                        -95.0
+                                      ],
+                                      "offsetMax": [
+                                        45.0,
+                                        -5.0
+                                      ]
+                                    },
+                                    "components": [
+                                      {
+                                        "type": "CanvasRenderer",
+                                        "fullType": "UnityEngine.CanvasRenderer",
+                                        "properties": {}
+                                      },
+                                      {
+                                        "type": "Image",
+                                        "fullType": "UnityEngine.UI.Image",
+                                        "properties": {
+                                          "color": "#4C4C6680",
+                                          "raycastTarget": true,
+                                          "type": "Simple"
+                                        }
+                                      }
+                                    ],
+                                    "children": []
+                                  },
+                                  {
+                                    "name": "InfoBar",
+                                    "path": "PartySelectScreen/SafeArea/Content/RightPanel/CharacterScrollView/Viewport/CharacterListContainer/CharacterSlot4/InfoBar",
+                                    "active": true,
+                                    "rect": {
+                                      "anchor": "BottomStretch",
+                                      "anchorMin": [
+                                        0.0,
+                                        0.0
+                                      ],
+                                      "anchorMax": [
+                                        1.0,
+                                        0.0
+                                      ],
+                                      "pivot": [
+                                        0.5,
+                                        0.0
+                                      ],
+                                      "sizeDelta": [
+                                        0.0,
+                                        25.0
+                                      ],
+                                      "anchoredPosition": [
+                                        0.0,
+                                        0.0
+                                      ],
+                                      "offsetMin": [
+                                        0.0,
+                                        0.0
+                                      ],
+                                      "offsetMax": [
+                                        0.0,
+                                        25.0
+                                      ]
+                                    },
+                                    "components": [
+                                      {
+                                        "type": "CanvasRenderer",
+                                        "fullType": "UnityEngine.CanvasRenderer",
+                                        "properties": {}
+                                      },
+                                      {
+                                        "type": "TextMeshProUGUI",
+                                        "fullType": "TMPro.TextMeshProUGUI",
+                                        "properties": {
+                                          "text": "Lv.1",
+                                          "fontSize": 10.0,
+                                          "color": "#FFFFFF80",
+                                          "alignment": "Center",
+                                          "fontStyle": "Normal",
+                                          "raycastTarget": true,
+                                          "font": "Assets/TextMesh Pro/Resources/Fonts & Materials/PretendardVariable SDF.asset"
+                                        }
+                                      }
+                                    ],
+                                    "children": []
+                                  }
+                                ]
+                              },
+                              {
+                                "name": "CharacterSlot5",
+                                "path": "PartySelectScreen/SafeArea/Content/RightPanel/CharacterScrollView/Viewport/CharacterListContainer/CharacterSlot5",
+                                "active": true,
+                                "rect": {
+                                  "anchor": "Center",
+                                  "anchorMin": [
+                                    0.5,
+                                    0.5
+                                  ],
+                                  "anchorMax": [
+                                    0.5,
+                                    0.5
+                                  ],
+                                  "pivot": [
+                                    0.5,
+                                    0.5
+                                  ],
+                                  "sizeDelta": [
+                                    100.0,
+                                    130.0
+                                  ],
+                                  "anchoredPosition": [
+                                    0.0,
+                                    0.0
+                                  ],
+                                  "offsetMin": [
+                                    -50.0,
+                                    -65.0
+                                  ],
+                                  "offsetMax": [
+                                    50.0,
+                                    65.0
+                                  ]
+                                },
+                                "components": [
+                                  {
+                                    "type": "CanvasRenderer",
+                                    "fullType": "UnityEngine.CanvasRenderer",
+                                    "properties": {}
+                                  },
+                                  {
+                                    "type": "Image",
+                                    "fullType": "UnityEngine.UI.Image",
+                                    "properties": {
+                                      "color": "#282D3CB4",
+                                      "raycastTarget": true,
+                                      "type": "Simple"
+                                    }
+                                  }
+                                ],
+                                "children": [
+                                  {
+                                    "name": "Portrait",
+                                    "path": "PartySelectScreen/SafeArea/Content/RightPanel/CharacterScrollView/Viewport/CharacterListContainer/CharacterSlot5/Portrait",
+                                    "active": true,
+                                    "rect": {
+                                      "anchor": "TopCenter",
+                                      "anchorMin": [
+                                        0.5,
+                                        1.0
+                                      ],
+                                      "anchorMax": [
+                                        0.5,
+                                        1.0
+                                      ],
+                                      "pivot": [
+                                        0.5,
+                                        1.0
+                                      ],
+                                      "sizeDelta": [
+                                        90.0,
+                                        90.0
+                                      ],
+                                      "anchoredPosition": [
+                                        0.0,
+                                        -5.0
+                                      ],
+                                      "offsetMin": [
+                                        -45.0,
+                                        -95.0
+                                      ],
+                                      "offsetMax": [
+                                        45.0,
+                                        -5.0
+                                      ]
+                                    },
+                                    "components": [
+                                      {
+                                        "type": "CanvasRenderer",
+                                        "fullType": "UnityEngine.CanvasRenderer",
+                                        "properties": {}
+                                      },
+                                      {
+                                        "type": "Image",
+                                        "fullType": "UnityEngine.UI.Image",
+                                        "properties": {
+                                          "color": "#4C4C6680",
+                                          "raycastTarget": true,
+                                          "type": "Simple"
+                                        }
+                                      }
+                                    ],
+                                    "children": []
+                                  },
+                                  {
+                                    "name": "InfoBar",
+                                    "path": "PartySelectScreen/SafeArea/Content/RightPanel/CharacterScrollView/Viewport/CharacterListContainer/CharacterSlot5/InfoBar",
+                                    "active": true,
+                                    "rect": {
+                                      "anchor": "BottomStretch",
+                                      "anchorMin": [
+                                        0.0,
+                                        0.0
+                                      ],
+                                      "anchorMax": [
+                                        1.0,
+                                        0.0
+                                      ],
+                                      "pivot": [
+                                        0.5,
+                                        0.0
+                                      ],
+                                      "sizeDelta": [
+                                        0.0,
+                                        25.0
+                                      ],
+                                      "anchoredPosition": [
+                                        0.0,
+                                        0.0
+                                      ],
+                                      "offsetMin": [
+                                        0.0,
+                                        0.0
+                                      ],
+                                      "offsetMax": [
+                                        0.0,
+                                        25.0
+                                      ]
+                                    },
+                                    "components": [
+                                      {
+                                        "type": "CanvasRenderer",
+                                        "fullType": "UnityEngine.CanvasRenderer",
+                                        "properties": {}
+                                      },
+                                      {
+                                        "type": "TextMeshProUGUI",
+                                        "fullType": "TMPro.TextMeshProUGUI",
+                                        "properties": {
+                                          "text": "Lv.1",
+                                          "fontSize": 10.0,
+                                          "color": "#FFFFFF80",
+                                          "alignment": "Center",
+                                          "fontStyle": "Normal",
+                                          "raycastTarget": true,
+                                          "font": "Assets/TextMesh Pro/Resources/Fonts & Materials/PretendardVariable SDF.asset"
+                                        }
+                                      }
+                                    ],
+                                    "children": []
+                                  }
+                                ]
+                              },
+                              {
+                                "name": "CharacterSlot6",
+                                "path": "PartySelectScreen/SafeArea/Content/RightPanel/CharacterScrollView/Viewport/CharacterListContainer/CharacterSlot6",
+                                "active": true,
+                                "rect": {
+                                  "anchor": "Center",
+                                  "anchorMin": [
+                                    0.5,
+                                    0.5
+                                  ],
+                                  "anchorMax": [
+                                    0.5,
+                                    0.5
+                                  ],
+                                  "pivot": [
+                                    0.5,
+                                    0.5
+                                  ],
+                                  "sizeDelta": [
+                                    100.0,
+                                    130.0
+                                  ],
+                                  "anchoredPosition": [
+                                    0.0,
+                                    0.0
+                                  ],
+                                  "offsetMin": [
+                                    -50.0,
+                                    -65.0
+                                  ],
+                                  "offsetMax": [
+                                    50.0,
+                                    65.0
+                                  ]
+                                },
+                                "components": [
+                                  {
+                                    "type": "CanvasRenderer",
+                                    "fullType": "UnityEngine.CanvasRenderer",
+                                    "properties": {}
+                                  },
+                                  {
+                                    "type": "Image",
+                                    "fullType": "UnityEngine.UI.Image",
+                                    "properties": {
+                                      "color": "#282D3CB4",
+                                      "raycastTarget": true,
+                                      "type": "Simple"
+                                    }
+                                  }
+                                ],
+                                "children": [
+                                  {
+                                    "name": "Portrait",
+                                    "path": "PartySelectScreen/SafeArea/Content/RightPanel/CharacterScrollView/Viewport/CharacterListContainer/CharacterSlot6/Portrait",
+                                    "active": true,
+                                    "rect": {
+                                      "anchor": "TopCenter",
+                                      "anchorMin": [
+                                        0.5,
+                                        1.0
+                                      ],
+                                      "anchorMax": [
+                                        0.5,
+                                        1.0
+                                      ],
+                                      "pivot": [
+                                        0.5,
+                                        1.0
+                                      ],
+                                      "sizeDelta": [
+                                        90.0,
+                                        90.0
+                                      ],
+                                      "anchoredPosition": [
+                                        0.0,
+                                        -5.0
+                                      ],
+                                      "offsetMin": [
+                                        -45.0,
+                                        -95.0
+                                      ],
+                                      "offsetMax": [
+                                        45.0,
+                                        -5.0
+                                      ]
+                                    },
+                                    "components": [
+                                      {
+                                        "type": "CanvasRenderer",
+                                        "fullType": "UnityEngine.CanvasRenderer",
+                                        "properties": {}
+                                      },
+                                      {
+                                        "type": "Image",
+                                        "fullType": "UnityEngine.UI.Image",
+                                        "properties": {
+                                          "color": "#4C4C6680",
+                                          "raycastTarget": true,
+                                          "type": "Simple"
+                                        }
+                                      }
+                                    ],
+                                    "children": []
+                                  },
+                                  {
+                                    "name": "InfoBar",
+                                    "path": "PartySelectScreen/SafeArea/Content/RightPanel/CharacterScrollView/Viewport/CharacterListContainer/CharacterSlot6/InfoBar",
+                                    "active": true,
+                                    "rect": {
+                                      "anchor": "BottomStretch",
+                                      "anchorMin": [
+                                        0.0,
+                                        0.0
+                                      ],
+                                      "anchorMax": [
+                                        1.0,
+                                        0.0
+                                      ],
+                                      "pivot": [
+                                        0.5,
+                                        0.0
+                                      ],
+                                      "sizeDelta": [
+                                        0.0,
+                                        25.0
+                                      ],
+                                      "anchoredPosition": [
+                                        0.0,
+                                        0.0
+                                      ],
+                                      "offsetMin": [
+                                        0.0,
+                                        0.0
+                                      ],
+                                      "offsetMax": [
+                                        0.0,
+                                        25.0
+                                      ]
+                                    },
+                                    "components": [
+                                      {
+                                        "type": "CanvasRenderer",
+                                        "fullType": "UnityEngine.CanvasRenderer",
+                                        "properties": {}
+                                      },
+                                      {
+                                        "type": "TextMeshProUGUI",
+                                        "fullType": "TMPro.TextMeshProUGUI",
+                                        "properties": {
+                                          "text": "Lv.1",
+                                          "fontSize": 10.0,
+                                          "color": "#FFFFFF80",
+                                          "alignment": "Center",
+                                          "fontStyle": "Normal",
+                                          "raycastTarget": true,
+                                          "font": "Assets/TextMesh Pro/Resources/Fonts & Materials/PretendardVariable SDF.asset"
+                                        }
+                                      }
+                                    ],
+                                    "children": []
+                                  }
+                                ]
+                              },
+                              {
+                                "name": "CharacterSlot7",
+                                "path": "PartySelectScreen/SafeArea/Content/RightPanel/CharacterScrollView/Viewport/CharacterListContainer/CharacterSlot7",
+                                "active": true,
+                                "rect": {
+                                  "anchor": "Center",
+                                  "anchorMin": [
+                                    0.5,
+                                    0.5
+                                  ],
+                                  "anchorMax": [
+                                    0.5,
+                                    0.5
+                                  ],
+                                  "pivot": [
+                                    0.5,
+                                    0.5
+                                  ],
+                                  "sizeDelta": [
+                                    100.0,
+                                    130.0
+                                  ],
+                                  "anchoredPosition": [
+                                    0.0,
+                                    0.0
+                                  ],
+                                  "offsetMin": [
+                                    -50.0,
+                                    -65.0
+                                  ],
+                                  "offsetMax": [
+                                    50.0,
+                                    65.0
+                                  ]
+                                },
+                                "components": [
+                                  {
+                                    "type": "CanvasRenderer",
+                                    "fullType": "UnityEngine.CanvasRenderer",
+                                    "properties": {}
+                                  },
+                                  {
+                                    "type": "Image",
+                                    "fullType": "UnityEngine.UI.Image",
+                                    "properties": {
+                                      "color": "#282D3CB4",
+                                      "raycastTarget": true,
+                                      "type": "Simple"
+                                    }
+                                  }
+                                ],
+                                "children": [
+                                  {
+                                    "name": "Portrait",
+                                    "path": "PartySelectScreen/SafeArea/Content/RightPanel/CharacterScrollView/Viewport/CharacterListContainer/CharacterSlot7/Portrait",
+                                    "active": true,
+                                    "rect": {
+                                      "anchor": "TopCenter",
+                                      "anchorMin": [
+                                        0.5,
+                                        1.0
+                                      ],
+                                      "anchorMax": [
+                                        0.5,
+                                        1.0
+                                      ],
+                                      "pivot": [
+                                        0.5,
+                                        1.0
+                                      ],
+                                      "sizeDelta": [
+                                        90.0,
+                                        90.0
+                                      ],
+                                      "anchoredPosition": [
+                                        0.0,
+                                        -5.0
+                                      ],
+                                      "offsetMin": [
+                                        -45.0,
+                                        -95.0
+                                      ],
+                                      "offsetMax": [
+                                        45.0,
+                                        -5.0
+                                      ]
+                                    },
+                                    "components": [
+                                      {
+                                        "type": "CanvasRenderer",
+                                        "fullType": "UnityEngine.CanvasRenderer",
+                                        "properties": {}
+                                      },
+                                      {
+                                        "type": "Image",
+                                        "fullType": "UnityEngine.UI.Image",
+                                        "properties": {
+                                          "color": "#4C4C6680",
+                                          "raycastTarget": true,
+                                          "type": "Simple"
+                                        }
+                                      }
+                                    ],
+                                    "children": []
+                                  },
+                                  {
+                                    "name": "InfoBar",
+                                    "path": "PartySelectScreen/SafeArea/Content/RightPanel/CharacterScrollView/Viewport/CharacterListContainer/CharacterSlot7/InfoBar",
+                                    "active": true,
+                                    "rect": {
+                                      "anchor": "BottomStretch",
+                                      "anchorMin": [
+                                        0.0,
+                                        0.0
+                                      ],
+                                      "anchorMax": [
+                                        1.0,
+                                        0.0
+                                      ],
+                                      "pivot": [
+                                        0.5,
+                                        0.0
+                                      ],
+                                      "sizeDelta": [
+                                        0.0,
+                                        25.0
+                                      ],
+                                      "anchoredPosition": [
+                                        0.0,
+                                        0.0
+                                      ],
+                                      "offsetMin": [
+                                        0.0,
+                                        0.0
+                                      ],
+                                      "offsetMax": [
+                                        0.0,
+                                        25.0
+                                      ]
+                                    },
+                                    "components": [
+                                      {
+                                        "type": "CanvasRenderer",
+                                        "fullType": "UnityEngine.CanvasRenderer",
+                                        "properties": {}
+                                      },
+                                      {
+                                        "type": "TextMeshProUGUI",
+                                        "fullType": "TMPro.TextMeshProUGUI",
+                                        "properties": {
+                                          "text": "Lv.1",
+                                          "fontSize": 10.0,
+                                          "color": "#FFFFFF80",
+                                          "alignment": "Center",
+                                          "fontStyle": "Normal",
+                                          "raycastTarget": true,
+                                          "font": "Assets/TextMesh Pro/Resources/Fonts & Materials/PretendardVariable SDF.asset"
+                                        }
+                                      }
+                                    ],
+                                    "children": []
+                                  }
+                                ]
+                              },
+                              {
+                                "name": "CharacterSlot8",
+                                "path": "PartySelectScreen/SafeArea/Content/RightPanel/CharacterScrollView/Viewport/CharacterListContainer/CharacterSlot8",
+                                "active": true,
+                                "rect": {
+                                  "anchor": "Center",
+                                  "anchorMin": [
+                                    0.5,
+                                    0.5
+                                  ],
+                                  "anchorMax": [
+                                    0.5,
+                                    0.5
+                                  ],
+                                  "pivot": [
+                                    0.5,
+                                    0.5
+                                  ],
+                                  "sizeDelta": [
+                                    100.0,
+                                    130.0
+                                  ],
+                                  "anchoredPosition": [
+                                    0.0,
+                                    0.0
+                                  ],
+                                  "offsetMin": [
+                                    -50.0,
+                                    -65.0
+                                  ],
+                                  "offsetMax": [
+                                    50.0,
+                                    65.0
+                                  ]
+                                },
+                                "components": [
+                                  {
+                                    "type": "CanvasRenderer",
+                                    "fullType": "UnityEngine.CanvasRenderer",
+                                    "properties": {}
+                                  },
+                                  {
+                                    "type": "Image",
+                                    "fullType": "UnityEngine.UI.Image",
+                                    "properties": {
+                                      "color": "#282D3CB4",
+                                      "raycastTarget": true,
+                                      "type": "Simple"
+                                    }
+                                  }
+                                ],
+                                "children": [
+                                  {
+                                    "name": "Portrait",
+                                    "path": "PartySelectScreen/SafeArea/Content/RightPanel/CharacterScrollView/Viewport/CharacterListContainer/CharacterSlot8/Portrait",
+                                    "active": true,
+                                    "rect": {
+                                      "anchor": "TopCenter",
+                                      "anchorMin": [
+                                        0.5,
+                                        1.0
+                                      ],
+                                      "anchorMax": [
+                                        0.5,
+                                        1.0
+                                      ],
+                                      "pivot": [
+                                        0.5,
+                                        1.0
+                                      ],
+                                      "sizeDelta": [
+                                        90.0,
+                                        90.0
+                                      ],
+                                      "anchoredPosition": [
+                                        0.0,
+                                        -5.0
+                                      ],
+                                      "offsetMin": [
+                                        -45.0,
+                                        -95.0
+                                      ],
+                                      "offsetMax": [
+                                        45.0,
+                                        -5.0
+                                      ]
+                                    },
+                                    "components": [
+                                      {
+                                        "type": "CanvasRenderer",
+                                        "fullType": "UnityEngine.CanvasRenderer",
+                                        "properties": {}
+                                      },
+                                      {
+                                        "type": "Image",
+                                        "fullType": "UnityEngine.UI.Image",
+                                        "properties": {
+                                          "color": "#4C4C6680",
+                                          "raycastTarget": true,
+                                          "type": "Simple"
+                                        }
+                                      }
+                                    ],
+                                    "children": []
+                                  },
+                                  {
+                                    "name": "InfoBar",
+                                    "path": "PartySelectScreen/SafeArea/Content/RightPanel/CharacterScrollView/Viewport/CharacterListContainer/CharacterSlot8/InfoBar",
+                                    "active": true,
+                                    "rect": {
+                                      "anchor": "BottomStretch",
+                                      "anchorMin": [
+                                        0.0,
+                                        0.0
+                                      ],
+                                      "anchorMax": [
+                                        1.0,
+                                        0.0
+                                      ],
+                                      "pivot": [
+                                        0.5,
+                                        0.0
+                                      ],
+                                      "sizeDelta": [
+                                        0.0,
+                                        25.0
+                                      ],
+                                      "anchoredPosition": [
+                                        0.0,
+                                        0.0
+                                      ],
+                                      "offsetMin": [
+                                        0.0,
+                                        0.0
+                                      ],
+                                      "offsetMax": [
+                                        0.0,
+                                        25.0
+                                      ]
+                                    },
+                                    "components": [
+                                      {
+                                        "type": "CanvasRenderer",
+                                        "fullType": "UnityEngine.CanvasRenderer",
+                                        "properties": {}
+                                      },
+                                      {
+                                        "type": "TextMeshProUGUI",
+                                        "fullType": "TMPro.TextMeshProUGUI",
+                                        "properties": {
+                                          "text": "Lv.1",
+                                          "fontSize": 10.0,
+                                          "color": "#FFFFFF80",
+                                          "alignment": "Center",
+                                          "fontStyle": "Normal",
+                                          "raycastTarget": true,
+                                          "font": "Assets/TextMesh Pro/Resources/Fonts & Materials/PretendardVariable SDF.asset"
+                                        }
+                                      }
+                                    ],
+                                    "children": []
+                                  }
+                                ]
+                              }
+                            ]
+                          }
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "name": "ActionBar",
+                    "path": "PartySelectScreen/SafeArea/Content/RightPanel/ActionBar",
+                    "active": true,
+                    "rect": {
+                      "anchor": "BottomStretch",
+                      "anchorMin": [
+                        0.0,
+                        0.0
+                      ],
+                      "anchorMax": [
+                        1.0,
+                        0.0
+                      ],
+                      "pivot": [
+                        0.5,
+                        0.0
+                      ],
+                      "sizeDelta": [
+                        0.0,
+                        80.0
+                      ],
+                      "anchoredPosition": [
+                        0.0,
+                        0.0
+                      ],
+                      "offsetMin": [
+                        0.0,
+                        0.0
+                      ],
+                      "offsetMax": [
+                        0.0,
+                        80.0
+                      ]
+                    },
+                    "components": [
+                      {
+                        "type": "HorizontalLayoutGroup",
+                        "fullType": "UnityEngine.UI.HorizontalLayoutGroup",
+                        "properties": {
+                          "spacing": 10.0,
+                          "padding": [
+                            15,
+                            15,
+                            15,
+                            15
+                          ],
+                          "childAlignment": "UpperLeft",
+                          "childControlWidth": true,
+                          "childControlHeight": true,
+                          "childForceExpandWidth": true,
+                          "childForceExpandHeight": false
+                        }
+                      }
+                    ],
+                    "children": [
+                      {
+                        "name": "QuickBattleButton",
+                        "path": "PartySelectScreen/SafeArea/Content/RightPanel/ActionBar/QuickBattleButton",
+                        "active": true,
+                        "rect": {
+                          "anchor": "Center",
+                          "anchorMin": [
+                            0.5,
+                            0.5
+                          ],
+                          "anchorMax": [
+                            0.5,
+                            0.5
+                          ],
+                          "pivot": [
+                            0.5,
+                            0.5
+                          ],
+                          "sizeDelta": [
+                            100.0,
+                            100.0
+                          ],
+                          "anchoredPosition": [
+                            0.0,
+                            0.0
+                          ],
+                          "offsetMin": [
+                            -50.0,
+                            -50.0
+                          ],
+                          "offsetMax": [
+                            50.0,
+                            50.0
+                          ]
+                        },
+                        "components": [
+                          {
+                            "type": "CanvasRenderer",
+                            "fullType": "UnityEngine.CanvasRenderer",
+                            "properties": {}
+                          },
+                          {
+                            "type": "Image",
+                            "fullType": "UnityEngine.UI.Image",
+                            "properties": {
+                              "color": "#508CFFFF",
+                              "raycastTarget": true,
+                              "type": "Simple"
+                            }
+                          },
+                          {
+                            "type": "Button",
+                            "fullType": "UnityEngine.UI.Button",
+                            "properties": {
+                              "interactable": true,
+                              "transition": "ColorTint"
+                            }
+                          }
+                        ],
+                        "children": [
+                          {
+                            "name": "Text",
+                            "path": "PartySelectScreen/SafeArea/Content/RightPanel/ActionBar/QuickBattleButton/Text",
+                            "active": true,
+                            "rect": {
+                              "anchor": "Stretch",
+                              "anchorMin": [
+                                0.0,
+                                0.0
+                              ],
+                              "anchorMax": [
+                                1.0,
+                                1.0
+                              ],
+                              "pivot": [
+                                0.5,
+                                0.5
+                              ],
+                              "sizeDelta": [
+                                0.0,
+                                0.0
+                              ],
+                              "anchoredPosition": [
+                                0.0,
+                                0.0
+                              ],
+                              "offsetMin": [
+                                0.0,
+                                0.0
+                              ],
+                              "offsetMax": [
+                                0.0,
+                                0.0
+                              ]
+                            },
+                            "components": [
+                              {
+                                "type": "CanvasRenderer",
+                                "fullType": "UnityEngine.CanvasRenderer",
+                                "properties": {}
+                              },
+                              {
+                                "type": "TextMeshProUGUI",
+                                "fullType": "TMPro.TextMeshProUGUI",
+                                "properties": {
+                                  "text": "소탕",
+                                  "fontSize": 16.0,
+                                  "color": "#FFFFFFFF",
+                                  "alignment": "Center",
+                                  "fontStyle": "Bold",
+                                  "raycastTarget": true,
+                                  "font": "Assets/TextMesh Pro/Resources/Fonts & Materials/PretendardVariable SDF.asset"
+                                }
+                              }
+                            ],
+                            "children": []
+                          }
+                        ]
+                      },
+                      {
+                        "name": "StartButton",
+                        "path": "PartySelectScreen/SafeArea/Content/RightPanel/ActionBar/StartButton",
+                        "active": true,
+                        "rect": {
+                          "anchor": "Center",
+                          "anchorMin": [
+                            0.5,
+                            0.5
+                          ],
+                          "anchorMax": [
+                            0.5,
+                            0.5
+                          ],
+                          "pivot": [
+                            0.5,
+                            0.5
+                          ],
+                          "sizeDelta": [
+                            100.0,
+                            100.0
+                          ],
+                          "anchoredPosition": [
+                            0.0,
+                            0.0
+                          ],
+                          "offsetMin": [
+                            -50.0,
+                            -50.0
+                          ],
+                          "offsetMax": [
+                            50.0,
+                            50.0
+                          ]
+                        },
+                        "components": [
+                          {
+                            "type": "CanvasRenderer",
+                            "fullType": "UnityEngine.CanvasRenderer",
+                            "properties": {}
+                          },
+                          {
+                            "type": "Image",
+                            "fullType": "UnityEngine.UI.Image",
+                            "properties": {
+                              "color": "#64DC8CFF",
+                              "raycastTarget": true,
+                              "type": "Simple"
+                            }
+                          },
+                          {
+                            "type": "Button",
+                            "fullType": "UnityEngine.UI.Button",
+                            "properties": {
+                              "interactable": true,
+                              "transition": "ColorTint"
+                            }
+                          }
+                        ],
+                        "children": [
+                          {
+                            "name": "Text",
+                            "path": "PartySelectScreen/SafeArea/Content/RightPanel/ActionBar/StartButton/Text",
+                            "active": true,
+                            "rect": {
+                              "anchor": "Stretch",
+                              "anchorMin": [
+                                0.0,
+                                0.0
+                              ],
+                              "anchorMax": [
+                                1.0,
+                                1.0
+                              ],
+                              "pivot": [
+                                0.5,
+                                0.5
+                              ],
+                              "sizeDelta": [
+                                0.0,
+                                0.0
+                              ],
+                              "anchoredPosition": [
+                                0.0,
+                                0.0
+                              ],
+                              "offsetMin": [
+                                0.0,
+                                0.0
+                              ],
+                              "offsetMax": [
+                                0.0,
+                                0.0
+                              ]
+                            },
+                            "components": [
+                              {
+                                "type": "CanvasRenderer",
+                                "fullType": "UnityEngine.CanvasRenderer",
+                                "properties": {}
+                              },
+                              {
+                                "type": "TextMeshProUGUI",
+                                "fullType": "TMPro.TextMeshProUGUI",
+                                "properties": {
+                                  "text": "출발",
+                                  "fontSize": 16.0,
+                                  "color": "#FFFFFFFF",
+                                  "alignment": "Center",
+                                  "fontStyle": "Bold",
+                                  "raycastTarget": true,
+                                  "font": "Assets/TextMesh Pro/Resources/Fonts & Materials/PretendardVariable SDF.asset"
+                                }
+                              }
+                            ],
+                            "children": []
+                          }
+                        ]
+                      },
+                      {
+                        "name": "AutoToggleButton",
+                        "path": "PartySelectScreen/SafeArea/Content/RightPanel/ActionBar/AutoToggleButton",
+                        "active": true,
+                        "rect": {
+                          "anchor": "Center",
+                          "anchorMin": [
+                            0.5,
+                            0.5
+                          ],
+                          "anchorMax": [
+                            0.5,
+                            0.5
+                          ],
+                          "pivot": [
+                            0.5,
+                            0.5
+                          ],
+                          "sizeDelta": [
+                            100.0,
+                            100.0
+                          ],
+                          "anchoredPosition": [
+                            0.0,
+                            0.0
+                          ],
+                          "offsetMin": [
+                            -50.0,
+                            -50.0
+                          ],
+                          "offsetMax": [
+                            50.0,
+                            50.0
+                          ]
+                        },
+                        "components": [
+                          {
+                            "type": "CanvasRenderer",
+                            "fullType": "UnityEngine.CanvasRenderer",
+                            "properties": {}
+                          },
+                          {
+                            "type": "Image",
+                            "fullType": "UnityEngine.UI.Image",
+                            "properties": {
+                              "color": "#FFA03CFF",
+                              "raycastTarget": true,
+                              "type": "Simple"
+                            }
+                          },
+                          {
+                            "type": "Button",
+                            "fullType": "UnityEngine.UI.Button",
+                            "properties": {
+                              "interactable": true,
+                              "transition": "ColorTint"
+                            }
+                          }
+                        ],
+                        "children": [
+                          {
+                            "name": "Text",
+                            "path": "PartySelectScreen/SafeArea/Content/RightPanel/ActionBar/AutoToggleButton/Text",
+                            "active": true,
+                            "rect": {
+                              "anchor": "Stretch",
+                              "anchorMin": [
+                                0.0,
+                                0.0
+                              ],
+                              "anchorMax": [
+                                1.0,
+                                1.0
+                              ],
+                              "pivot": [
+                                0.5,
+                                0.5
+                              ],
+                              "sizeDelta": [
+                                0.0,
+                                0.0
+                              ],
+                              "anchoredPosition": [
+                                0.0,
+                                0.0
+                              ],
+                              "offsetMin": [
+                                0.0,
+                                0.0
+                              ],
+                              "offsetMax": [
+                                0.0,
+                                0.0
+                              ]
+                            },
+                            "components": [
+                              {
+                                "type": "CanvasRenderer",
+                                "fullType": "UnityEngine.CanvasRenderer",
+                                "properties": {}
+                              },
+                              {
+                                "type": "TextMeshProUGUI",
+                                "fullType": "TMPro.TextMeshProUGUI",
+                                "properties": {
+                                  "text": "자동",
+                                  "fontSize": 16.0,
+                                  "color": "#FFFFFFFF",
+                                  "alignment": "Center",
+                                  "fontStyle": "Bold",
+                                  "raycastTarget": true,
+                                  "font": "Assets/TextMesh Pro/Resources/Fonts & Materials/PretendardVariable SDF.asset"
+                                }
+                              }
+                            ],
+                            "children": []
+                          }
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "name": "CharacterSelectWidget",
+                    "path": "PartySelectScreen/SafeArea/Content/RightPanel/CharacterSelectWidget",
+                    "active": true,
+                    "rect": {
+                      "anchor": "Center",
+                      "anchorMin": [
+                        0.5,
+                        0.5
+                      ],
+                      "anchorMax": [
+                        0.5,
+                        0.5
+                      ],
+                      "pivot": [
+                        0.5,
+                        0.5
+                      ],
+                      "sizeDelta": [
+                        200.0,
+                        100.0
+                      ],
+                      "anchoredPosition": [
+                        0.0,
+                        0.0
+                      ],
+                      "offsetMin": [
+                        -100.0,
+                        -50.0
+                      ],
+                      "offsetMax": [
+                        100.0,
+                        50.0
+                      ]
+                    },
+                    "components": [
+                      {
+                        "type": "CanvasRenderer",
+                        "fullType": "UnityEngine.CanvasRenderer",
+                        "properties": {}
+                      },
+                      {
+                        "type": "Image",
+                        "fullType": "UnityEngine.UI.Image",
+                        "properties": {
+                          "color": "#FF00FF1A",
+                          "raycastTarget": true,
+                          "type": "Simple"
+                        }
+                      }
+                    ],
+                    "children": []
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "name": "StageInfoPanel",
+            "path": "PartySelectScreen/SafeArea/StageInfoPanel",
+            "active": true,
+            "rect": {
+              "anchor": "TopCenter",
+              "anchorMin": [
+                0.5,
+                1.0
+              ],
+              "anchorMax": [
+                0.5,
+                1.0
+              ],
+              "pivot": [
+                0.5,
+                1.0
+              ],
+              "sizeDelta": [
+                300.0,
+                120.0
+              ],
+              "anchoredPosition": [
+                0.0,
+                -100.0
+              ],
+              "offsetMin": [
+                -150.0,
+                -220.0
+              ],
+              "offsetMax": [
+                150.0,
+                -100.0
+              ]
+            },
+            "components": [
+              {
+                "type": "CanvasRenderer",
+                "fullType": "UnityEngine.CanvasRenderer",
+                "properties": {}
+              },
+              {
+                "type": "Image",
+                "fullType": "UnityEngine.UI.Image",
+                "properties": {
+                  "color": "#161A26FF",
+                  "raycastTarget": true,
+                  "type": "Simple"
+                }
+              },
+              {
+                "type": "VerticalLayoutGroup",
+                "fullType": "UnityEngine.UI.VerticalLayoutGroup",
+                "properties": {
+                  "spacing": 5.0,
+                  "padding": [
+                    15,
+                    15,
+                    15,
+                    15
+                  ],
+                  "childAlignment": "UpperLeft",
+                  "childControlWidth": true,
+                  "childControlHeight": false,
+                  "childForceExpandWidth": true,
+                  "childForceExpandHeight": true
+                }
+              }
+            ],
+            "children": [
+              {
+                "name": "StaminaCostText",
+                "path": "PartySelectScreen/SafeArea/StageInfoPanel/StaminaCostText",
+                "active": true,
+                "rect": {
+                  "anchor": "Center",
+                  "anchorMin": [
+                    0.5,
+                    0.5
+                  ],
+                  "anchorMax": [
+                    0.5,
+                    0.5
+                  ],
+                  "pivot": [
+                    0.5,
+                    0.5
+                  ],
+                  "sizeDelta": [
+                    0.0,
+                    20.0
+                  ],
+                  "anchoredPosition": [
+                    0.0,
+                    0.0
+                  ],
+                  "offsetMin": [
+                    0.0,
+                    -10.0
+                  ],
+                  "offsetMax": [
+                    0.0,
+                    10.0
+                  ]
+                },
+                "components": [
+                  {
+                    "type": "CanvasRenderer",
+                    "fullType": "UnityEngine.CanvasRenderer",
+                    "properties": {}
+                  },
+                  {
+                    "type": "TextMeshProUGUI",
+                    "fullType": "TMPro.TextMeshProUGUI",
+                    "properties": {
+                      "text": "입장 비용: 30",
+                      "fontSize": 14.0,
+                      "color": "#FFFFFFB2",
+                      "alignment": "Left",
+                      "fontStyle": "Normal",
+                      "raycastTarget": true,
+                      "font": "Assets/TextMesh Pro/Resources/Fonts & Materials/PretendardVariable SDF.asset"
+                    }
+                  }
+                ],
+                "children": []
+              },
+              {
+                "name": "RecommendedPowerText",
+                "path": "PartySelectScreen/SafeArea/StageInfoPanel/RecommendedPowerText",
+                "active": true,
+                "rect": {
+                  "anchor": "Center",
+                  "anchorMin": [
+                    0.5,
+                    0.5
+                  ],
+                  "anchorMax": [
+                    0.5,
+                    0.5
+                  ],
+                  "pivot": [
+                    0.5,
+                    0.5
+                  ],
+                  "sizeDelta": [
+                    0.0,
+                    20.0
+                  ],
+                  "anchoredPosition": [
+                    0.0,
+                    0.0
+                  ],
+                  "offsetMin": [
+                    0.0,
+                    -10.0
+                  ],
+                  "offsetMax": [
+                    0.0,
+                    10.0
+                  ]
+                },
+                "components": [
+                  {
+                    "type": "CanvasRenderer",
+                    "fullType": "UnityEngine.CanvasRenderer",
+                    "properties": {}
+                  },
+                  {
+                    "type": "TextMeshProUGUI",
+                    "fullType": "TMPro.TextMeshProUGUI",
+                    "properties": {
+                      "text": "권장 전투력: 123,188",
+                      "fontSize": 14.0,
+                      "color": "#FFFFFFB2",
+                      "alignment": "Left",
+                      "fontStyle": "Normal",
+                      "raycastTarget": true,
+                      "font": "Assets/TextMesh Pro/Resources/Fonts & Materials/PretendardVariable SDF.asset"
+                    }
+                  }
+                ],
+                "children": []
+              },
+              {
+                "name": "CharacterCountText",
+                "path": "PartySelectScreen/SafeArea/StageInfoPanel/CharacterCountText",
+                "active": true,
+                "rect": {
+                  "anchor": "Center",
+                  "anchorMin": [
+                    0.5,
+                    0.5
+                  ],
+                  "anchorMax": [
+                    0.5,
+                    0.5
+                  ],
+                  "pivot": [
+                    0.5,
+                    0.5
+                  ],
+                  "sizeDelta": [
+                    0.0,
+                    20.0
+                  ],
+                  "anchoredPosition": [
+                    0.0,
+                    0.0
+                  ],
+                  "offsetMin": [
+                    0.0,
+                    -10.0
+                  ],
+                  "offsetMax": [
+                    0.0,
+                    10.0
+                  ]
+                },
+                "components": [
+                  {
+                    "type": "CanvasRenderer",
+                    "fullType": "UnityEngine.CanvasRenderer",
+                    "properties": {}
+                  },
+                  {
+                    "type": "TextMeshProUGUI",
+                    "fullType": "TMPro.TextMeshProUGUI",
+                    "properties": {
+                      "text": "편성된 사도: 6/6",
+                      "fontSize": 14.0,
+                      "color": "#FFFFFFB2",
+                      "alignment": "Left",
+                      "fontStyle": "Normal",
+                      "raycastTarget": true,
+                      "font": "Assets/TextMesh Pro/Resources/Fonts & Materials/PretendardVariable SDF.asset"
+                    }
+                  }
+                ],
+                "children": []
+              },
+              {
+                "name": "PartyPowerText",
+                "path": "PartySelectScreen/SafeArea/StageInfoPanel/PartyPowerText",
+                "active": true,
+                "rect": {
+                  "anchor": "Center",
+                  "anchorMin": [
+                    0.5,
+                    0.5
+                  ],
+                  "anchorMax": [
+                    0.5,
+                    0.5
+                  ],
+                  "pivot": [
+                    0.5,
+                    0.5
+                  ],
+                  "sizeDelta": [
+                    0.0,
+                    20.0
+                  ],
+                  "anchoredPosition": [
+                    0.0,
+                    0.0
+                  ],
+                  "offsetMin": [
+                    0.0,
+                    -10.0
+                  ],
+                  "offsetMax": [
+                    0.0,
+                    10.0
+                  ]
+                },
+                "components": [
+                  {
+                    "type": "CanvasRenderer",
+                    "fullType": "UnityEngine.CanvasRenderer",
+                    "properties": {}
+                  },
+                  {
+                    "type": "TextMeshProUGUI",
+                    "fullType": "TMPro.TextMeshProUGUI",
+                    "properties": {
+                      "text": "카드: 24/24",
+                      "fontSize": 14.0,
+                      "color": "#FFFFFFB2",
+                      "alignment": "Left",
+                      "fontStyle": "Normal",
+                      "raycastTarget": true,
+                      "font": "Assets/TextMesh Pro/Resources/Fonts & Materials/PretendardVariable SDF.asset"
+                    }
+                  }
+                ],
+                "children": []
+              }
+            ]
+          },
+          {
+            "name": "StageInfoWidget",
+            "path": "PartySelectScreen/SafeArea/StageInfoWidget",
+            "active": true,
+            "rect": {
+              "anchor": "Center",
+              "anchorMin": [
+                0.5,
+                0.5
+              ],
+              "anchorMax": [
+                0.5,
+                0.5
+              ],
+              "pivot": [
+                0.5,
+                0.5
+              ],
+              "sizeDelta": [
+                200.0,
+                100.0
+              ],
+              "anchoredPosition": [
+                0.0,
+                0.0
+              ],
+              "offsetMin": [
+                -100.0,
+                -50.0
+              ],
+              "offsetMax": [
+                100.0,
+                50.0
+              ]
+            },
+            "components": [
+              {
+                "type": "CanvasRenderer",
+                "fullType": "UnityEngine.CanvasRenderer",
+                "properties": {}
+              },
+              {
+                "type": "Image",
+                "fullType": "UnityEngine.UI.Image",
+                "properties": {
+                  "color": "#FF00FF1A",
+                  "raycastTarget": true,
+                  "type": "Simple"
+                }
+              }
+            ],
             "children": []
           }
         ]
       }
     ]
   },
-  "serializedFields": [],
+  "serializedFields": [
+    {
+      "fieldName": "_frontLineContainer",
+      "fieldType": "Transform",
+      "targetPath": "SafeArea/Content/LeftArea/BattlePreviewArea/FrontLineContainer",
+      "targetType": "RectTransform"
+    },
+    {
+      "fieldName": "_backLineContainer",
+      "fieldType": "Transform",
+      "targetPath": "SafeArea/Content/LeftArea/BattlePreviewArea/BackLineContainer",
+      "targetType": "RectTransform"
+    },
+    {
+      "fieldName": "_battlePreviewArea",
+      "fieldType": "Transform",
+      "targetPath": "SafeArea/Content/LeftArea/BattlePreviewVisual",
+      "targetType": "RectTransform"
+    },
+    {
+      "fieldName": "_partyFormation",
+      "fieldType": "Transform",
+      "targetPath": "SafeArea/Content/LeftArea/BattlePreviewVisual/PartyFormation",
+      "targetType": "RectTransform"
+    },
+    {
+      "fieldName": "_enemyFormation",
+      "fieldType": "Transform",
+      "targetPath": "SafeArea/Content/LeftArea/BattlePreviewVisual/EnemyFormation",
+      "targetType": "RectTransform"
+    },
+    {
+      "fieldName": "_stageNameText",
+      "fieldType": "TMP_Text",
+      "targetPath": "SafeArea/Header/StageInfoContainer/StageNameText",
+      "targetType": "TextMeshProUGUI"
+    },
+    {
+      "fieldName": "_stageDifficultyText",
+      "fieldType": "TMP_Text",
+      "targetPath": "SafeArea/Header/StageInfoContainer/StageDifficultyText",
+      "targetType": "TextMeshProUGUI"
+    },
+    {
+      "fieldName": "_recommendedPowerText",
+      "fieldType": "TMP_Text",
+      "targetPath": "SafeArea/StageInfoPanel/RecommendedPowerText",
+      "targetType": "TextMeshProUGUI"
+    },
+    {
+      "fieldName": "_partySlotContainer",
+      "fieldType": "Transform",
+      "targetPath": "SafeArea/Content/LeftArea/PartySlotContainer",
+      "targetType": "RectTransform"
+    },
+    {
+      "fieldName": "_partyPowerText",
+      "fieldType": "TMP_Text",
+      "targetPath": "SafeArea/StageInfoPanel/PartyPowerText",
+      "targetType": "TextMeshProUGUI"
+    },
+    {
+      "fieldName": "_characterListContainer",
+      "fieldType": "Transform",
+      "targetPath": "SafeArea/Content/RightPanel/CharacterScrollView/Viewport/CharacterListContainer",
+      "targetType": "RectTransform"
+    },
+    {
+      "fieldName": "_characterCountText",
+      "fieldType": "TMP_Text",
+      "targetPath": "SafeArea/StageInfoPanel/CharacterCountText",
+      "targetType": "TextMeshProUGUI"
+    },
+    {
+      "fieldName": "_autoFormButton",
+      "fieldType": "Button",
+      "targetPath": "SafeArea/Content/LeftArea/QuickActionBar/AutoFormButton",
+      "targetType": "Button"
+    },
+    {
+      "fieldName": "_stageInfoButton",
+      "fieldType": "Button",
+      "targetPath": "SafeArea/Content/LeftArea/QuickActionBar/StageInfoButton",
+      "targetType": "Button"
+    },
+    {
+      "fieldName": "_formationSettingButton",
+      "fieldType": "Button",
+      "targetPath": "SafeArea/Content/LeftArea/QuickActionBar/FormationSettingButton",
+      "targetType": "Button"
+    },
+    {
+      "fieldName": "_staminaCostText",
+      "fieldType": "TMP_Text",
+      "targetPath": "SafeArea/StageInfoPanel/StaminaCostText",
+      "targetType": "TextMeshProUGUI"
+    },
+    {
+      "fieldName": "_startButton",
+      "fieldType": "Button",
+      "targetPath": "SafeArea/Content/RightPanel/ActionBar/StartButton",
+      "targetType": "Button"
+    },
+    {
+      "fieldName": "_quickBattleButton",
+      "fieldType": "Button",
+      "targetPath": "SafeArea/Content/RightPanel/ActionBar/QuickBattleButton",
+      "targetType": "Button"
+    },
+    {
+      "fieldName": "_autoToggleButton",
+      "fieldType": "Button",
+      "targetPath": "SafeArea/Content/RightPanel/ActionBar/AutoToggleButton",
+      "targetType": "Button"
+    },
+    {
+      "fieldName": "_backButton",
+      "fieldType": "Button",
+      "targetPath": "SafeArea/Header/BackButton",
+      "targetType": "Button"
+    },
+    {
+      "fieldName": "_homeButton",
+      "fieldType": "Button",
+      "targetPath": "SafeArea/Header/HomeButton",
+      "targetType": "Button"
+    }
+  ],
   "theme": {
     "colors": {
-      "Dark_D9060601": "#0A0A12FF"
+      "Dark_D9262621": "#080A12FF",
+      "Dark_DBF31314": "#0F121CF2",
+      "Glass_D0866666": "#FFFFFF1A",
+      "Light_D1A00000": "#FFFFFFFF",
+      "Red_D35EBEB8": "#FFA03CFF",
+      "Color_D6F41413": "#282D3CB4",
+      "Glass_D5B33334": "#FF5A5A4C",
+      "Color_D5AAAAAE": "#4C6680FF",
+      "Dark_DBCA8A8D": "#0F121C80",
+      "Light_D1E00000": "#FFFFFF80",
+      "Color_D4CCCCC1": "#4C4C6680",
+      "Blue_D2B29295": "#508CFFFF",
+      "Green_D3B8989E": "#64DC8CFF",
+      "Glass_2E866666": "#FF00FF1A",
+      "Dark_DAB5D5D3": "#161A26FF",
+      "Light_D1F99999": "#FFFFFFB2"
     },
-    "constants": {},
+    "constants": {
+      "FontSize_20": 20.0,
+      "FontSize_14": 14.0,
+      "Spacing_10": 10.0,
+      "FontSize_16": 16.0,
+      "Spacing_5": 5.0,
+      "FontSize_10": 10.0
+    },
     "fonts": {}
   }
 }
