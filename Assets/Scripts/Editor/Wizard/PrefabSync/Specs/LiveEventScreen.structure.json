@@ -4,7 +4,7 @@
     "prefabPath": "Assets/Prefabs/UI/Screens/LiveEventScreen.prefab",
     "componentType": "LiveEventScreen",
     "componentNamespace": "Sc.Contents.Event",
-    "generatedAt": "2026-01-27T00:56:07",
+    "generatedAt": "2026-01-27T11:55:23",
     "builderPath": "Assets/Scripts/Editor/Wizard/Generators/LiveEventScreenPrefabBuilder.cs"
   },
   "hierarchy": {
@@ -95,23 +95,380 @@
             0.0
           ]
         },
-        "components": [
+        "components": [],
+        "children": [
           {
-            "type": "CanvasRenderer",
-            "fullType": "UnityEngine.CanvasRenderer",
-            "properties": {}
+            "name": "BaseBg",
+            "path": "LiveEventScreen/Background/BaseBg",
+            "active": true,
+            "rect": {
+              "anchor": "Stretch",
+              "anchorMin": [
+                0.0,
+                0.0
+              ],
+              "anchorMax": [
+                1.0,
+                1.0
+              ],
+              "pivot": [
+                0.5,
+                0.5
+              ],
+              "sizeDelta": [
+                0.0,
+                0.0
+              ],
+              "anchoredPosition": [
+                0.0,
+                0.0
+              ],
+              "offsetMin": [
+                0.0,
+                0.0
+              ],
+              "offsetMax": [
+                0.0,
+                0.0
+              ]
+            },
+            "components": [
+              {
+                "type": "CanvasRenderer",
+                "fullType": "UnityEngine.CanvasRenderer",
+                "properties": {}
+              },
+              {
+                "type": "Image",
+                "fullType": "UnityEngine.UI.Image",
+                "properties": {
+                  "color": "#C8E6B4FF",
+                  "raycastTarget": true,
+                  "type": "Simple"
+                }
+              }
+            ],
+            "children": []
           },
           {
-            "type": "Image",
-            "fullType": "UnityEngine.UI.Image",
-            "properties": {
-              "color": "#0A0A12FF",
-              "raycastTarget": true,
-              "type": "Simple"
-            }
+            "name": "TopOverlay",
+            "path": "LiveEventScreen/Background/TopOverlay",
+            "active": true,
+            "rect": {
+              "anchor": "VStretch(0.70-1.00)",
+              "anchorMin": [
+                0.0,
+                0.7
+              ],
+              "anchorMax": [
+                1.0,
+                1.0
+              ],
+              "pivot": [
+                0.5,
+                0.5
+              ],
+              "sizeDelta": [
+                0.0,
+                0.0
+              ],
+              "anchoredPosition": [
+                0.0,
+                0.0
+              ],
+              "offsetMin": [
+                0.0,
+                0.0
+              ],
+              "offsetMax": [
+                0.0,
+                0.0
+              ]
+            },
+            "components": [
+              {
+                "type": "CanvasRenderer",
+                "fullType": "UnityEngine.CanvasRenderer",
+                "properties": {}
+              },
+              {
+                "type": "Image",
+                "fullType": "UnityEngine.UI.Image",
+                "properties": {
+                  "color": "#8CBE824C",
+                  "raycastTarget": false,
+                  "type": "Simple"
+                }
+              }
+            ],
+            "children": []
+          },
+          {
+            "name": "BottomOverlay",
+            "path": "LiveEventScreen/Background/BottomOverlay",
+            "active": true,
+            "rect": {
+              "anchor": "VStretch(0.00-0.15)",
+              "anchorMin": [
+                0.0,
+                0.0
+              ],
+              "anchorMax": [
+                1.0,
+                0.15
+              ],
+              "pivot": [
+                0.5,
+                0.5
+              ],
+              "sizeDelta": [
+                0.0,
+                0.0
+              ],
+              "anchoredPosition": [
+                0.0,
+                0.0
+              ],
+              "offsetMin": [
+                0.0,
+                0.0
+              ],
+              "offsetMax": [
+                0.0,
+                0.0
+              ]
+            },
+            "components": [
+              {
+                "type": "CanvasRenderer",
+                "fullType": "UnityEngine.CanvasRenderer",
+                "properties": {}
+              },
+              {
+                "type": "Image",
+                "fullType": "UnityEngine.UI.Image",
+                "properties": {
+                  "color": "#FFFFFF80",
+                  "raycastTarget": false,
+                  "type": "Simple"
+                }
+              }
+            ],
+            "children": []
+          },
+          {
+            "name": "TopBorder",
+            "path": "LiveEventScreen/Background/TopBorder",
+            "active": true,
+            "rect": {
+              "anchor": "TopStretch",
+              "anchorMin": [
+                0.0,
+                1.0
+              ],
+              "anchorMax": [
+                1.0,
+                1.0
+              ],
+              "pivot": [
+                0.5,
+                1.0
+              ],
+              "sizeDelta": [
+                0.0,
+                8.0
+              ],
+              "anchoredPosition": [
+                0.0,
+                0.0
+              ],
+              "offsetMin": [
+                0.0,
+                -8.0
+              ],
+              "offsetMax": [
+                0.0,
+                0.0
+              ]
+            },
+            "components": [
+              {
+                "type": "CanvasRenderer",
+                "fullType": "UnityEngine.CanvasRenderer",
+                "properties": {}
+              },
+              {
+                "type": "Image",
+                "fullType": "UnityEngine.UI.Image",
+                "properties": {
+                  "color": "#508C50FF",
+                  "raycastTarget": false,
+                  "type": "Simple"
+                }
+              }
+            ],
+            "children": []
+          },
+          {
+            "name": "BottomBorder",
+            "path": "LiveEventScreen/Background/BottomBorder",
+            "active": true,
+            "rect": {
+              "anchor": "BottomStretch",
+              "anchorMin": [
+                0.0,
+                0.0
+              ],
+              "anchorMax": [
+                1.0,
+                0.0
+              ],
+              "pivot": [
+                0.5,
+                0.0
+              ],
+              "sizeDelta": [
+                0.0,
+                8.0
+              ],
+              "anchoredPosition": [
+                0.0,
+                0.0
+              ],
+              "offsetMin": [
+                0.0,
+                0.0
+              ],
+              "offsetMax": [
+                0.0,
+                8.0
+              ]
+            },
+            "components": [
+              {
+                "type": "CanvasRenderer",
+                "fullType": "UnityEngine.CanvasRenderer",
+                "properties": {}
+              },
+              {
+                "type": "Image",
+                "fullType": "UnityEngine.UI.Image",
+                "properties": {
+                  "color": "#508C50FF",
+                  "raycastTarget": false,
+                  "type": "Simple"
+                }
+              }
+            ],
+            "children": []
+          },
+          {
+            "name": "LeftBorder",
+            "path": "LiveEventScreen/Background/LeftBorder",
+            "active": true,
+            "rect": {
+              "anchor": "LeftStretch",
+              "anchorMin": [
+                0.0,
+                0.0
+              ],
+              "anchorMax": [
+                0.0,
+                1.0
+              ],
+              "pivot": [
+                0.0,
+                0.5
+              ],
+              "sizeDelta": [
+                8.0,
+                0.0
+              ],
+              "anchoredPosition": [
+                0.0,
+                0.0
+              ],
+              "offsetMin": [
+                0.0,
+                0.0
+              ],
+              "offsetMax": [
+                8.0,
+                0.0
+              ]
+            },
+            "components": [
+              {
+                "type": "CanvasRenderer",
+                "fullType": "UnityEngine.CanvasRenderer",
+                "properties": {}
+              },
+              {
+                "type": "Image",
+                "fullType": "UnityEngine.UI.Image",
+                "properties": {
+                  "color": "#508C50FF",
+                  "raycastTarget": false,
+                  "type": "Simple"
+                }
+              }
+            ],
+            "children": []
+          },
+          {
+            "name": "RightBorder",
+            "path": "LiveEventScreen/Background/RightBorder",
+            "active": true,
+            "rect": {
+              "anchor": "RightStretch",
+              "anchorMin": [
+                1.0,
+                0.0
+              ],
+              "anchorMax": [
+                1.0,
+                1.0
+              ],
+              "pivot": [
+                1.0,
+                0.5
+              ],
+              "sizeDelta": [
+                8.0,
+                0.0
+              ],
+              "anchoredPosition": [
+                0.0,
+                0.0
+              ],
+              "offsetMin": [
+                -8.0,
+                0.0
+              ],
+              "offsetMax": [
+                0.0,
+                0.0
+              ]
+            },
+            "components": [
+              {
+                "type": "CanvasRenderer",
+                "fullType": "UnityEngine.CanvasRenderer",
+                "properties": {}
+              },
+              {
+                "type": "Image",
+                "fullType": "UnityEngine.UI.Image",
+                "properties": {
+                  "color": "#508C50FF",
+                  "raycastTarget": false,
+                  "type": "Simple"
+                }
+              }
+            ],
+            "children": []
           }
-        ],
-        "children": []
+        ]
       },
       {
         "name": "SafeArea",
@@ -186,7 +543,119 @@
               ]
             },
             "components": [],
-            "children": []
+            "children": [
+              {
+                "name": "ScreenHeaderPlaceholder",
+                "path": "LiveEventScreen/SafeArea/Header/ScreenHeaderPlaceholder",
+                "active": true,
+                "rect": {
+                  "anchor": "Stretch",
+                  "anchorMin": [
+                    0.0,
+                    0.0
+                  ],
+                  "anchorMax": [
+                    1.0,
+                    1.0
+                  ],
+                  "pivot": [
+                    0.5,
+                    0.5
+                  ],
+                  "sizeDelta": [
+                    0.0,
+                    0.0
+                  ],
+                  "anchoredPosition": [
+                    0.0,
+                    0.0
+                  ],
+                  "offsetMin": [
+                    0.0,
+                    0.0
+                  ],
+                  "offsetMax": [
+                    0.0,
+                    0.0
+                  ]
+                },
+                "components": [
+                  {
+                    "type": "CanvasRenderer",
+                    "fullType": "UnityEngine.CanvasRenderer",
+                    "properties": {}
+                  },
+                  {
+                    "type": "Image",
+                    "fullType": "UnityEngine.UI.Image",
+                    "properties": {
+                      "color": "#0000004C",
+                      "raycastTarget": true,
+                      "type": "Simple"
+                    }
+                  }
+                ],
+                "children": [
+                  {
+                    "name": "Text",
+                    "path": "LiveEventScreen/SafeArea/Header/ScreenHeaderPlaceholder/Text",
+                    "active": true,
+                    "rect": {
+                      "anchor": "Stretch",
+                      "anchorMin": [
+                        0.0,
+                        0.0
+                      ],
+                      "anchorMax": [
+                        1.0,
+                        1.0
+                      ],
+                      "pivot": [
+                        0.5,
+                        0.5
+                      ],
+                      "sizeDelta": [
+                        0.0,
+                        0.0
+                      ],
+                      "anchoredPosition": [
+                        0.0,
+                        0.0
+                      ],
+                      "offsetMin": [
+                        0.0,
+                        0.0
+                      ],
+                      "offsetMax": [
+                        0.0,
+                        0.0
+                      ]
+                    },
+                    "components": [
+                      {
+                        "type": "CanvasRenderer",
+                        "fullType": "UnityEngine.CanvasRenderer",
+                        "properties": {}
+                      },
+                      {
+                        "type": "TextMeshProUGUI",
+                        "fullType": "TMPro.TextMeshProUGUI",
+                        "properties": {
+                          "text": "[ScreenHeader - 이벤트]",
+                          "fontSize": 14.0,
+                          "color": "#FFFFFF99",
+                          "alignment": "Center",
+                          "fontStyle": "Normal",
+                          "raycastTarget": true,
+                          "font": "Assets/TextMesh Pro/Resources/Fonts & Materials/PretendardVariable SDF.asset"
+                        }
+                      }
+                    ],
+                    "children": []
+                  }
+                ]
+              }
+            ]
           },
           {
             "name": "Content",
@@ -224,18 +693,2486 @@
               ]
             },
             "components": [],
-            "children": []
+            "children": [
+              {
+                "name": "LeftPanel",
+                "path": "LiveEventScreen/SafeArea/Content/LeftPanel",
+                "active": true,
+                "rect": {
+                  "anchor": "LeftStretch",
+                  "anchorMin": [
+                    0.0,
+                    0.0
+                  ],
+                  "anchorMax": [
+                    0.0,
+                    1.0
+                  ],
+                  "pivot": [
+                    0.0,
+                    0.5
+                  ],
+                  "sizeDelta": [
+                    350.0,
+                    -40.0
+                  ],
+                  "anchoredPosition": [
+                    20.0,
+                    0.0
+                  ],
+                  "offsetMin": [
+                    20.0,
+                    20.0
+                  ],
+                  "offsetMax": [
+                    370.0,
+                    -20.0
+                  ]
+                },
+                "components": [
+                  {
+                    "type": "EventListWidget",
+                    "fullType": "Sc.Contents.Event.Widgets.EventListWidget",
+                    "isMainComponent": true,
+                    "properties": {}
+                  },
+                  {
+                    "type": "CanvasRenderer",
+                    "fullType": "UnityEngine.CanvasRenderer",
+                    "properties": {}
+                  },
+                  {
+                    "type": "Image",
+                    "fullType": "UnityEngine.UI.Image",
+                    "properties": {
+                      "color": "#FFFFFF1A",
+                      "raycastTarget": false,
+                      "type": "Simple"
+                    }
+                  }
+                ],
+                "children": [
+                  {
+                    "name": "EventBannerScrollView",
+                    "path": "LiveEventScreen/SafeArea/Content/LeftPanel/EventBannerScrollView",
+                    "active": true,
+                    "rect": {
+                      "anchor": "Stretch",
+                      "anchorMin": [
+                        0.0,
+                        0.0
+                      ],
+                      "anchorMax": [
+                        1.0,
+                        1.0
+                      ],
+                      "pivot": [
+                        0.5,
+                        0.5
+                      ],
+                      "sizeDelta": [
+                        0.0,
+                        0.0
+                      ],
+                      "anchoredPosition": [
+                        0.0,
+                        0.0
+                      ],
+                      "offsetMin": [
+                        0.0,
+                        0.0
+                      ],
+                      "offsetMax": [
+                        0.0,
+                        0.0
+                      ]
+                    },
+                    "components": [
+                      {
+                        "type": "ScrollRect",
+                        "fullType": "UnityEngine.UI.ScrollRect",
+                        "properties": {
+                          "horizontal": false,
+                          "vertical": true,
+                          "movementType": "Elastic",
+                          "viewport": "Viewport",
+                          "content": "Viewport/BannerContainer"
+                        }
+                      }
+                    ],
+                    "children": [
+                      {
+                        "name": "Viewport",
+                        "path": "LiveEventScreen/SafeArea/Content/LeftPanel/EventBannerScrollView/Viewport",
+                        "active": true,
+                        "rect": {
+                          "anchor": "Stretch",
+                          "anchorMin": [
+                            0.0,
+                            0.0
+                          ],
+                          "anchorMax": [
+                            1.0,
+                            1.0
+                          ],
+                          "pivot": [
+                            0.5,
+                            0.5
+                          ],
+                          "sizeDelta": [
+                            0.0,
+                            0.0
+                          ],
+                          "anchoredPosition": [
+                            0.0,
+                            0.0
+                          ],
+                          "offsetMin": [
+                            0.0,
+                            0.0
+                          ],
+                          "offsetMax": [
+                            0.0,
+                            0.0
+                          ]
+                        },
+                        "components": [
+                          {
+                            "type": "RectMask2D",
+                            "fullType": "UnityEngine.UI.RectMask2D",
+                            "properties": {}
+                          },
+                          {
+                            "type": "CanvasRenderer",
+                            "fullType": "UnityEngine.CanvasRenderer",
+                            "properties": {}
+                          },
+                          {
+                            "type": "Image",
+                            "fullType": "UnityEngine.UI.Image",
+                            "properties": {
+                              "color": "#00000000",
+                              "raycastTarget": true,
+                              "type": "Simple"
+                            }
+                          }
+                        ],
+                        "children": [
+                          {
+                            "name": "BannerContainer",
+                            "path": "LiveEventScreen/SafeArea/Content/LeftPanel/EventBannerScrollView/Viewport/BannerContainer",
+                            "active": true,
+                            "rect": {
+                              "anchor": "TopStretch",
+                              "anchorMin": [
+                                0.0,
+                                1.0
+                              ],
+                              "anchorMax": [
+                                1.0,
+                                1.0
+                              ],
+                              "pivot": [
+                                0.5,
+                                1.0
+                              ],
+                              "sizeDelta": [
+                                0.0,
+                                0.0
+                              ],
+                              "anchoredPosition": [
+                                0.0,
+                                0.0
+                              ],
+                              "offsetMin": [
+                                0.0,
+                                0.0
+                              ],
+                              "offsetMax": [
+                                0.0,
+                                0.0
+                              ]
+                            },
+                            "components": [
+                              {
+                                "type": "VerticalLayoutGroup",
+                                "fullType": "UnityEngine.UI.VerticalLayoutGroup",
+                                "properties": {
+                                  "spacing": 12.0,
+                                  "padding": [
+                                    10,
+                                    10,
+                                    10,
+                                    10
+                                  ],
+                                  "childAlignment": "UpperCenter",
+                                  "childControlWidth": true,
+                                  "childControlHeight": false,
+                                  "childForceExpandWidth": true,
+                                  "childForceExpandHeight": false
+                                }
+                              },
+                              {
+                                "type": "ContentSizeFitter",
+                                "fullType": "UnityEngine.UI.ContentSizeFitter",
+                                "properties": {
+                                  "horizontalFit": "Unconstrained",
+                                  "verticalFit": "PreferredSize"
+                                }
+                              }
+                            ],
+                            "children": []
+                          }
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "name": "EmptyState",
+                    "path": "LiveEventScreen/SafeArea/Content/LeftPanel/EmptyState",
+                    "rect": {
+                      "anchor": "Stretch",
+                      "anchorMin": [
+                        0.0,
+                        0.0
+                      ],
+                      "anchorMax": [
+                        1.0,
+                        1.0
+                      ],
+                      "pivot": [
+                        0.5,
+                        0.5
+                      ],
+                      "sizeDelta": [
+                        0.0,
+                        0.0
+                      ],
+                      "anchoredPosition": [
+                        0.0,
+                        0.0
+                      ],
+                      "offsetMin": [
+                        0.0,
+                        0.0
+                      ],
+                      "offsetMax": [
+                        0.0,
+                        0.0
+                      ]
+                    },
+                    "components": [
+                      {
+                        "type": "CanvasRenderer",
+                        "fullType": "UnityEngine.CanvasRenderer",
+                        "properties": {}
+                      },
+                      {
+                        "type": "Image",
+                        "fullType": "UnityEngine.UI.Image",
+                        "properties": {
+                          "color": "#0000001A",
+                          "raycastTarget": false,
+                          "type": "Simple"
+                        }
+                      }
+                    ],
+                    "children": [
+                      {
+                        "name": "EmptyText",
+                        "path": "LiveEventScreen/SafeArea/Content/LeftPanel/EmptyState/EmptyText",
+                        "active": true,
+                        "rect": {
+                          "anchor": "Stretch",
+                          "anchorMin": [
+                            0.0,
+                            0.0
+                          ],
+                          "anchorMax": [
+                            1.0,
+                            1.0
+                          ],
+                          "pivot": [
+                            0.5,
+                            0.5
+                          ],
+                          "sizeDelta": [
+                            0.0,
+                            0.0
+                          ],
+                          "anchoredPosition": [
+                            0.0,
+                            0.0
+                          ],
+                          "offsetMin": [
+                            0.0,
+                            0.0
+                          ],
+                          "offsetMax": [
+                            0.0,
+                            0.0
+                          ]
+                        },
+                        "components": [
+                          {
+                            "type": "CanvasRenderer",
+                            "fullType": "UnityEngine.CanvasRenderer",
+                            "properties": {}
+                          },
+                          {
+                            "type": "TextMeshProUGUI",
+                            "fullType": "TMPro.TextMeshProUGUI",
+                            "properties": {
+                              "text": "진행 중인 이벤트가 없습니다.",
+                              "fontSize": 16.0,
+                              "color": "#646464FF",
+                              "alignment": "Center",
+                              "fontStyle": "Normal",
+                              "raycastTarget": true,
+                              "font": "Assets/TextMesh Pro/Resources/Fonts & Materials/PretendardVariable SDF.asset"
+                            }
+                          }
+                        ],
+                        "children": []
+                      }
+                    ]
+                  },
+                  {
+                    "name": "LoadingIndicator",
+                    "path": "LiveEventScreen/SafeArea/Content/LeftPanel/LoadingIndicator",
+                    "rect": {
+                      "anchor": "Center",
+                      "anchorMin": [
+                        0.5,
+                        0.5
+                      ],
+                      "anchorMax": [
+                        0.5,
+                        0.5
+                      ],
+                      "pivot": [
+                        0.5,
+                        0.5
+                      ],
+                      "sizeDelta": [
+                        60.0,
+                        60.0
+                      ],
+                      "anchoredPosition": [
+                        0.0,
+                        0.0
+                      ],
+                      "offsetMin": [
+                        -30.0,
+                        -30.0
+                      ],
+                      "offsetMax": [
+                        30.0,
+                        30.0
+                      ]
+                    },
+                    "components": [
+                      {
+                        "type": "CanvasRenderer",
+                        "fullType": "UnityEngine.CanvasRenderer",
+                        "properties": {}
+                      },
+                      {
+                        "type": "Image",
+                        "fullType": "UnityEngine.UI.Image",
+                        "properties": {
+                          "color": "#00000080",
+                          "raycastTarget": true,
+                          "type": "Simple"
+                        }
+                      }
+                    ],
+                    "children": [
+                      {
+                        "name": "SpinnerText",
+                        "path": "LiveEventScreen/SafeArea/Content/LeftPanel/LoadingIndicator/SpinnerText",
+                        "active": true,
+                        "rect": {
+                          "anchor": "Stretch",
+                          "anchorMin": [
+                            0.0,
+                            0.0
+                          ],
+                          "anchorMax": [
+                            1.0,
+                            1.0
+                          ],
+                          "pivot": [
+                            0.5,
+                            0.5
+                          ],
+                          "sizeDelta": [
+                            0.0,
+                            0.0
+                          ],
+                          "anchoredPosition": [
+                            0.0,
+                            0.0
+                          ],
+                          "offsetMin": [
+                            0.0,
+                            0.0
+                          ],
+                          "offsetMax": [
+                            0.0,
+                            0.0
+                          ]
+                        },
+                        "components": [
+                          {
+                            "type": "CanvasRenderer",
+                            "fullType": "UnityEngine.CanvasRenderer",
+                            "properties": {}
+                          },
+                          {
+                            "type": "TextMeshProUGUI",
+                            "fullType": "TMPro.TextMeshProUGUI",
+                            "properties": {
+                              "text": "...",
+                              "fontSize": 24.0,
+                              "color": "#FFFFFFFF",
+                              "alignment": "Center",
+                              "fontStyle": "Normal",
+                              "raycastTarget": true,
+                              "font": "Assets/TextMesh Pro/Resources/Fonts & Materials/PretendardVariable SDF.asset"
+                            }
+                          }
+                        ],
+                        "children": []
+                      }
+                    ]
+                  },
+                  {
+                    "name": "EventBannerItemPrefab",
+                    "path": "LiveEventScreen/SafeArea/Content/LeftPanel/EventBannerItemPrefab",
+                    "rect": {
+                      "anchor": "Center",
+                      "anchorMin": [
+                        0.5,
+                        0.5
+                      ],
+                      "anchorMax": [
+                        0.5,
+                        0.5
+                      ],
+                      "pivot": [
+                        0.5,
+                        0.5
+                      ],
+                      "sizeDelta": [
+                        0.0,
+                        110.0
+                      ],
+                      "anchoredPosition": [
+                        0.0,
+                        0.0
+                      ],
+                      "offsetMin": [
+                        0.0,
+                        -55.0
+                      ],
+                      "offsetMax": [
+                        0.0,
+                        55.0
+                      ]
+                    },
+                    "components": [
+                      {
+                        "type": "EventBannerItem",
+                        "fullType": "Sc.Contents.Event.EventBannerItem",
+                        "properties": {}
+                      },
+                      {
+                        "type": "CanvasRenderer",
+                        "fullType": "UnityEngine.CanvasRenderer",
+                        "properties": {}
+                      },
+                      {
+                        "type": "Image",
+                        "fullType": "UnityEngine.UI.Image",
+                        "properties": {
+                          "color": "#FFFFFFE6",
+                          "raycastTarget": true,
+                          "type": "Simple"
+                        }
+                      },
+                      {
+                        "type": "Button",
+                        "fullType": "UnityEngine.UI.Button",
+                        "properties": {
+                          "interactable": true,
+                          "transition": "ColorTint"
+                        }
+                      },
+                      {
+                        "type": "HorizontalLayoutGroup",
+                        "fullType": "UnityEngine.UI.HorizontalLayoutGroup",
+                        "properties": {
+                          "spacing": 10.0,
+                          "padding": [
+                            8,
+                            8,
+                            8,
+                            8
+                          ],
+                          "childAlignment": "MiddleLeft",
+                          "childControlWidth": false,
+                          "childControlHeight": true,
+                          "childForceExpandWidth": false,
+                          "childForceExpandHeight": true
+                        }
+                      }
+                    ],
+                    "children": [
+                      {
+                        "name": "BannerImage",
+                        "path": "LiveEventScreen/SafeArea/Content/LeftPanel/EventBannerItemPrefab/BannerImage",
+                        "active": true,
+                        "rect": {
+                          "anchor": "Center",
+                          "anchorMin": [
+                            0.5,
+                            0.5
+                          ],
+                          "anchorMax": [
+                            0.5,
+                            0.5
+                          ],
+                          "pivot": [
+                            0.5,
+                            0.5
+                          ],
+                          "sizeDelta": [
+                            100.0,
+                            100.0
+                          ],
+                          "anchoredPosition": [
+                            0.0,
+                            0.0
+                          ],
+                          "offsetMin": [
+                            -50.0,
+                            -50.0
+                          ],
+                          "offsetMax": [
+                            50.0,
+                            50.0
+                          ]
+                        },
+                        "components": [
+                          {
+                            "type": "LayoutElement",
+                            "fullType": "UnityEngine.UI.LayoutElement",
+                            "properties": {
+                              "preferredWidth": 150.0,
+                              "preferredHeight": 90.0
+                            }
+                          },
+                          {
+                            "type": "CanvasRenderer",
+                            "fullType": "UnityEngine.CanvasRenderer",
+                            "properties": {}
+                          },
+                          {
+                            "type": "Image",
+                            "fullType": "UnityEngine.UI.Image",
+                            "properties": {
+                              "color": "#6496C8FF",
+                              "raycastTarget": true,
+                              "type": "Simple"
+                            }
+                          }
+                        ],
+                        "children": []
+                      },
+                      {
+                        "name": "InfoArea",
+                        "path": "LiveEventScreen/SafeArea/Content/LeftPanel/EventBannerItemPrefab/InfoArea",
+                        "active": true,
+                        "rect": {
+                          "anchor": "Center",
+                          "anchorMin": [
+                            0.5,
+                            0.5
+                          ],
+                          "anchorMax": [
+                            0.5,
+                            0.5
+                          ],
+                          "pivot": [
+                            0.5,
+                            0.5
+                          ],
+                          "sizeDelta": [
+                            100.0,
+                            100.0
+                          ],
+                          "anchoredPosition": [
+                            0.0,
+                            0.0
+                          ],
+                          "offsetMin": [
+                            -50.0,
+                            -50.0
+                          ],
+                          "offsetMax": [
+                            50.0,
+                            50.0
+                          ]
+                        },
+                        "components": [
+                          {
+                            "type": "LayoutElement",
+                            "fullType": "UnityEngine.UI.LayoutElement",
+                            "properties": {
+                              "flexibleWidth": 1.0
+                            }
+                          },
+                          {
+                            "type": "VerticalLayoutGroup",
+                            "fullType": "UnityEngine.UI.VerticalLayoutGroup",
+                            "properties": {
+                              "spacing": 4.0,
+                              "padding": [
+                                0,
+                                0,
+                                0,
+                                0
+                              ],
+                              "childAlignment": "MiddleLeft",
+                              "childControlWidth": true,
+                              "childControlHeight": false,
+                              "childForceExpandWidth": true,
+                              "childForceExpandHeight": false
+                            }
+                          }
+                        ],
+                        "children": [
+                          {
+                            "name": "NameText",
+                            "path": "LiveEventScreen/SafeArea/Content/LeftPanel/EventBannerItemPrefab/InfoArea/NameText",
+                            "active": true,
+                            "rect": {
+                              "anchor": "Center",
+                              "anchorMin": [
+                                0.5,
+                                0.5
+                              ],
+                              "anchorMax": [
+                                0.5,
+                                0.5
+                              ],
+                              "pivot": [
+                                0.5,
+                                0.5
+                              ],
+                              "sizeDelta": [
+                                100.0,
+                                100.0
+                              ],
+                              "anchoredPosition": [
+                                0.0,
+                                0.0
+                              ],
+                              "offsetMin": [
+                                -50.0,
+                                -50.0
+                              ],
+                              "offsetMax": [
+                                50.0,
+                                50.0
+                              ]
+                            },
+                            "components": [
+                              {
+                                "type": "LayoutElement",
+                                "fullType": "UnityEngine.UI.LayoutElement",
+                                "properties": {
+                                  "preferredHeight": 24.0
+                                }
+                              },
+                              {
+                                "type": "CanvasRenderer",
+                                "fullType": "UnityEngine.CanvasRenderer",
+                                "properties": {}
+                              },
+                              {
+                                "type": "TextMeshProUGUI",
+                                "fullType": "TMPro.TextMeshProUGUI",
+                                "properties": {
+                                  "text": "이벤트 이름",
+                                  "fontSize": 16.0,
+                                  "color": "#323232FF",
+                                  "alignment": "Left",
+                                  "fontStyle": "Bold",
+                                  "raycastTarget": true,
+                                  "font": "Assets/TextMesh Pro/Resources/Fonts & Materials/PretendardVariable SDF.asset"
+                                }
+                              }
+                            ],
+                            "children": []
+                          },
+                          {
+                            "name": "RemainingDaysText",
+                            "path": "LiveEventScreen/SafeArea/Content/LeftPanel/EventBannerItemPrefab/InfoArea/RemainingDaysText",
+                            "active": true,
+                            "rect": {
+                              "anchor": "Center",
+                              "anchorMin": [
+                                0.5,
+                                0.5
+                              ],
+                              "anchorMax": [
+                                0.5,
+                                0.5
+                              ],
+                              "pivot": [
+                                0.5,
+                                0.5
+                              ],
+                              "sizeDelta": [
+                                100.0,
+                                100.0
+                              ],
+                              "anchoredPosition": [
+                                0.0,
+                                0.0
+                              ],
+                              "offsetMin": [
+                                -50.0,
+                                -50.0
+                              ],
+                              "offsetMax": [
+                                50.0,
+                                50.0
+                              ]
+                            },
+                            "components": [
+                              {
+                                "type": "LayoutElement",
+                                "fullType": "UnityEngine.UI.LayoutElement",
+                                "properties": {
+                                  "preferredHeight": 18.0
+                                }
+                              },
+                              {
+                                "type": "CanvasRenderer",
+                                "fullType": "UnityEngine.CanvasRenderer",
+                                "properties": {}
+                              },
+                              {
+                                "type": "TextMeshProUGUI",
+                                "fullType": "TMPro.TextMeshProUGUI",
+                                "properties": {
+                                  "text": "D-7",
+                                  "fontSize": 12.0,
+                                  "color": "#646464FF",
+                                  "alignment": "Left",
+                                  "fontStyle": "Normal",
+                                  "raycastTarget": true,
+                                  "font": "Assets/TextMesh Pro/Resources/Fonts & Materials/PretendardVariable SDF.asset"
+                                }
+                              }
+                            ],
+                            "children": []
+                          },
+                          {
+                            "name": "GracePeriodIndicator",
+                            "path": "LiveEventScreen/SafeArea/Content/LeftPanel/EventBannerItemPrefab/InfoArea/GracePeriodIndicator",
+                            "rect": {
+                              "anchor": "Center",
+                              "anchorMin": [
+                                0.5,
+                                0.5
+                              ],
+                              "anchorMax": [
+                                0.5,
+                                0.5
+                              ],
+                              "pivot": [
+                                0.5,
+                                0.5
+                              ],
+                              "sizeDelta": [
+                                100.0,
+                                100.0
+                              ],
+                              "anchoredPosition": [
+                                0.0,
+                                0.0
+                              ],
+                              "offsetMin": [
+                                -50.0,
+                                -50.0
+                              ],
+                              "offsetMax": [
+                                50.0,
+                                50.0
+                              ]
+                            },
+                            "components": [
+                              {
+                                "type": "LayoutElement",
+                                "fullType": "UnityEngine.UI.LayoutElement",
+                                "properties": {
+                                  "preferredHeight": 16.0
+                                }
+                              },
+                              {
+                                "type": "HorizontalLayoutGroup",
+                                "fullType": "UnityEngine.UI.HorizontalLayoutGroup",
+                                "properties": {
+                                  "spacing": 4.0,
+                                  "padding": [
+                                    0,
+                                    0,
+                                    0,
+                                    0
+                                  ],
+                                  "childAlignment": "MiddleLeft",
+                                  "childControlWidth": false,
+                                  "childControlHeight": false,
+                                  "childForceExpandWidth": true,
+                                  "childForceExpandHeight": true
+                                }
+                              }
+                            ],
+                            "children": [
+                              {
+                                "name": "GracePeriodText",
+                                "path": "LiveEventScreen/SafeArea/Content/LeftPanel/EventBannerItemPrefab/InfoArea/GracePeriodIndicator/GracePeriodText",
+                                "active": true,
+                                "rect": {
+                                  "anchor": "Center",
+                                  "anchorMin": [
+                                    0.5,
+                                    0.5
+                                  ],
+                                  "anchorMax": [
+                                    0.5,
+                                    0.5
+                                  ],
+                                  "pivot": [
+                                    0.5,
+                                    0.5
+                                  ],
+                                  "sizeDelta": [
+                                    100.0,
+                                    100.0
+                                  ],
+                                  "anchoredPosition": [
+                                    0.0,
+                                    0.0
+                                  ],
+                                  "offsetMin": [
+                                    -50.0,
+                                    -50.0
+                                  ],
+                                  "offsetMax": [
+                                    50.0,
+                                    50.0
+                                  ]
+                                },
+                                "components": [
+                                  {
+                                    "type": "CanvasRenderer",
+                                    "fullType": "UnityEngine.CanvasRenderer",
+                                    "properties": {}
+                                  },
+                                  {
+                                    "type": "TextMeshProUGUI",
+                                    "fullType": "TMPro.TextMeshProUGUI",
+                                    "properties": {
+                                      "text": "이벤트 종료",
+                                      "fontSize": 10.0,
+                                      "color": "#C86464FF",
+                                      "alignment": "Left",
+                                      "fontStyle": "Normal",
+                                      "raycastTarget": true,
+                                      "font": "Assets/TextMesh Pro/Resources/Fonts & Materials/PretendardVariable SDF.asset"
+                                    }
+                                  }
+                                ],
+                                "children": []
+                              }
+                            ]
+                          }
+                        ]
+                      },
+                      {
+                        "name": "NewBadge",
+                        "path": "LiveEventScreen/SafeArea/Content/LeftPanel/EventBannerItemPrefab/NewBadge",
+                        "active": true,
+                        "rect": {
+                          "anchor": "TopLeft",
+                          "anchorMin": [
+                            0.0,
+                            1.0
+                          ],
+                          "anchorMax": [
+                            0.0,
+                            1.0
+                          ],
+                          "pivot": [
+                            0.0,
+                            1.0
+                          ],
+                          "sizeDelta": [
+                            24.0,
+                            24.0
+                          ],
+                          "anchoredPosition": [
+                            4.0,
+                            -4.0
+                          ],
+                          "offsetMin": [
+                            4.0,
+                            -28.0
+                          ],
+                          "offsetMax": [
+                            28.0,
+                            -4.0
+                          ]
+                        },
+                        "components": [
+                          {
+                            "type": "CanvasRenderer",
+                            "fullType": "UnityEngine.CanvasRenderer",
+                            "properties": {}
+                          },
+                          {
+                            "type": "Image",
+                            "fullType": "UnityEngine.UI.Image",
+                            "properties": {
+                              "color": "#FF78A0FF",
+                              "raycastTarget": true,
+                              "type": "Simple"
+                            }
+                          }
+                        ],
+                        "children": []
+                      },
+                      {
+                        "name": "RewardBadge",
+                        "path": "LiveEventScreen/SafeArea/Content/LeftPanel/EventBannerItemPrefab/RewardBadge",
+                        "rect": {
+                          "anchor": "TopRight",
+                          "anchorMin": [
+                            1.0,
+                            1.0
+                          ],
+                          "anchorMax": [
+                            1.0,
+                            1.0
+                          ],
+                          "pivot": [
+                            1.0,
+                            1.0
+                          ],
+                          "sizeDelta": [
+                            40.0,
+                            20.0
+                          ],
+                          "anchoredPosition": [
+                            -4.0,
+                            -4.0
+                          ],
+                          "offsetMin": [
+                            -44.0,
+                            -24.0
+                          ],
+                          "offsetMax": [
+                            -4.0,
+                            -4.0
+                          ]
+                        },
+                        "components": [
+                          {
+                            "type": "CanvasRenderer",
+                            "fullType": "UnityEngine.CanvasRenderer",
+                            "properties": {}
+                          },
+                          {
+                            "type": "Image",
+                            "fullType": "UnityEngine.UI.Image",
+                            "properties": {
+                              "color": "#FF5050FF",
+                              "raycastTarget": true,
+                              "type": "Simple"
+                            }
+                          }
+                        ],
+                        "children": [
+                          {
+                            "name": "Text",
+                            "path": "LiveEventScreen/SafeArea/Content/LeftPanel/EventBannerItemPrefab/RewardBadge/Text",
+                            "active": true,
+                            "rect": {
+                              "anchor": "Stretch",
+                              "anchorMin": [
+                                0.0,
+                                0.0
+                              ],
+                              "anchorMax": [
+                                1.0,
+                                1.0
+                              ],
+                              "pivot": [
+                                0.5,
+                                0.5
+                              ],
+                              "sizeDelta": [
+                                0.0,
+                                0.0
+                              ],
+                              "anchoredPosition": [
+                                0.0,
+                                0.0
+                              ],
+                              "offsetMin": [
+                                0.0,
+                                0.0
+                              ],
+                              "offsetMax": [
+                                0.0,
+                                0.0
+                              ]
+                            },
+                            "components": [
+                              {
+                                "type": "CanvasRenderer",
+                                "fullType": "UnityEngine.CanvasRenderer",
+                                "properties": {}
+                              },
+                              {
+                                "type": "TextMeshProUGUI",
+                                "fullType": "TMPro.TextMeshProUGUI",
+                                "properties": {
+                                  "text": "보상!",
+                                  "fontSize": 10.0,
+                                  "color": "#FFFFFFFF",
+                                  "alignment": "Center",
+                                  "fontStyle": "Normal",
+                                  "raycastTarget": true,
+                                  "font": "Assets/TextMesh Pro/Resources/Fonts & Materials/PretendardVariable SDF.asset"
+                                }
+                              }
+                            ],
+                            "children": []
+                          }
+                        ]
+                      },
+                      {
+                        "name": "SelectionHighlight",
+                        "path": "LiveEventScreen/SafeArea/Content/LeftPanel/EventBannerItemPrefab/SelectionHighlight",
+                        "rect": {
+                          "anchor": "Stretch",
+                          "anchorMin": [
+                            0.0,
+                            0.0
+                          ],
+                          "anchorMax": [
+                            1.0,
+                            1.0
+                          ],
+                          "pivot": [
+                            0.5,
+                            0.5
+                          ],
+                          "sizeDelta": [
+                            0.0,
+                            0.0
+                          ],
+                          "anchoredPosition": [
+                            0.0,
+                            0.0
+                          ],
+                          "offsetMin": [
+                            0.0,
+                            0.0
+                          ],
+                          "offsetMax": [
+                            0.0,
+                            0.0
+                          ]
+                        },
+                        "components": [
+                          {
+                            "type": "CanvasRenderer",
+                            "fullType": "UnityEngine.CanvasRenderer",
+                            "properties": {}
+                          },
+                          {
+                            "type": "Image",
+                            "fullType": "UnityEngine.UI.Image",
+                            "properties": {
+                              "color": "#FFC85080",
+                              "raycastTarget": false,
+                              "type": "Simple"
+                            }
+                          }
+                        ],
+                        "children": []
+                      }
+                    ]
+                  }
+                ],
+                "widgetFields": [
+                  {
+                    "fieldName": "_scrollRect",
+                    "fieldType": "ScrollRect",
+                    "targetPath": "EventBannerScrollView",
+                    "targetType": "ScrollRect"
+                  },
+                  {
+                    "fieldName": "_bannerContainer",
+                    "fieldType": "Transform",
+                    "targetPath": "EventBannerScrollView/Viewport/BannerContainer",
+                    "targetType": "RectTransform"
+                  },
+                  {
+                    "fieldName": "_bannerItemPrefab",
+                    "fieldType": "EventBannerItem",
+                    "targetPath": "EventBannerItemPrefab",
+                    "targetType": "EventBannerItem"
+                  },
+                  {
+                    "fieldName": "_emptyState",
+                    "fieldType": "GameObject",
+                    "targetPath": "EmptyState",
+                    "targetType": "GameObject"
+                  },
+                  {
+                    "fieldName": "_emptyText",
+                    "fieldType": "TMP_Text",
+                    "targetPath": "EmptyState/EmptyText",
+                    "targetType": "TextMeshProUGUI"
+                  },
+                  {
+                    "fieldName": "_loadingIndicator",
+                    "fieldType": "GameObject",
+                    "targetPath": "LoadingIndicator",
+                    "targetType": "GameObject"
+                  }
+                ]
+              },
+              {
+                "name": "RightPanel",
+                "path": "LiveEventScreen/SafeArea/Content/RightPanel",
+                "active": true,
+                "rect": {
+                  "anchor": "Stretch",
+                  "anchorMin": [
+                    0.0,
+                    0.0
+                  ],
+                  "anchorMax": [
+                    1.0,
+                    1.0
+                  ],
+                  "pivot": [
+                    0.5,
+                    0.5
+                  ],
+                  "sizeDelta": [
+                    -410.0,
+                    -40.0
+                  ],
+                  "anchoredPosition": [
+                    185.0,
+                    0.0
+                  ],
+                  "offsetMin": [
+                    390.0,
+                    20.0
+                  ],
+                  "offsetMax": [
+                    -20.0,
+                    -20.0
+                  ]
+                },
+                "components": [
+                  {
+                    "type": "EventDetailWidget",
+                    "fullType": "Sc.Contents.Event.Widgets.EventDetailWidget",
+                    "isMainComponent": true,
+                    "properties": {}
+                  }
+                ],
+                "children": [
+                  {
+                    "name": "EventDetailContainer",
+                    "path": "LiveEventScreen/SafeArea/Content/RightPanel/EventDetailContainer",
+                    "active": true,
+                    "rect": {
+                      "anchor": "Stretch",
+                      "anchorMin": [
+                        0.0,
+                        0.0
+                      ],
+                      "anchorMax": [
+                        1.0,
+                        1.0
+                      ],
+                      "pivot": [
+                        0.5,
+                        0.5
+                      ],
+                      "sizeDelta": [
+                        0.0,
+                        0.0
+                      ],
+                      "anchoredPosition": [
+                        0.0,
+                        0.0
+                      ],
+                      "offsetMin": [
+                        0.0,
+                        0.0
+                      ],
+                      "offsetMax": [
+                        0.0,
+                        0.0
+                      ]
+                    },
+                    "components": [
+                      {
+                        "type": "CanvasRenderer",
+                        "fullType": "UnityEngine.CanvasRenderer",
+                        "properties": {}
+                      },
+                      {
+                        "type": "Image",
+                        "fullType": "UnityEngine.UI.Image",
+                        "properties": {
+                          "color": "#FFFFFFF0",
+                          "raycastTarget": false,
+                          "type": "Simple"
+                        }
+                      }
+                    ],
+                    "children": [
+                      {
+                        "name": "TitleBannerArea",
+                        "path": "LiveEventScreen/SafeArea/Content/RightPanel/EventDetailContainer/TitleBannerArea",
+                        "active": true,
+                        "rect": {
+                          "anchor": "VStretch(0.75-1.00)",
+                          "anchorMin": [
+                            0.0,
+                            0.75
+                          ],
+                          "anchorMax": [
+                            1.0,
+                            1.0
+                          ],
+                          "pivot": [
+                            0.5,
+                            0.5
+                          ],
+                          "sizeDelta": [
+                            -40.0,
+                            -20.0
+                          ],
+                          "anchoredPosition": [
+                            0.0,
+                            -10.0
+                          ],
+                          "offsetMin": [
+                            20.0,
+                            0.0
+                          ],
+                          "offsetMax": [
+                            -20.0,
+                            -20.0
+                          ]
+                        },
+                        "components": [],
+                        "children": [
+                          {
+                            "name": "TitleBannerImage",
+                            "path": "LiveEventScreen/SafeArea/Content/RightPanel/EventDetailContainer/TitleBannerArea/TitleBannerImage",
+                            "active": true,
+                            "rect": {
+                              "anchor": "Stretch",
+                              "anchorMin": [
+                                0.0,
+                                0.0
+                              ],
+                              "anchorMax": [
+                                1.0,
+                                1.0
+                              ],
+                              "pivot": [
+                                0.5,
+                                0.5
+                              ],
+                              "sizeDelta": [
+                                0.0,
+                                0.0
+                              ],
+                              "anchoredPosition": [
+                                0.0,
+                                0.0
+                              ],
+                              "offsetMin": [
+                                0.0,
+                                0.0
+                              ],
+                              "offsetMax": [
+                                0.0,
+                                0.0
+                              ]
+                            },
+                            "components": [
+                              {
+                                "type": "CanvasRenderer",
+                                "fullType": "UnityEngine.CanvasRenderer",
+                                "properties": {}
+                              },
+                              {
+                                "type": "Image",
+                                "fullType": "UnityEngine.UI.Image",
+                                "properties": {
+                                  "color": "#C8DCB4FF",
+                                  "raycastTarget": false,
+                                  "type": "Simple"
+                                }
+                              }
+                            ],
+                            "children": [
+                              {
+                                "name": "Placeholder",
+                                "path": "LiveEventScreen/SafeArea/Content/RightPanel/EventDetailContainer/TitleBannerArea/TitleBannerImage/Placeholder",
+                                "active": true,
+                                "rect": {
+                                  "anchor": "Stretch",
+                                  "anchorMin": [
+                                    0.0,
+                                    0.0
+                                  ],
+                                  "anchorMax": [
+                                    1.0,
+                                    1.0
+                                  ],
+                                  "pivot": [
+                                    0.5,
+                                    0.5
+                                  ],
+                                  "sizeDelta": [
+                                    0.0,
+                                    0.0
+                                  ],
+                                  "anchoredPosition": [
+                                    0.0,
+                                    0.0
+                                  ],
+                                  "offsetMin": [
+                                    0.0,
+                                    0.0
+                                  ],
+                                  "offsetMax": [
+                                    0.0,
+                                    0.0
+                                  ]
+                                },
+                                "components": [
+                                  {
+                                    "type": "CanvasRenderer",
+                                    "fullType": "UnityEngine.CanvasRenderer",
+                                    "properties": {}
+                                  },
+                                  {
+                                    "type": "TextMeshProUGUI",
+                                    "fullType": "TMPro.TextMeshProUGUI",
+                                    "properties": {
+                                      "text": "이벤트 타이틀 배너",
+                                      "fontSize": 32.0,
+                                      "color": "#323232FF",
+                                      "alignment": "Center",
+                                      "fontStyle": "Bold",
+                                      "raycastTarget": true,
+                                      "font": "Assets/TextMesh Pro/Resources/Fonts & Materials/PretendardVariable SDF.asset"
+                                    }
+                                  }
+                                ],
+                                "children": []
+                              }
+                            ]
+                          },
+                          {
+                            "name": "DecoElements",
+                            "path": "LiveEventScreen/SafeArea/Content/RightPanel/EventDetailContainer/TitleBannerArea/DecoElements",
+                            "active": true,
+                            "rect": {
+                              "anchor": "Stretch",
+                              "anchorMin": [
+                                0.0,
+                                0.0
+                              ],
+                              "anchorMax": [
+                                1.0,
+                                1.0
+                              ],
+                              "pivot": [
+                                0.5,
+                                0.5
+                              ],
+                              "sizeDelta": [
+                                0.0,
+                                0.0
+                              ],
+                              "anchoredPosition": [
+                                0.0,
+                                0.0
+                              ],
+                              "offsetMin": [
+                                0.0,
+                                0.0
+                              ],
+                              "offsetMax": [
+                                0.0,
+                                0.0
+                              ]
+                            },
+                            "components": [],
+                            "children": []
+                          }
+                        ]
+                      },
+                      {
+                        "name": "CharacterArea",
+                        "path": "LiveEventScreen/SafeArea/Content/RightPanel/EventDetailContainer/CharacterArea",
+                        "active": true,
+                        "rect": {
+                          "anchor": "Custom",
+                          "anchorMin": [
+                            0.5,
+                            0.25
+                          ],
+                          "anchorMax": [
+                            1.0,
+                            0.75
+                          ],
+                          "pivot": [
+                            0.5,
+                            0.5
+                          ],
+                          "sizeDelta": [
+                            -20.0,
+                            0.0
+                          ],
+                          "anchoredPosition": [
+                            -10.0,
+                            0.0
+                          ],
+                          "offsetMin": [
+                            0.0,
+                            0.0
+                          ],
+                          "offsetMax": [
+                            -20.0,
+                            0.0
+                          ]
+                        },
+                        "components": [],
+                        "children": [
+                          {
+                            "name": "CharacterIllustImage",
+                            "path": "LiveEventScreen/SafeArea/Content/RightPanel/EventDetailContainer/CharacterArea/CharacterIllustImage",
+                            "active": true,
+                            "rect": {
+                              "anchor": "Stretch",
+                              "anchorMin": [
+                                0.0,
+                                0.0
+                              ],
+                              "anchorMax": [
+                                1.0,
+                                1.0
+                              ],
+                              "pivot": [
+                                0.5,
+                                0.5
+                              ],
+                              "sizeDelta": [
+                                0.0,
+                                0.0
+                              ],
+                              "anchoredPosition": [
+                                0.0,
+                                0.0
+                              ],
+                              "offsetMin": [
+                                0.0,
+                                0.0
+                              ],
+                              "offsetMax": [
+                                0.0,
+                                0.0
+                              ]
+                            },
+                            "components": [
+                              {
+                                "type": "CanvasRenderer",
+                                "fullType": "UnityEngine.CanvasRenderer",
+                                "properties": {}
+                              },
+                              {
+                                "type": "Image",
+                                "fullType": "UnityEngine.UI.Image",
+                                "properties": {
+                                  "color": "#B4C8A0FF",
+                                  "raycastTarget": false,
+                                  "type": "Simple"
+                                }
+                              }
+                            ],
+                            "children": [
+                              {
+                                "name": "Placeholder",
+                                "path": "LiveEventScreen/SafeArea/Content/RightPanel/EventDetailContainer/CharacterArea/CharacterIllustImage/Placeholder",
+                                "active": true,
+                                "rect": {
+                                  "anchor": "Stretch",
+                                  "anchorMin": [
+                                    0.0,
+                                    0.0
+                                  ],
+                                  "anchorMax": [
+                                    1.0,
+                                    1.0
+                                  ],
+                                  "pivot": [
+                                    0.5,
+                                    0.5
+                                  ],
+                                  "sizeDelta": [
+                                    0.0,
+                                    0.0
+                                  ],
+                                  "anchoredPosition": [
+                                    0.0,
+                                    0.0
+                                  ],
+                                  "offsetMin": [
+                                    0.0,
+                                    0.0
+                                  ],
+                                  "offsetMax": [
+                                    0.0,
+                                    0.0
+                                  ]
+                                },
+                                "components": [
+                                  {
+                                    "type": "CanvasRenderer",
+                                    "fullType": "UnityEngine.CanvasRenderer",
+                                    "properties": {}
+                                  },
+                                  {
+                                    "type": "TextMeshProUGUI",
+                                    "fullType": "TMPro.TextMeshProUGUI",
+                                    "properties": {
+                                      "text": "캐릭터\n일러스트",
+                                      "fontSize": 24.0,
+                                      "color": "#646464FF",
+                                      "alignment": "Center",
+                                      "fontStyle": "Normal",
+                                      "raycastTarget": true,
+                                      "font": "Assets/TextMesh Pro/Resources/Fonts & Materials/PretendardVariable SDF.asset"
+                                    }
+                                  }
+                                ],
+                                "children": []
+                              }
+                            ]
+                          }
+                        ]
+                      },
+                      {
+                        "name": "PeriodArea",
+                        "path": "LiveEventScreen/SafeArea/Content/RightPanel/EventDetailContainer/PeriodArea",
+                        "active": true,
+                        "rect": {
+                          "anchor": "VStretch(0.15-0.25)",
+                          "anchorMin": [
+                            0.0,
+                            0.15
+                          ],
+                          "anchorMax": [
+                            1.0,
+                            0.25
+                          ],
+                          "pivot": [
+                            0.5,
+                            0.5
+                          ],
+                          "sizeDelta": [
+                            -40.0,
+                            0.0
+                          ],
+                          "anchoredPosition": [
+                            0.0,
+                            0.0
+                          ],
+                          "offsetMin": [
+                            20.0,
+                            0.0
+                          ],
+                          "offsetMax": [
+                            -20.0,
+                            0.0
+                          ]
+                        },
+                        "components": [
+                          {
+                            "type": "CanvasRenderer",
+                            "fullType": "UnityEngine.CanvasRenderer",
+                            "properties": {}
+                          },
+                          {
+                            "type": "Image",
+                            "fullType": "UnityEngine.UI.Image",
+                            "properties": {
+                              "color": "#0000004C",
+                              "raycastTarget": false,
+                              "type": "Simple"
+                            }
+                          },
+                          {
+                            "type": "VerticalLayoutGroup",
+                            "fullType": "UnityEngine.UI.VerticalLayoutGroup",
+                            "properties": {
+                              "spacing": 2.0,
+                              "padding": [
+                                20,
+                                20,
+                                5,
+                                5
+                              ],
+                              "childAlignment": "MiddleCenter",
+                              "childControlWidth": true,
+                              "childControlHeight": false,
+                              "childForceExpandWidth": true,
+                              "childForceExpandHeight": false
+                            }
+                          }
+                        ],
+                        "children": [
+                          {
+                            "name": "StartTimeLabel",
+                            "path": "LiveEventScreen/SafeArea/Content/RightPanel/EventDetailContainer/PeriodArea/StartTimeLabel",
+                            "active": true,
+                            "rect": {
+                              "anchor": "Center",
+                              "anchorMin": [
+                                0.5,
+                                0.5
+                              ],
+                              "anchorMax": [
+                                0.5,
+                                0.5
+                              ],
+                              "pivot": [
+                                0.5,
+                                0.5
+                              ],
+                              "sizeDelta": [
+                                200.0,
+                                50.0
+                              ],
+                              "anchoredPosition": [
+                                0.0,
+                                0.0
+                              ],
+                              "offsetMin": [
+                                -100.0,
+                                -25.0
+                              ],
+                              "offsetMax": [
+                                100.0,
+                                25.0
+                              ]
+                            },
+                            "components": [
+                              {
+                                "type": "LayoutElement",
+                                "fullType": "UnityEngine.UI.LayoutElement",
+                                "properties": {
+                                  "preferredHeight": 18.0
+                                }
+                              },
+                              {
+                                "type": "CanvasRenderer",
+                                "fullType": "UnityEngine.CanvasRenderer",
+                                "properties": {}
+                              },
+                              {
+                                "type": "TextMeshProUGUI",
+                                "fullType": "TMPro.TextMeshProUGUI",
+                                "properties": {
+                                  "text": "이벤트 시작: 2026-01-15 11:00(UTC +9)",
+                                  "fontSize": 12.0,
+                                  "color": "#FFFFFFFF",
+                                  "alignment": "Center",
+                                  "fontStyle": "Normal",
+                                  "raycastTarget": true,
+                                  "font": "Assets/TextMesh Pro/Resources/Fonts & Materials/PretendardVariable SDF.asset"
+                                }
+                              }
+                            ],
+                            "children": []
+                          },
+                          {
+                            "name": "EndTimeLabel",
+                            "path": "LiveEventScreen/SafeArea/Content/RightPanel/EventDetailContainer/PeriodArea/EndTimeLabel",
+                            "active": true,
+                            "rect": {
+                              "anchor": "Center",
+                              "anchorMin": [
+                                0.5,
+                                0.5
+                              ],
+                              "anchorMax": [
+                                0.5,
+                                0.5
+                              ],
+                              "pivot": [
+                                0.5,
+                                0.5
+                              ],
+                              "sizeDelta": [
+                                200.0,
+                                50.0
+                              ],
+                              "anchoredPosition": [
+                                0.0,
+                                0.0
+                              ],
+                              "offsetMin": [
+                                -100.0,
+                                -25.0
+                              ],
+                              "offsetMax": [
+                                100.0,
+                                25.0
+                              ]
+                            },
+                            "components": [
+                              {
+                                "type": "LayoutElement",
+                                "fullType": "UnityEngine.UI.LayoutElement",
+                                "properties": {
+                                  "preferredHeight": 18.0
+                                }
+                              },
+                              {
+                                "type": "CanvasRenderer",
+                                "fullType": "UnityEngine.CanvasRenderer",
+                                "properties": {}
+                              },
+                              {
+                                "type": "TextMeshProUGUI",
+                                "fullType": "TMPro.TextMeshProUGUI",
+                                "properties": {
+                                  "text": "이벤트 종료: 2026-01-29 10:59(UTC +9)",
+                                  "fontSize": 12.0,
+                                  "color": "#FFFFFFFF",
+                                  "alignment": "Center",
+                                  "fontStyle": "Normal",
+                                  "raycastTarget": true,
+                                  "font": "Assets/TextMesh Pro/Resources/Fonts & Materials/PretendardVariable SDF.asset"
+                                }
+                              }
+                            ],
+                            "children": []
+                          }
+                        ]
+                      },
+                      {
+                        "name": "RewardPreviewArea",
+                        "path": "LiveEventScreen/SafeArea/Content/RightPanel/EventDetailContainer/RewardPreviewArea",
+                        "active": true,
+                        "rect": {
+                          "anchor": "Custom",
+                          "anchorMin": [
+                            0.0,
+                            0.0
+                          ],
+                          "anchorMax": [
+                            0.6,
+                            0.15
+                          ],
+                          "pivot": [
+                            0.5,
+                            0.5
+                          ],
+                          "sizeDelta": [
+                            -20.0,
+                            -15.0
+                          ],
+                          "anchoredPosition": [
+                            10.0,
+                            7.5
+                          ],
+                          "offsetMin": [
+                            20.0,
+                            15.0
+                          ],
+                          "offsetMax": [
+                            0.0,
+                            0.0
+                          ]
+                        },
+                        "components": [
+                          {
+                            "type": "VerticalLayoutGroup",
+                            "fullType": "UnityEngine.UI.VerticalLayoutGroup",
+                            "properties": {
+                              "spacing": 8.0,
+                              "padding": [
+                                0,
+                                0,
+                                0,
+                                0
+                              ],
+                              "childAlignment": "MiddleLeft",
+                              "childControlWidth": true,
+                              "childControlHeight": false,
+                              "childForceExpandWidth": true,
+                              "childForceExpandHeight": false
+                            }
+                          }
+                        ],
+                        "children": [
+                          {
+                            "name": "RewardPreviewTitle",
+                            "path": "LiveEventScreen/SafeArea/Content/RightPanel/EventDetailContainer/RewardPreviewArea/RewardPreviewTitle",
+                            "active": true,
+                            "rect": {
+                              "anchor": "Center",
+                              "anchorMin": [
+                                0.5,
+                                0.5
+                              ],
+                              "anchorMax": [
+                                0.5,
+                                0.5
+                              ],
+                              "pivot": [
+                                0.5,
+                                0.5
+                              ],
+                              "sizeDelta": [
+                                200.0,
+                                50.0
+                              ],
+                              "anchoredPosition": [
+                                0.0,
+                                0.0
+                              ],
+                              "offsetMin": [
+                                -100.0,
+                                -25.0
+                              ],
+                              "offsetMax": [
+                                100.0,
+                                25.0
+                              ]
+                            },
+                            "components": [
+                              {
+                                "type": "LayoutElement",
+                                "fullType": "UnityEngine.UI.LayoutElement",
+                                "properties": {
+                                  "preferredHeight": 20.0
+                                }
+                              },
+                              {
+                                "type": "CanvasRenderer",
+                                "fullType": "UnityEngine.CanvasRenderer",
+                                "properties": {}
+                              },
+                              {
+                                "type": "TextMeshProUGUI",
+                                "fullType": "TMPro.TextMeshProUGUI",
+                                "properties": {
+                                  "text": "참여 시 획득 가능한 보상",
+                                  "fontSize": 12.0,
+                                  "color": "#646464FF",
+                                  "alignment": "Left",
+                                  "fontStyle": "Normal",
+                                  "raycastTarget": true,
+                                  "font": "Assets/TextMesh Pro/Resources/Fonts & Materials/PretendardVariable SDF.asset"
+                                }
+                              }
+                            ],
+                            "children": []
+                          },
+                          {
+                            "name": "RewardIconContainer",
+                            "path": "LiveEventScreen/SafeArea/Content/RightPanel/EventDetailContainer/RewardPreviewArea/RewardIconContainer",
+                            "active": true,
+                            "rect": {
+                              "anchor": "Center",
+                              "anchorMin": [
+                                0.5,
+                                0.5
+                              ],
+                              "anchorMax": [
+                                0.5,
+                                0.5
+                              ],
+                              "pivot": [
+                                0.5,
+                                0.5
+                              ],
+                              "sizeDelta": [
+                                100.0,
+                                100.0
+                              ],
+                              "anchoredPosition": [
+                                0.0,
+                                0.0
+                              ],
+                              "offsetMin": [
+                                -50.0,
+                                -50.0
+                              ],
+                              "offsetMax": [
+                                50.0,
+                                50.0
+                              ]
+                            },
+                            "components": [
+                              {
+                                "type": "LayoutElement",
+                                "fullType": "UnityEngine.UI.LayoutElement",
+                                "properties": {
+                                  "preferredHeight": 50.0
+                                }
+                              },
+                              {
+                                "type": "HorizontalLayoutGroup",
+                                "fullType": "UnityEngine.UI.HorizontalLayoutGroup",
+                                "properties": {
+                                  "spacing": 8.0,
+                                  "padding": [
+                                    0,
+                                    0,
+                                    0,
+                                    0
+                                  ],
+                                  "childAlignment": "MiddleLeft",
+                                  "childControlWidth": false,
+                                  "childControlHeight": false,
+                                  "childForceExpandWidth": false,
+                                  "childForceExpandHeight": false
+                                }
+                              }
+                            ],
+                            "children": [
+                              {
+                                "name": "RewardIconPrefab",
+                                "path": "LiveEventScreen/SafeArea/Content/RightPanel/EventDetailContainer/RewardPreviewArea/RewardIconContainer/RewardIconPrefab",
+                                "rect": {
+                                  "anchor": "Center",
+                                  "anchorMin": [
+                                    0.5,
+                                    0.5
+                                  ],
+                                  "anchorMax": [
+                                    0.5,
+                                    0.5
+                                  ],
+                                  "pivot": [
+                                    0.5,
+                                    0.5
+                                  ],
+                                  "sizeDelta": [
+                                    100.0,
+                                    100.0
+                                  ],
+                                  "anchoredPosition": [
+                                    0.0,
+                                    0.0
+                                  ],
+                                  "offsetMin": [
+                                    -50.0,
+                                    -50.0
+                                  ],
+                                  "offsetMax": [
+                                    50.0,
+                                    50.0
+                                  ]
+                                },
+                                "components": [
+                                  {
+                                    "type": "LayoutElement",
+                                    "fullType": "UnityEngine.UI.LayoutElement",
+                                    "properties": {
+                                      "preferredWidth": 50.0,
+                                      "preferredHeight": 50.0
+                                    }
+                                  },
+                                  {
+                                    "type": "CanvasRenderer",
+                                    "fullType": "UnityEngine.CanvasRenderer",
+                                    "properties": {}
+                                  },
+                                  {
+                                    "type": "Image",
+                                    "fullType": "UnityEngine.UI.Image",
+                                    "properties": {
+                                      "color": "#64B4FFFF",
+                                      "raycastTarget": true,
+                                      "type": "Simple"
+                                    }
+                                  }
+                                ],
+                                "children": []
+                              },
+                              {
+                                "name": "SampleRewardIcon",
+                                "path": "LiveEventScreen/SafeArea/Content/RightPanel/EventDetailContainer/RewardPreviewArea/RewardIconContainer/SampleRewardIcon",
+                                "active": true,
+                                "rect": {
+                                  "anchor": "Center",
+                                  "anchorMin": [
+                                    0.5,
+                                    0.5
+                                  ],
+                                  "anchorMax": [
+                                    0.5,
+                                    0.5
+                                  ],
+                                  "pivot": [
+                                    0.5,
+                                    0.5
+                                  ],
+                                  "sizeDelta": [
+                                    100.0,
+                                    100.0
+                                  ],
+                                  "anchoredPosition": [
+                                    0.0,
+                                    0.0
+                                  ],
+                                  "offsetMin": [
+                                    -50.0,
+                                    -50.0
+                                  ],
+                                  "offsetMax": [
+                                    50.0,
+                                    50.0
+                                  ]
+                                },
+                                "components": [
+                                  {
+                                    "type": "LayoutElement",
+                                    "fullType": "UnityEngine.UI.LayoutElement",
+                                    "properties": {
+                                      "preferredWidth": 50.0,
+                                      "preferredHeight": 50.0
+                                    }
+                                  },
+                                  {
+                                    "type": "CanvasRenderer",
+                                    "fullType": "UnityEngine.CanvasRenderer",
+                                    "properties": {}
+                                  },
+                                  {
+                                    "type": "Image",
+                                    "fullType": "UnityEngine.UI.Image",
+                                    "properties": {
+                                      "color": "#96DC96FF",
+                                      "raycastTarget": true,
+                                      "type": "Simple"
+                                    }
+                                  }
+                                ],
+                                "children": []
+                              }
+                            ]
+                          }
+                        ]
+                      },
+                      {
+                        "name": "ButtonArea",
+                        "path": "LiveEventScreen/SafeArea/Content/RightPanel/EventDetailContainer/ButtonArea",
+                        "active": true,
+                        "rect": {
+                          "anchor": "Custom",
+                          "anchorMin": [
+                            0.6,
+                            0.0
+                          ],
+                          "anchorMax": [
+                            1.0,
+                            0.15
+                          ],
+                          "pivot": [
+                            0.5,
+                            0.5
+                          ],
+                          "sizeDelta": [
+                            -40.0,
+                            -15.0
+                          ],
+                          "anchoredPosition": [
+                            0.0,
+                            7.5
+                          ],
+                          "offsetMin": [
+                            20.0,
+                            15.0
+                          ],
+                          "offsetMax": [
+                            -20.0,
+                            0.0
+                          ]
+                        },
+                        "components": [
+                          {
+                            "type": "HorizontalLayoutGroup",
+                            "fullType": "UnityEngine.UI.HorizontalLayoutGroup",
+                            "properties": {
+                              "spacing": 0.0,
+                              "padding": [
+                                0,
+                                0,
+                                0,
+                                0
+                              ],
+                              "childAlignment": "MiddleRight",
+                              "childControlWidth": false,
+                              "childControlHeight": true,
+                              "childForceExpandWidth": false,
+                              "childForceExpandHeight": true
+                            }
+                          }
+                        ],
+                        "children": [
+                          {
+                            "name": "EnterButton",
+                            "path": "LiveEventScreen/SafeArea/Content/RightPanel/EventDetailContainer/ButtonArea/EnterButton",
+                            "active": true,
+                            "rect": {
+                              "anchor": "Center",
+                              "anchorMin": [
+                                0.5,
+                                0.5
+                              ],
+                              "anchorMax": [
+                                0.5,
+                                0.5
+                              ],
+                              "pivot": [
+                                0.5,
+                                0.5
+                              ],
+                              "sizeDelta": [
+                                100.0,
+                                100.0
+                              ],
+                              "anchoredPosition": [
+                                0.0,
+                                0.0
+                              ],
+                              "offsetMin": [
+                                -50.0,
+                                -50.0
+                              ],
+                              "offsetMax": [
+                                50.0,
+                                50.0
+                              ]
+                            },
+                            "components": [
+                              {
+                                "type": "LayoutElement",
+                                "fullType": "UnityEngine.UI.LayoutElement",
+                                "properties": {
+                                  "preferredWidth": 120.0,
+                                  "preferredHeight": 50.0
+                                }
+                              },
+                              {
+                                "type": "CanvasRenderer",
+                                "fullType": "UnityEngine.CanvasRenderer",
+                                "properties": {}
+                              },
+                              {
+                                "type": "Image",
+                                "fullType": "UnityEngine.UI.Image",
+                                "properties": {
+                                  "color": "#FFC864FF",
+                                  "raycastTarget": true,
+                                  "type": "Simple"
+                                }
+                              },
+                              {
+                                "type": "Button",
+                                "fullType": "UnityEngine.UI.Button",
+                                "properties": {
+                                  "interactable": true,
+                                  "transition": "ColorTint"
+                                }
+                              }
+                            ],
+                            "children": [
+                              {
+                                "name": "EnterButtonLabel",
+                                "path": "LiveEventScreen/SafeArea/Content/RightPanel/EventDetailContainer/ButtonArea/EnterButton/EnterButtonLabel",
+                                "active": true,
+                                "rect": {
+                                  "anchor": "Stretch",
+                                  "anchorMin": [
+                                    0.0,
+                                    0.0
+                                  ],
+                                  "anchorMax": [
+                                    1.0,
+                                    1.0
+                                  ],
+                                  "pivot": [
+                                    0.5,
+                                    0.5
+                                  ],
+                                  "sizeDelta": [
+                                    0.0,
+                                    0.0
+                                  ],
+                                  "anchoredPosition": [
+                                    0.0,
+                                    0.0
+                                  ],
+                                  "offsetMin": [
+                                    0.0,
+                                    0.0
+                                  ],
+                                  "offsetMax": [
+                                    0.0,
+                                    0.0
+                                  ]
+                                },
+                                "components": [
+                                  {
+                                    "type": "CanvasRenderer",
+                                    "fullType": "UnityEngine.CanvasRenderer",
+                                    "properties": {}
+                                  },
+                                  {
+                                    "type": "TextMeshProUGUI",
+                                    "fullType": "TMPro.TextMeshProUGUI",
+                                    "properties": {
+                                      "text": "바로 가기",
+                                      "fontSize": 16.0,
+                                      "color": "#503C28FF",
+                                      "alignment": "Center",
+                                      "fontStyle": "Bold",
+                                      "raycastTarget": true,
+                                      "font": "Assets/TextMesh Pro/Resources/Fonts & Materials/PretendardVariable SDF.asset"
+                                    }
+                                  }
+                                ],
+                                "children": []
+                              }
+                            ]
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ],
+                "widgetFields": [
+                  {
+                    "fieldName": "_titleBannerImage",
+                    "fieldType": "Image",
+                    "targetPath": "EventDetailContainer/TitleBannerArea/TitleBannerImage",
+                    "targetType": "Image"
+                  },
+                  {
+                    "fieldName": "_characterIllustImage",
+                    "fieldType": "Image",
+                    "targetPath": "EventDetailContainer/CharacterArea/CharacterIllustImage",
+                    "targetType": "Image"
+                  },
+                  {
+                    "fieldName": "_startTimeLabel",
+                    "fieldType": "TMP_Text",
+                    "targetPath": "EventDetailContainer/PeriodArea/StartTimeLabel",
+                    "targetType": "TextMeshProUGUI"
+                  },
+                  {
+                    "fieldName": "_endTimeLabel",
+                    "fieldType": "TMP_Text",
+                    "targetPath": "EventDetailContainer/PeriodArea/EndTimeLabel",
+                    "targetType": "TextMeshProUGUI"
+                  },
+                  {
+                    "fieldName": "_rewardPreviewTitle",
+                    "fieldType": "TMP_Text",
+                    "targetPath": "EventDetailContainer/RewardPreviewArea/RewardPreviewTitle",
+                    "targetType": "TextMeshProUGUI"
+                  },
+                  {
+                    "fieldName": "_rewardIconContainer",
+                    "fieldType": "Transform",
+                    "targetPath": "EventDetailContainer/RewardPreviewArea/RewardIconContainer",
+                    "targetType": "RectTransform"
+                  },
+                  {
+                    "fieldName": "_rewardIconPrefab",
+                    "fieldType": "GameObject",
+                    "targetPath": "EventDetailContainer/RewardPreviewArea/RewardIconContainer/RewardIconPrefab",
+                    "targetType": "GameObject"
+                  },
+                  {
+                    "fieldName": "_enterButton",
+                    "fieldType": "Button",
+                    "targetPath": "EventDetailContainer/ButtonArea/EnterButton",
+                    "targetType": "Button"
+                  },
+                  {
+                    "fieldName": "_enterButtonLabel",
+                    "fieldType": "TMP_Text",
+                    "targetPath": "EventDetailContainer/ButtonArea/EnterButton/EnterButtonLabel",
+                    "targetType": "TextMeshProUGUI"
+                  }
+                ]
+              }
+            ]
           }
         ]
+      },
+      {
+        "name": "OverlayLayer",
+        "path": "LiveEventScreen/OverlayLayer",
+        "active": true,
+        "rect": {
+          "anchor": "Stretch",
+          "anchorMin": [
+            0.0,
+            0.0
+          ],
+          "anchorMax": [
+            1.0,
+            1.0
+          ],
+          "pivot": [
+            0.5,
+            0.5
+          ],
+          "sizeDelta": [
+            0.0,
+            0.0
+          ],
+          "anchoredPosition": [
+            0.0,
+            0.0
+          ],
+          "offsetMin": [
+            0.0,
+            0.0
+          ],
+          "offsetMax": [
+            0.0,
+            0.0
+          ]
+        },
+        "components": [],
+        "children": []
       }
     ]
   },
-  "serializedFields": [],
+  "serializedFields": [
+    {
+      "fieldName": "_eventListWidget",
+      "fieldType": "EventListWidget",
+      "targetPath": "SafeArea/Content/LeftPanel",
+      "targetType": "EventListWidget"
+    },
+    {
+      "fieldName": "_eventDetailWidget",
+      "fieldType": "EventDetailWidget",
+      "targetPath": "SafeArea/Content/RightPanel",
+      "targetType": "EventDetailWidget"
+    },
+    {
+      "fieldName": "_eventListContainer",
+      "fieldType": "Transform",
+      "targetPath": "SafeArea/Content/LeftPanel/EventBannerScrollView/Viewport/BannerContainer",
+      "targetType": "RectTransform"
+    },
+    {
+      "fieldName": "_bannerItemPrefab",
+      "fieldType": "EventBannerItem",
+      "targetPath": "SafeArea/Content/LeftPanel/EventBannerItemPrefab",
+      "targetType": "EventBannerItem"
+    },
+    {
+      "fieldName": "_emptyText",
+      "fieldType": "TMP_Text",
+      "targetPath": "SafeArea/Content/LeftPanel/EmptyState/EmptyText",
+      "targetType": "TextMeshProUGUI"
+    },
+    {
+      "fieldName": "_loadingIndicator",
+      "fieldType": "GameObject",
+      "targetPath": "SafeArea/Content/LeftPanel/LoadingIndicator",
+      "targetType": "GameObject"
+    }
+  ],
   "theme": {
     "colors": {
-      "Dark_D9060601": "#0A0A12FF"
+      "Color_D2DE7E78": "#C8E6B4FF",
+      "Glass_D37A1A1C": "#8CBE824C",
+      "Light_D1E00000": "#FFFFFF80",
+      "Green_D2FABABD": "#508C50FF",
+      "Glass_1F4CCCCD": "#0000004C",
+      "Light_D1ECCCCD": "#FFFFFF99",
+      "Glass_D0866666": "#FFFFFF1A",
+      "Transparent_00000000": "#00000000",
+      "Glass_1EE66666": "#0000001A",
+      "Color_D599D9DF": "#646464FF",
+      "Dark_1F800000": "#00000080",
+      "Light_D1A00000": "#FFFFFFFF",
+      "Light_D1D37373": "#FFFFFFE6",
+      "Color_D280A0A7": "#6496C8FF",
+      "Color_D739D9DF": "#323232FF",
+      "Red_D419D9DF": "#C86464FF",
+      "Red_D44BEBEC": "#FF78A0FF",
+      "Red_D56AAAAC": "#FF5050FF",
+      "Red_D28B0B0C": "#FFC85080",
+      "Light_D1D87878": "#FFFFFFF0",
+      "Color_D2369690": "#C8DCB4FF",
+      "Color_D21FBFB9": "#B4C8A0FF",
+      "Blue_D23A1A1D": "#64B4FFFF",
+      "Green_D2604046": "#96DC96FF",
+      "Red_D2D11116": "#FFC864FF",
+      "Color_D72B4B4D": "#503C28FF"
     },
-    "constants": {},
+    "constants": {
+      "FontSize_14": 14.0,
+      "Spacing_12": 12.0,
+      "FontSize_16": 16.0,
+      "FontSize_24": 24.0,
+      "Spacing_10": 10.0,
+      "Spacing_4": 4.0,
+      "FontSize_12": 12.0,
+      "FontSize_10": 10.0,
+      "FontSize_32": 32.0,
+      "Spacing_2": 2.0,
+      "Spacing_8": 8.0,
+      "Spacing_0": 0.0
+    },
     "fonts": {}
   }
 }
