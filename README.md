@@ -2,6 +2,8 @@
 
 **서브컬쳐 수집형 RPG 포트폴리오** | 100% AI 코드 생성 실험 프로젝트
 
+[![Notion](https://img.shields.io/badge/Notion-프로젝트_문서-000000?style=flat&logo=notion)](https://www.notion.so/yongjepark/ProejctSC-2f6c3a3accb0814fad18ccb7687567ca)
+
 > 프로그래머의 직접적인 코드 개입 없이 AI만으로 게임 프로젝트를 완성할 수 있을까?
 
 ---
